@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Carter -Save links",  
   description: "A Simple Platform to Save Links and Share anonymously.",
   icons: {
-    icon: "/logo.png",
+    icon: "../../public/logo.png",
       
   },
 };
