@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  secretkey     String      @unique   @default(uuid())
+  email         String          @unique
+  username      String?
+  password      String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  linkform      Linkform[]
+  LinkformTrash LinkformTrash[]
+
+  // New fields for email verification and password reset
+  emailVerified     Boolean   @default(false)
+  verificationToken String? // To store token for email verification
+  resetToken        String? // To store token for password reset
+  resetTokenExpiry  DateTime? // Expiry time for reset token
+}
+
+model Linkform {
+  secret_Id   String      @id @default(uuid())
+  links       String
+  title       String?
+  imgurl      String?
+  tobefind    Boolean     @default(false)
+  description String?
+  createdAt   DateTime @default(now())
+  userID      Int
+  user        User     @relation(fields: [userID], references: [id])
+
+  // Index to optimize user-related queries
+  @@index([userID])
+}
+
+
+model LinkformTrash {
+  trash_Id    Int      @id @default(autoincrement())
+  secret_Id   Int
+  links       String 
+  title       String?
+  imgurl      String?
+  description String?
+  createdAt   DateTime
+  deletedAt   DateTime @default(now())
+  userID      Int
+  user        User     @relation(fields: [userID], references: [id])
+
+  // Optional restoredAt if you want to restore from trash
+  restoredAt DateTime?
+
+  @@index([userID])
+}
