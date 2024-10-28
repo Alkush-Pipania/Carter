@@ -8,5 +8,5 @@ Carter is designed to help you securely store and share your valuable links. Wit
 ## What it does 👀
 - After signing it up
 ### you see a page something like this
-(https://firebasestorage.googleapis.com/v0/b/my-new-app-888e3.appspot.com/o/Screenshot%202024-10-29%20012357.png?alt=media&token=b6689765-391b-4111-a671-9ac458e849e4)
+![Dashboard Carter Screenshot](https://firebasestorage.googleapis.com/v0/b/my-new-app-888e3.appspot.com/o/Screenshot%202024-10-29%20012357.png?alt=media&token=b6689765-391b-4111-a671-9ac458e849e4)
 
