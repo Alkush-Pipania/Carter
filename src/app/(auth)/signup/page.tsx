@@ -113,7 +113,7 @@ const Signin = () => {
 
         <Button className='w-full p-6' type='submit' size='lg'
           disabled={isLoading}>
-          {!isLoading || !loading ? 'Login' : <Loader />}
+          {!isLoading || !loading ? 'Sign up' : <Loader />}
         </Button>
         <span className='self-center '>
            Already have an account?{' '}
