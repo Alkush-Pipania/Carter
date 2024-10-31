@@ -129,7 +129,7 @@ export default function Home() {
            className="text-gray-300 cursor-pointer hover:text-gray-200 font-mono">
             About
           </h3>
-          <h3 onClick={()=> router.push('/#portfolio')}
+          <h3 onClick={()=> router.push('https://alkush.vercel.app/')}
            className="text-gray-300 cursor-pointer hover:text-gray-200 font-mono">
             Developer
           </h3>
