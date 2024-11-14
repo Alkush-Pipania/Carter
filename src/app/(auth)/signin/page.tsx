@@ -13,13 +13,14 @@ import Loader from '@/components/global/Loader'
 import { signIn, useSession } from 'next-auth/react'
 import carterlogo from "../../../../public/logo.png"
 import Image from 'next/image'
+import { FaGithub } from "react-icons/fa";
 
 
 const Signin = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [loading , setLoading] = useState(false);
-  
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -27,13 +28,13 @@ const Signin = () => {
       router.push('/dashboard');
     }
   }, [session, status, router]);
-  
 
-  
- 
 
-  
-  
+
+
+
+
+
 
   const [submitError, setSubmitError] = useState('');
 
@@ -62,61 +63,72 @@ const Signin = () => {
     }
   };
   return (
+    <main className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
 
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col
-    '>
-        <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
-        <Link href='/' className='w-full flex justify-start items-center'>
-          <span
-            className='font-semibold text-gray-400 hover:text-gray-300 flex items-center justify-center text-xl  first-letter:ml-1 '>
-             <Image src={carterlogo} alt='logo' className='w-[50px]' />
-            Carter
-          </span>
-        </Link>
-        <FormDescription className=''>
-          Organize, Share, and Manage Your Links with Ease
-        </FormDescription>
-        <FormField  control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type='email' placeholder='Email' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField  control={form.control}
-          name='password'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type='password' placeholder='Password' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {submitError && <FormMessage>{submitError}</FormMessage>}
-
-        <Button className='w-full p-6' type='submit' size='lg'
-          disabled={isLoading}>
-          {!isLoading || !loading ? 'Login' : <Loader />}
-        </Button>
-        <span className='self-center '>
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className='text-primary mx-2 text-primary-purple/primary-purple-400 hover:text-primary-purple/primary-purple-300'>
-            Sign up
+      <section className=' border-b-2 '>
+      <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
+          <Link href='/' className='w-full flex justify-start items-center'>
+            <span
+              className='font-semibold text-gray-400 hover:text-gray-300 flex items-center justify-center text-xl  first-letter:ml-1 '>
+              <Image src={carterlogo} alt='logo' className='w-[50px]' />
+              Carter
+            </span>
           </Link>
-        </span>
+          <span className='text-gray-400 text-xs'>
+            Organize, Share, and Manage Your Links with Ease
+          </span>
+          <div className='flex my-5 flex-col items-center justify-center gap-3 w-full'>
+          <Button className='w-full bg-gray-500 hover:bg-gray-600 flex items-center justify-center gap-2' onClick={()=>{
+            signIn("github")
+          }}>
+          <FaGithub className='text-2xl' />  
+          Github</Button>
+          </div>
+      </section>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col' >
+          
+          <FormField control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input type='email' placeholder='Email' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
+          <FormField control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input type='password' placeholder='Password' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      </form>
-    </Form>
+          {submitError && <FormMessage>{submitError}</FormMessage>}
+
+          <Button className='w-full p-6' type='submit' size='lg'
+            disabled={isLoading}>
+            {!isLoading || !loading ? 'Sign in' : <Loader />}
+          </Button>
+        </form>
+        <section className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
+          <span className='self-center '>
+            Don&apos;t have an account?{' '}
+            <Link href="/signup" className='text-primary mx-2 text-primary-purple/primary-purple-400 hover:text-primary-purple/primary-purple-300'>
+              Sign up
+            </Link>
+          </span>
+        </section>
+      </Form>
+    </main>
   )
 }
 

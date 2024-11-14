@@ -1,5 +1,6 @@
-import  CredentialsProvider  from "next-auth/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import GitHubProvider from "next-auth/providers/github";
 import prisma from "./prisma";
 
 
@@ -9,7 +10,7 @@ export const authOption = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username : {label : "username " , type : "text" , placeholder : "username"},
+        username: { label: "username ", type: "text", placeholder: "username" },
         email: {
           label: "email", type: "text", placeholder: "1234567891",
           required: true
@@ -39,7 +40,7 @@ export const authOption = {
         try {
           const user = await prisma.user.create({
             data: {
-              username : credentials.username,
+              username: credentials.username,
               email: credentials.email,
               password: hashedPassword
             }
@@ -47,28 +48,32 @@ export const authOption = {
 
           return {
             id: user.id.toString(),
-            username : user.username,
-            email : user.email
+            username: user.username,
+            email: user.email
           }
-        } catch(e){
+        } catch (e) {
           console.log(e);
         }
         return null;
       },
+    }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID || "",
+      clientSecret: process.env.GITHUB_SECRET || ""
     })
   ],
-  secret : process.env.JWT_SECRET ,
+  secret: process.env.JWT_SECRET,
   callbacks: {
     //fix the type here? Using any is bad
     async session({ token, session }: any) {
-        session.user.id = token.sub
+      session.user.id = token.sub
 
       return session
     }
   },
-  pages:{
-    signIn : "/signin",
-    signUp : "/signup",
+  pages: {
+    signIn: "/signin",
+    signUp: "/signup",
   }
 
 }
