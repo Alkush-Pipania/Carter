@@ -35,10 +35,10 @@ model User {
 model Linkform {
   secret_Id   String      @id @default(uuid())
   links       String
-  title       String?
+  title       String
   imgurl      String?
   tobefind    Boolean     @default(false)
-  description String?
+  description String
   createdAt   DateTime @default(now())
   userID      Int
   user        User     @relation(fields: [userID], references: [id])

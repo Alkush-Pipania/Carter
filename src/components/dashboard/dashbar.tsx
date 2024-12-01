@@ -17,7 +17,9 @@ import axios from 'axios';
 import carterlogo from "../../../public/logo.png"
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Mainmenu from './Mainmenu';
+import { EllipsisVertical } from 'lucide-react';
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '../ui/sheet';
+import Rightmenu from './rightmenu';
 
 
 
@@ -29,43 +31,28 @@ interface UserDetail {
 
 
 
-const Dashbar = () => {
+const Dashbar = (
+) => {
+ const session =  useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const boxRef = useRef<HTMLDivElement>(null);
   const toggleBox = () => setIsOpen(!isOpen);
   const router = useRouter();
-  const [mainmenu, Setmainmenu] = useState(false);
-  const [userdetail, Setuserdetail] = useState<UserDetail | null>(null);
 
 
 
 
-  const session = useSession();
+  
+
+
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}api/userdetail`, {
-          params: { email: session.data?.user?.email || '' },
-        });
-        Setuserdetail(res.data);
 
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    if (session?.data?.user?.email) {
-      fetchUserData();
-    } else {
-      console.warn("Email is not available in the session data.");
-    }
-  }, [session]);
-
+  
 
 
 
@@ -96,6 +83,9 @@ const Dashbar = () => {
   const isLoading = form.formState.isSubmitting;
   // @ts-ignore
   const userId = session.data?.user.id;
+  
+
+
 
 
   const onSubmit: SubmitHandler<z.infer<typeof AddLinkSchema>> = async (FormData) => {
@@ -201,7 +191,7 @@ const Dashbar = () => {
                           <FormControl>
                             <textarea
                               placeholder="Summary"
-                              className=" bg-Neutrals/neutrals-10 outline-none px-1 py-1 rounded-xl"
+                              className=" bg-Neutrals/neutrals-10 resize-none outline-none px-1 py-1 rounded-xl"
                               {...field}
                             />
                           </FormControl>
@@ -243,50 +233,9 @@ const Dashbar = () => {
            hover:bg-primary-purple/primary-purple-500 duration-75 ease-in-out text-gray-200 hover:text-gray-100 cursor-pointer'>
             <h3 >Sign Out</h3>
           </div>
-
-          <button onClick={
-            () => {
-              Setmainmenu(true)
-            }
-          } >
-            <svg
-              className='h-[14px]'
-              fill="#ffffff"
-              version="1.1"
-              id="Capa_1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 32.055 32.055"
-              stroke="#ffffff"
-              transform="rotate(90)"
-            >
-              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-              <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-              <g id="SVGRepo_iconCarrier">
-                <g>
-                  <path d="M3.968,12.061C1.775,12.061,0,13.835,0,16.027c0,2.192,1.773,3.967,3.968,3.967c2.189,0,3.966-1.772,3.966-3.967 C7.934,13.835,6.157,12.061,3.968,12.061z M16.233,12.061c-2.188,0-3.968,1.773-3.968,3.965c0,2.192,1.778,3.967,3.968,3.967 s3.97-1.772,3.97-3.967C20.201,13.835,18.423,12.061,16.233,12.061z M28.09,12.061c-2.192,0-3.969,1.774-3.969,3.967 c0,2.19,1.774,3.965,3.969,3.965c2.188,0,3.965-1.772,3.965-3.965S30.278,12.061,28.09,12.061z"></path>
-                </g>
-              </g>
-            </svg>
-
-          </button>
-          {mainmenu && (
-            <motion.div
-              className="overlay backdrop-blur  "
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ImCross onClick={() => {
-                Setmainmenu(false)
-              }}
-                className='absolute top-0 m-2 right-0 font-bold text-3xl text-purple-600 hover:text-purple-500 cursor-pointer' />
-              <Mainmenu
-                username={userdetail?.username || ''}
-                email={userdetail?.email || ''}
-              />
-            </motion.div>
-          )}
+          
+          <Rightmenu userid={userId} /> 
+          
 
         </div>
       </div>

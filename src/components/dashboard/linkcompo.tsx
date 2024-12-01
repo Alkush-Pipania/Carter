@@ -3,20 +3,36 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { IoMdCloudOutline } from "react-icons/io";
 import { AiFillCloud } from "react-icons/ai";
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { MdDeleteOutline } from "react-icons/md";
+import { Button } from '../ui/button';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { useState, useTransition } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { togglecloud } from '@/server/actions/links';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"
+import { AlertDialog, AlertDialogTrigger } from '../ui/alert-dialog';
+import { DeleteProductAlertDialogContent } from './Deletealertdialog';
 
 
 const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boolean, secretId: string, url: string, title: string, imgurl: string }) => {
+  const [ iscloudPending , startcloudtransition ] = useTransition()
+  const { toast } = useToast();
   const router = useRouter();
 
-
+ const [local_tobefind , setLocal_tobefind ] = useState(tobefind);
 
 
 
   return (
-    <div className='w-full bg-darkBg shadow-2xl hover:shadow-sm shadow-purpleShadow max-w-[321px] h-[227px] flex flex-col p-2  rounded-lg '>
+    <div className='w-full  bg-darkBg shadow-2xl hover:shadow-sm shadow-purpleShadow sm:max-w-[321px] h-[227px] flex flex-col p-2  rounded-lg '>
 
       <Link href={url} target="_blank" rel="noopener noreferrer" className='w-full flex items-center justify-center'>
         <div className="w-full h-[150px] overflow-hidden flex items-center justify-center">
@@ -36,41 +52,80 @@ const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boole
       <div className='flex flex-col gap-y-1 mt-1 px-2 w-full'>
         <div className='flex items-center justify-between'>
           <h2 className='text-sm font-medium text-slate-300'>
-            {url.length > 25 ? `${url.slice(0, 25)}...` : url}
+            {url.length > 20 ? `${url.slice(0, 20)}...` : url}
           </h2>
           <button
-            onClick={async () => {
-              try {
-                await axios.put(`${process.env.NEXT_PUBLIC_API_URL}api/linkform`, {
-                  secret_Id: secretId,
-                });
-                router.refresh()
-
-              } catch (error: any) {
-                console.error("Error updating linkform:", error.response ? error.response.data : error.message);
-              }
+          className='p-0 '
+            onClick={()=>{
+              startcloudtransition(async ()=>{
+                const data = await togglecloud(secretId);
+                if(data.message){
+                  toast({
+                    title : data.changeto ? "Added" : "Removed",
+                    description : data.changeto ? "Successfully added to cloud" : 
+                    "Succesfully removed from cloud",
+                    variant : data.changeto ? "great": "destructive",
+                  })
+                }
+               setLocal_tobefind(data.changeto)
+              })
             }}
           >
-            {tobefind === true ? (<AiFillCloud />) : (<IoMdCloudOutline />)}
+            {local_tobefind === true ? (<AiFillCloud className='size-6' />) : (<IoMdCloudOutline className='size-6' />)}
           </button>
 
         </div>
         <div className='text-xs text-gray-100 flex justify-between items-center'>
-          {title.length > 40 ? `${title.slice(0, 40)}...` : title}
-          <button
-            onClick={async () => {
-              try {
-                const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}api/delteform`, {
-                  data: { secret_Id: secretId }
-                });
+        <h2 className='text-sm font-medium text-slate-300'>
+        {title.length > 40 ? `${title.slice(0, 40)}...` : title}
+        </h2>
+         
+           <Dialog>
+          <AlertDialog>
 
-                router.refresh()
-                console.log("Delete response:", response.data);
-              } catch (error: any) {
-                console.error("Error deleting linkform:", error.response ? error.response.data : error.message);
-              }
-            }}
-          ><MdDeleteOutline className='text-base' /></button>
+         
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+            <Button  className="size-6 px-0  hover:bg-gray-400 active:bg-gray-300   bg-gray-500">
+              <div className="sr-only">Action Menu</div>
+              <DotsHorizontalIcon className="size-5" />
+            </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className='bg-darkBg font-mono text-white'>
+              <DropdownMenuItem asChild>
+              <Link href={`/dashboard/links/${secretId}/edit`}>Edit</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+              <h3 
+              onClick={()=>{
+                startcloudtransition(async ()=>{
+                  const data = await togglecloud(secretId);
+                  if(data.message){
+                    toast({
+                      title : data.changeto ? "Added" : "Removed",
+                      description : data.changeto ? "Successfully added to cloud" : 
+                      "Succesfully removed from cloud",
+                      variant : data.changeto ? "great": "destructive",
+                    })
+                  }
+                 setLocal_tobefind(data.changeto)
+                })
+              }}
+              >{local_tobefind == true ? "remove from cloud" : "add to cloud" }</h3>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator/>
+              <AlertDialogTrigger asChild>
+              <DropdownMenuItem >
+               Delete
+              </DropdownMenuItem>
+              </AlertDialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+              <DeleteProductAlertDialogContent  id={secretId}/>
+          </AlertDialog>
+          </Dialog> 
+            
+
         </div>
       </div>
     </div>

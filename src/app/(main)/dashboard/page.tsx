@@ -15,12 +15,12 @@ import { redirect } from 'next/navigation';
 
 
 const Dashboard = async () => {
-  const data = await getLinklist();
+  
   const session = getServerSession(authOption);
-  if(!session || !data.data){ 
+  if(!session){ 
     redirect('/signin');
   }
-
+  const datacard = await getLinklist();
   
 
   return (
@@ -30,9 +30,9 @@ const Dashboard = async () => {
     <Image src={down} alt="drop down" className='w-[24px] my-auto' />
   </button>
   
-  <section className='sm:px-6 grid grid-cols-1 gap-4 mt-10 w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-  {data.data.length > 0 ? (
-  data.data.map(link => (
+  <section className='sm:px-6 px-7 grid grid-cols-1 gap-4 mt-10 w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+  {datacard.data.length > 0 ? (
+  datacard.data.map(link => (
     <Linkcompo 
       key={link.secret_Id} 
       tobefind={link.tobefind} 
