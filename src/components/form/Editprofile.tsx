@@ -42,7 +42,7 @@ export function Editprofile({data} : {data : Editprofileprops }){
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}
       className='flex gap-6 flex-col my-2'>
-      <div className="grid gap-y-2 gap-6 grid-cols-1 lg:grid-cols-2">
+      <div className="flex flex-col gap-3">
       <FormField
             control={form.control}
             name='username'
