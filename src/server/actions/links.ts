@@ -71,7 +71,7 @@ export async function updatelinkform(secret_Id : string ,values : any){
   );
 
   return{
-    message : !isSucces ? "Succesfully updated" : errorMessage,
+    message : isSucces ? "Succesfully updated" : errorMessage,
     error : !isSucces,
   }
 }

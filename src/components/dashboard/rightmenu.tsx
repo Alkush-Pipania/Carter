@@ -62,10 +62,10 @@ export default function Rightmenu({ userid }: { userid: string }) {
           </SheetDescription>
         </SheetHeader>
         
-        {/* Loading state: Show a loading spinner if fetching data */}
+        
         {loading ? (
           <div className="flex justify-center items-center">
-            <span className="loader">Loading...</span> {/* Add custom spinner or tailwind class */}
+            <span className="loader">Loading...</span> 
           </div>
         ) : (
           <Editprofile data={data?.data} />
