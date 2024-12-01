@@ -38,6 +38,8 @@ export function Editprofile({data} : {data : Editprofileprops }){
     }
   }
 
+  
+
   return(
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}
