@@ -14,7 +14,7 @@ const About = () => {
       </div>
       <div className=' w-[90%] md:w-[80%] blur-[120px] rounded-full h-40 absolute bg-brand/brand-primaryblue/50 -z-10 sm:top-52 sm:left-44 top-40'
       />
-      <section className='w-full flex flex-col items-center  justify-center  mb-32 mt-10 gap-2'>
+      <section className='w-full   flex flex-col items-center  justify-center  mb-32 mt-10 gap-2'>
         <h3 className='text-6xl font-myfav text-primary-purple/primary-purple-300 hover:text-primary-purple/primary-purple-200 ease-in-out duration-200 '>About</h3>
         <p className='sm:w-[500px] sm:mr-40 text-washed-purple/washed-purple-300 sm:mx-0 mx-9 sm:text-center '>In an age where digital content is abundant and personal privacy is paramount, Carter was built with one mission: to give users secure, private, and efficient control over their shared links. With Carter, you get a seamless, user-focused way to save, organize, and securely share your links, whether for personal use, collaboration, or quick reference.</p>
         <h3 className='text-3xl my-3 sm:mr-32  font-myfav text-primary-purple/primary-purple-300 hover:text-primary-purple/primary-purple-200 ease-in-out duration-200'>

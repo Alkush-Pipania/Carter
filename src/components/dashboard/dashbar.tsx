@@ -12,14 +12,12 @@ import * as z from "zod";
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import Loader from '../global/Loader';
-import { ImCross } from "react-icons/im";
 import axios from 'axios';
 import carterlogo from "../../../public/logo.png"
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { EllipsisVertical } from 'lucide-react';
-import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '../ui/sheet';
 import Rightmenu from './rightmenu';
+import { Loader2Icon } from 'lucide-react';
 
 
 
@@ -42,7 +40,7 @@ const Dashbar = (
 
 
 
-
+  
   
 
 
@@ -84,7 +82,7 @@ const Dashbar = (
   // @ts-ignore
   const userId = session.data?.user.id;
   
-
+  
 
 
 
@@ -224,9 +222,11 @@ const Dashbar = (
             }} className='bg-transparent outline-none focus:outline-none w-full' />
 
           </div>
-          <div onClick={async () => {
-            router.push('http://localhost:3000/');
+          <div onClick={() => {
+           
             signOut();
+            
+            router.push('/signin');
 
           }} className='bg-primary-purple/primary-purple-400 px-3  py-1 rounded-full hidden sm:block
            hover:border-x-primary-purple/primary-purple-500

@@ -123,11 +123,29 @@ export async function updateuserdatadb(user_id : string , userdata : any){
       },
       data : {
         username : userdata.username,
-        email : userdata.email,
       }
     })
     return { error: false, message: "success" }
   } catch(e){
     return { error: true, message: "error" }
+  }
+}
+
+export async function verificationq(user_id : string){
+  if(!user_id){
+    return { error : true , message : "error"}
+  }
+  try{
+    const verify = await prisma.user.findFirst({
+      where : {
+        id : parseInt(user_id , 10)
+      },
+      select : {
+        varified : true
+      }
+    })
+    return { error : false , data : verify}
+  } catch(e){
+    console.log(e)
   }
 }

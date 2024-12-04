@@ -5,11 +5,17 @@ import { EllipsisVertical } from 'lucide-react';
 import { Editprofile } from "../form/Editprofile";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { Badge } from "../ui/badge";
+import { verificationq } from "@/server/db/links";
+import { Button } from "../ui/button";
+import { generateVerificationToken } from "@/lib/token";
+import Email from "next-auth/providers/email";
 
 export default function Rightmenu({ userid }: { userid: string }) {
   const { toast } = useToast();
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);  
+  const [loading, setLoading] = useState(false); 
+  const [verfication, setVerficationq] = useState<any>(false);
+  
 
   useEffect(() => {
     async function fetchData() {
@@ -23,12 +29,24 @@ export default function Rightmenu({ userid }: { userid: string }) {
           description: "Failed to fetch data.",
           variant: "destructive",
         });
-      } finally {
-        setLoading(false); 
-      }
+      } 
     }
     fetchData();
   }, [userid]);
+ 
+ 
+  useEffect(() =>{
+    async function verificaiton(){
+      try{
+        const data = await verificationq(userid);
+        setLoading(false)
+        setVerficationq(data?.data.varified)
+      }catch(e){
+        console.log('little error')
+      }
+    }
+    verificaiton()
+  },[userid])
 
   const handleCopy = async (text: string) => {
     try {
@@ -52,7 +70,7 @@ export default function Rightmenu({ userid }: { userid: string }) {
       <SheetTrigger asChild>
         <EllipsisVertical className="h-6 cursor-pointer hover:text-slate-300 active:text-slate-100" />
       </SheetTrigger>
-      <SheetContent className="bg-brand/brand-dark/85" side="right">
+      <SheetContent className="bg-brand/brand-dark/85 " side="right">
         <SheetHeader>
           <SheetTitle asChild>
             <h3 className="text-gray-100 hover:text-white">Edit profile</h3>
@@ -68,7 +86,7 @@ export default function Rightmenu({ userid }: { userid: string }) {
             <span className="loader">Loading...</span> 
           </div>
         ) : (
-          <Editprofile data={data?.data} />
+          <Editprofile verified={verfication} data={data?.data} />
         )}
 
         <SheetHeader>
@@ -82,7 +100,9 @@ export default function Rightmenu({ userid }: { userid: string }) {
             </Badge>
           </div>
         </SheetHeader>
+        
       </SheetContent>
+      
     </Sheet>
   );
 }

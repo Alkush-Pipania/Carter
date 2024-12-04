@@ -25,12 +25,18 @@ model User {
   linkform      Linkform[]
   LinkformTrash LinkformTrash[]
 
-  // New fields for email verification and password reset
-  emailVerified     Boolean   @default(false)
-  verificationToken String? // To store token for email verification
-  resetToken        String? // To store token for password reset
-  resetTokenExpiry  DateTime? // Expiry time for reset token
+  varified     Boolean         @default(false)
 }
+
+model Verification {
+  id  String      @id @default(uuid())
+  email String
+  token  String
+  expires DateTime
+
+  @@unique([email , token])
+}
+
 
 model Linkform {
   secret_Id   String      @id @default(uuid())

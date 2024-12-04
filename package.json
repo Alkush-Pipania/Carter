@@ -38,6 +38,7 @@
     "lucide-react": "^0.453.0",
     "next": "14.2.15",
     "next-auth": "^4.24.8",
+    "nodemailer": "^6.9.16",
     "open-graph-scraper": "^6.8.2",
     "prisma": "^5.21.1",
     "react": "^18",
@@ -47,9 +48,12 @@
     "react-spring": "^9.7.4",
     "react-toastify": "^10.0.6",
     "recoil": "^0.7.7",
+    "resend": "^4.0.1",
     "sharp": "^0.33.5",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-motion": "^0.4.3-beta",
+    "uuid": "^11.0.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {

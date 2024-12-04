@@ -5,6 +5,7 @@ import { error } from "console";
 import { getServerSession } from "next-auth"
 import { deltelinkcarddb, linkformdetaildb, retrivedatadb, toggleclouddb, updatelinkformdb, updateuserdatadb } from "../db/links";
 import { number, string } from "zod";
+import { redirect } from "next/navigation";
 
 export async function togglecloud(id : string){
   const { user } = await getServerSession(authOption);
@@ -77,8 +78,11 @@ export async function updatelinkform(secret_Id : string ,values : any){
 }
 
 export async function retrivedata(userid : string){
-  const { user } = await getServerSession(authOption);
-  const isSucces = await retrivedatadb(userid || user.id);
+  const  user  = await getServerSession(authOption);
+  if(!user){
+   redirect ("/signin");
+  }
+  const isSucces = await retrivedatadb(userid || user.user.id);
 
   return{
     error : !isSucces,
@@ -107,3 +111,5 @@ export async function updateuserdata(userdata : userdatatype ){
 
 
 }
+
+
