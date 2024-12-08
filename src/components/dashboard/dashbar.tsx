@@ -9,7 +9,7 @@ import { SubmitHandler, useForm, FormProvider } from 'react-hook-form';
 import { AddLinkSchema } from '@/lib/types/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from "zod";
-import { FormControl, FormField, FormItem, FormMessage } from '../ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import Loader from '../global/Loader';
 import axios from 'axios';
@@ -18,6 +18,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Rightmenu from './rightmenu';
 import { Loader2Icon } from 'lucide-react';
+import { Button } from '../ui/button';
 
 
 
@@ -31,26 +32,28 @@ interface UserDetail {
 
 const Dashbar = (
 ) => {
- const session =  useSession();
+  const session = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const boxRef = useRef<HTMLDivElement>(null);
   const toggleBox = () => setIsOpen(!isOpen);
   const router = useRouter();
 
+  const [dataloading, setdataLoading] = useState(false);
 
 
-  
-  
+
+
+
 
 
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  
 
 
-  
+
+
 
 
 
@@ -81,9 +84,36 @@ const Dashbar = (
   const isLoading = form.formState.isSubmitting;
   // @ts-ignore
   const userId = session.data?.user.id;
-  
-  
 
+  const { watch, setValue, setError, clearErrors, reset } = form;
+  const url = watch("url");
+
+  const fetchData = async (url: string) => {
+    try {
+      const validationResult = form.trigger("url");
+      validationResult.then(async (isValid) => {
+        if (isValid) {
+          clearErrors('url')
+          setdataLoading(true)
+          const response = await axios.post('https://gemini.alkush.workers.dev/getdata', {
+            prompt: url,
+          });
+          const { title, description } = response.data.data;
+          setValue('title', title);
+          setValue('description', description);
+          setdataLoading(false)
+
+        } else {
+          // URL is invalid; show a validation error
+          setError("url", { type: "manual", message: "Invalid URL format" });
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+ 
 
 
   const onSubmit: SubmitHandler<z.infer<typeof AddLinkSchema>> = async (FormData) => {
@@ -135,13 +165,15 @@ const Dashbar = (
               <FormProvider {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3 w-full">
                   {/* URL Input */}
-                  <div className="flex items-center justify-start gap-4">
-                    <h3 className="text-center text-xl">Url: </h3>
+                  <div className="flex flex-col justify-center  gap-4">
+
                     <FormField
                       control={form.control}
                       name="url"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className='flex flex-col'>
+                          <div className='flex items-center justify-start  gap-4'>
+                          <FormLabel className='text-center text-xl'>Url:</FormLabel>
                           <FormControl>
                             <Input
                               type="url"
@@ -150,10 +182,18 @@ const Dashbar = (
                               {...field}
                             />
                           </FormControl>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+
+                    <div className='bg-gray-500 w-fit px-2 rounded-full py-1'>
+                      {dataloading ? <Loader2Icon className='w-6 h-6 bg-transparent text-white' /> : (<h3 onClick={() => fetchData(url)}
+                        className='cursor-pointer'>✨Use AI
+                      </h3>)}
+                    </div>
+
                   </div>
 
                   {/* Title Input */}
@@ -200,7 +240,8 @@ const Dashbar = (
                   </div>
 
                   {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-                  {/* Save Button */}
+                  
+                  <div className='flex justify-between items-center'>
                   <button
                     type="submit"
                     className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 self-start rounded"
@@ -208,6 +249,11 @@ const Dashbar = (
                   >
                     {!isLoading ? 'Submit' : <Loader />}
                   </button>
+                  <h3 onClick={() => reset()} 
+                  className='text-gray-400 underline underline-offset-4 hover:text-gray-300 active:text-gray-500 cursor-pointer'>
+                    clear
+                  </h3>
+                  </div>
                 </form>
               </FormProvider>
             </motion.div>
@@ -223,9 +269,9 @@ const Dashbar = (
 
           </div>
           <div onClick={() => {
-           
+
             signOut();
-            
+
             router.push('/signin');
 
           }} className='bg-primary-purple/primary-purple-400 px-3  py-1 rounded-full hidden sm:block
@@ -233,9 +279,9 @@ const Dashbar = (
            hover:bg-primary-purple/primary-purple-500 duration-75 ease-in-out text-gray-200 hover:text-gray-100 cursor-pointer'>
             <h3 >Sign Out</h3>
           </div>
-          
-          <Rightmenu userid={userId} /> 
-          
+
+          <Rightmenu userid={userId} />
+
 
         </div>
       </div>
