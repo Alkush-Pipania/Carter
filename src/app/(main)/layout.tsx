@@ -9,8 +9,8 @@ const HomePageLayout = ({children} : {children : React.ReactNode}) => {
   const pathname = usePathname();
   const hideDashbar = pathname?.includes("/edit") ;
   return (
-    <main className='h-screen '>
-       {!hideDashbar && <Dashbar />}
+    <main className=' '>
+      {!hideDashbar && <Dashbar />}
       
       {children}
       <Toaster/>

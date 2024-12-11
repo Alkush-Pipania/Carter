@@ -9,10 +9,16 @@ const config: Config = {
   ],
   theme: {
   	extend: {
-			fontFamily:{
-        myfav : ['YourLink', 'sans-serif'],
-				portland : ['portland', 'sans-serif']
-      },
+  		fontFamily: {
+  			myfav: [
+  				'YourLink',
+  				'sans-serif'
+  			],
+  			portland: [
+  				'portland',
+  				'sans-serif'
+  			]
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -74,10 +80,10 @@ const config: Config = {
   			'brand/brand-primaryblue': '#7000ff',
   			'brand/brand-asliblue': '#0469FF',
   			'brand/brand-dark': '#030014',
-				darkBg: '#1F1B2E',       
-        lightGray: '#EAEAEA',    
-        pureWhite: '#FFFFFF', 
-        purpleShadow: '#3A275C', 
+  			darkBg: '#1F1B2E',
+  			lightGray: '#EAEAEA',
+  			pureWhite: '#FFFFFF',
+  			purpleShadow: '#3A275C',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
@@ -115,6 +121,16 @@ const config: Config = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
+  			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
   		borderRadius: {

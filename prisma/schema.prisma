@@ -15,44 +15,53 @@ datasource db {
 
 model User {
   id            Int             @id @default(autoincrement())
-  secretkey     String      @unique   @default(uuid())
+  secretkey     String          @unique   @default(uuid())
   email         String          @unique
   username      String?
   password      String
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   
-  linkform      Linkform[]
+  linkform      Linkform[]      // Global links
   LinkformTrash LinkformTrash[]
+  varified      Boolean         @default(false)
 
-  varified     Boolean         @default(false)
+  // New relation for folders
+  folders       Folder[]        // Folders owned by the user
 }
 
-model Verification {
-  id  String      @id @default(uuid())
-  email String
-  token  String
-  expires DateTime
+model Folder {
+  id            Int             @id @default(autoincrement())
+  name          String          // Folder name
+  secretKey     String          @unique @default(uuid()) // Secret key for the folder
+  userID        Int
+  user          User            @relation(fields: [userID], references: [id])
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 
-  @@unique([email , token])
-}
+  // Links related to this folder
+  links         Linkform[]      // Relation to Linkform model
 
-
-model Linkform {
-  secret_Id   String      @id @default(uuid())
-  links       String
-  title       String
-  imgurl      String?
-  tobefind    Boolean     @default(false)
-  description String
-  createdAt   DateTime @default(now())
-  userID      Int
-  user        User     @relation(fields: [userID], references: [id])
-
-  // Index to optimize user-related queries
   @@index([userID])
 }
 
+model Linkform {
+  secret_Id     String          @id @default(uuid())
+  links         String
+  title         String
+  imgurl        String?
+  tobefind      Boolean         @default(false)
+  description   String
+  createdAt     DateTime        @default(now())
+  userID        Int
+  user          User            @relation(fields: [userID], references: [id])
+
+  // Global links will not have a folder
+  folderID      Int?            // Null for global links, or an ID for links in a folder
+  folder         Folder?        @relation(fields: [folderID], references: [id])
+
+  @@index([userID])
+}
 
 model LinkformTrash {
   trash_Id    Int      @id @default(autoincrement())
@@ -70,4 +79,13 @@ model LinkformTrash {
   restoredAt DateTime?
 
   @@index([userID])
+}
+
+model Verification {
+  id        String    @id @default(uuid())
+  email     String
+  token     String
+  expires   DateTime
+
+  @@unique([email , token])
 }

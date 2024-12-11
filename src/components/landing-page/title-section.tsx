@@ -73,7 +73,7 @@ const TitleSection: React.FC<TitleSectionProps> = ({
             font-semibold
           "
           >
-           {title === 'Organize, Share, and Manage Your Links with Ease' ? (<div>Organize, Share, and Manage Your <Cover>Links</Cover>  with Ease</div>): (title)}
+           {title === 'Organize, Share, and Manage Your Links with Ease' ? (<div>Organize, Share, and Manage Your <Cover >Links</Cover>  with Ease</div>): (title)}
           </h1>
         )}
       </section>
