@@ -32,3 +32,13 @@ export const EditProfileSchema = z.object({
   username: z.string().describe('Username').min(4, { message: 'Username must be at least 4 characters long' }),
   email: z.string().describe('Email').email({ message: 'Invalid email' }),
 })
+
+
+export const CreateLinkCartSchema = z.object({
+  name: z
+  .string({
+    required_error: "Name is required", 
+  })
+  .min(1, { message: "Name must be at least 1 character long" })
+  .max(40, { message: "Too long to be a name" }),
+})

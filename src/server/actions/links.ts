@@ -3,9 +3,11 @@
 import { authOption } from "@/lib/auth";
 import { error } from "console";
 import { getServerSession } from "next-auth"
-import { deltelinkcarddb, linkformdetaildb, retrivedatadb, toggleclouddb, updatelinkformdb, updateuserdatadb } from "../db/links";
+import { createlinkcarterdb, deltelinkcarddb, folderdatadb, getuserdatadb, linkformdetaildb, retrivedatadb, toggleclouddb, updatelinkformdb, updateuserdatadb } from "../db/links";
 import { number, string } from "zod";
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation"
+import exp from "constants";
+import prisma from "@/lib/prisma";
 
 export async function togglecloud(id : string){
   const { user } = await getServerSession(authOption);
@@ -112,4 +114,50 @@ export async function updateuserdata(userdata : userdatatype ){
 
 }
 
+export async function createlinkcarter(values : { name : any}){
+  const user = await getServerSession(authOption);
+  const user_id = user.user.id;
+  if(!user){
+    return {error : true , message : "User is not logged in"}
+  }
+  if(!values.name){
+    return {error : true , message : "Name is required"}
+  }
 
+  const isSucces = await createlinkcarterdb(values.name , user_id)
+  
+  
+  return{
+    message : !isSucces.error ? "Succesfully created" : "There was an error while creating the folder",
+    error : isSucces.error,
+    data : isSucces.data,
+  }
+}
+
+export async function folderdata(){
+  const user = await getServerSession(authOption);
+  const user_id = user.user.id;
+  if(!user){
+    return {error : true , message : "User is not logged in"}
+  }
+  const isSucces = await folderdatadb(user_id);
+
+  return{
+    data : isSucces.data,
+    error : isSucces.error,
+  }
+  
+}
+
+export async function getuserdata(){
+  const user = await getServerSession(authOption);
+  if(!user){
+    return {error : true , message : "User is not logged in"}
+  }
+  const isSucces = await getuserdatadb(user.user.id);
+
+  return{
+    data : isSucces.data,
+    error : isSucces.error
+  }
+}

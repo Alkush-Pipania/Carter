@@ -1,6 +1,7 @@
 "use server"
 import prisma from "@/lib/prisma"
 import { error } from "console";
+import { FaLastfmSquare } from "react-icons/fa";
 
 export async function toggleclouddb({
   user_id,
@@ -148,4 +149,58 @@ export async function verificationq(user_id : string){
   } catch(e){
     console.log(e)
   }
+}
+
+export async function createlinkcarterdb(name : string , user_id : string){
+  if(!user_id){
+    return { error : true , message : "error"}
+  }
+
+  try{
+    const createlinkcart = await prisma.folder.create({
+      data :{
+        name : name,
+        userID : parseInt(user_id , 10)
+      },
+    })
+    return{ error : false  , message : "successfully created!" , data : createlinkcart}
+  }catch(e){
+    return { error : true , message : "error"}
+  }
+}
+
+export async function folderdatadb(user_id : string){
+  if(!user_id){
+    return { error : true , message : "error"}
+  }
+  try{
+    const data = await prisma.folder.findMany({
+      where : {
+        userID : parseInt(user_id , 10)
+      }
+    })
+    return { error : false , data : data}
+  }catch(error){
+    return {error : true , message : "There was an error while fetching the folder data"}
+  }
+}
+
+export async function getuserdatadb(userId : string){
+ if(!userId){
+  return { error : true , message : "error"}
+ }
+  try{
+    const data = await prisma.user.findFirst({
+      where :{
+        id : parseInt(userId , 10)
+      },
+      select:{
+        username : true
+      }
+    })
+    return{error : false , data : data}
+  }catch(e){
+    return { error : true , message : "error"}
+  }
+
 }

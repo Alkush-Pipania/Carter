@@ -141,7 +141,7 @@ const Dashbar = (
   };
 
   return (
-    <div className='w-[100%] z-10 my-3 flex justify-between items-start px-2'>
+    <div className='w-[100%] z-10 my-5 bg-brand/brand-dark/60 flex justify-between sticky top-0 items-start px-2'>
       <Link href="/" >
 
         <Image src={carterlogo} alt='logo' className='w-[50px]' />
