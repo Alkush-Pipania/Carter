@@ -25,15 +25,25 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "@/components
 import { DialogTitle } from "@radix-ui/react-dialog"
 import { CreateLinkCart } from "./createfolder"
 import { folderdata, getuserdata } from "@/server/actions/links"
-import { useSession } from "next-auth/react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { usePathname } from "next/navigation"
 
 
 export function AppSidebar() {
+
   const [isLoading, setIsLoading] = React.useState(true)
   const [cartdata, setCartdata] = React.useState<any>([])
   const [userdata, setUserdata] = React.useState<any>("");
+  const [activeRoute, setActiveRoute] = React.useState<any>();
+  const pathname = usePathname();
 
+  React.useEffect(() => {
+    function handleRouteChange() {
+      const pathId = pathname.split('/').pop();
+      setActiveRoute(pathId);
+    }
+    handleRouteChange();
+  }, [pathname])
 
   React.useEffect(() => {
     async function fetchfolderdata() {
@@ -43,8 +53,7 @@ export function AppSidebar() {
       setCartdata(res.data)
       setIsLoading(false)
     }
-
-    fetchfolderdata()
+    fetchfolderdata();
   }, [])
 
 
@@ -82,7 +91,14 @@ export function AppSidebar() {
 
               <SidebarMenuItem key="#1">
                 <SidebarMenuButton asChild>
-                  <Link href="/dashboard/" className="flex items-center gap-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
+                  <Link onClick={() => setActiveRoute("dashboard")} href="/dashboard/"
+                    className={`flex 
+                  ${activeRoute === "dashboard" ?
+                        ('bg-zinc-800/50 text-white') :
+                        ('text-zinc-400 '
+                        )}
+                   hover:bg-zinc-800/50 active:bg-zinc-900 hover:text-zinc-100
+                  items-center gap-2 `}>
                     <Globe className="h-4 w-4" />
                     <span >Global Links</span>
                   </Link>
@@ -145,9 +161,14 @@ export function AppSidebar() {
                       cartdata?.map((data: any) => (
                         <SidebarMenuSubItem className="cursor-pointer" key={data.id}>
                           <SidebarMenuSubButton asChild>
-                            <Link
+                            <Link onClick={() => setActiveRoute(data.id)}
                               href={`/dashboard/cart/${data.id}`}
-                              className="flex w-full justify-between items-center gap-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100"
+                              className={`
+                                ${activeRoute == data.id ?
+                                  ('bg-zinc-800/50 text-white') :
+                                  ('text-zinc-400 ')}
+                                  flex w-full justify-between items-center gap-2  hover:bg-zinc-800/50 hover:text-zinc-100 active:bg-zinc-900
+                                `}
                             >
                               <span className="truncate">{data.name}</span>
 

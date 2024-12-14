@@ -15,7 +15,7 @@ const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
       {!hideDashbar && <Dashbar />}
       <SidebarProvider className="m-0 p-0">
       <div className="flex">
-      <AppSidebar />
+       <AppSidebar />
       <SidebarTrigger/>
       
       </div>
