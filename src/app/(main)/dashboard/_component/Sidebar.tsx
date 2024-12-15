@@ -56,6 +56,10 @@ export function AppSidebar() {
     fetchfolderdata();
   }, [])
 
+  const handleFolderCreate = (newfolder) =>{
+    setCartdata([...cartdata,newfolder])
+  }
+
 
   return (
     <Sidebar className="border-r-0  text-zinc-100">
@@ -131,7 +135,7 @@ export function AppSidebar() {
                       Create LinkCart
                     </DialogTitle>
                   </DialogHeader>
-                  <CreateLinkCart />
+                  <CreateLinkCart onfoldercreate={handleFolderCreate}  />
                 </DialogContent>
               </Dialog>
 

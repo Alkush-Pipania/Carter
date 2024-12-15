@@ -32,7 +32,7 @@ const Dashboard = async () => {
 
 
   return (
-    <section className=" w-full  ">
+    <section className=" w-full h-screen  ">
       
      <Content datacard={datacard}/>
      

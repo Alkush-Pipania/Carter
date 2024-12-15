@@ -12,7 +12,7 @@ import { z } from "zod";
 import { useRouter } from 'next/navigation';
 import { DialogClose } from "@/components/ui/dialog";
 
-export  function CreateLinkCart() {
+export  function CreateLinkCart({ onfoldercreate }) {
   const router = useRouter();
   const {toast} = useToast();
   const form = useForm<z.infer<typeof CreateLinkCartSchema>>({
@@ -24,6 +24,7 @@ export  function CreateLinkCart() {
 
   async function onSubmit(values : z.infer<typeof CreateLinkCartSchema>){
     const data = await createlinkcarter(values);
+    onfoldercreate(data.data)
     if(data?.message){
       toast({
         title : data.error ? "Error" : "Success",
