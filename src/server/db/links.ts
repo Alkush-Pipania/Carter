@@ -195,12 +195,56 @@ export async function getuserdatadb(userId : string){
         id : parseInt(userId , 10)
       },
       select:{
-        username : true
+        username : true,
       }
     })
     return{error : false , data : data}
   }catch(e){
     return { error : true , message : "error"}
   }
+}
 
+export async function getsettingdatadb(userId : string){
+  if(!userId){
+   return { error : true , message : "error"}
+  }
+   try{
+     const data = await prisma.user.findFirst({
+       where :{
+         id : parseInt(userId , 10)
+       },
+       select:{
+         username : true,
+         email : true,
+         varified : true,
+       }
+     })
+     return{error : false , data : data}
+   }catch(e){
+     return { error : true , message : "error"}
+   }
+ 
+ }
+
+export async function updateusernamedb(data : { username : string}, userId : string){
+  if(!data){
+    return { error : true , message : "no username given"}
+  }
+  if(!userId){
+    return { error : true , message : "error"}
+  }
+  try{
+    await prisma.user.update({
+      where : {
+        id : parseInt(userId , 10)
+      },
+      data:{
+        username: data.username,
+      }
+    })
+    return { error : false , message : "success"}
+  }catch(e){
+    console.log(e)
+    return { error : true , message : "error"}
+  }
 }

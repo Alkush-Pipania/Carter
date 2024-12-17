@@ -24,9 +24,9 @@ import Content from "./_component/Content";
 const Dashboard = async () => {
   const datacard = await getLinklist();
 
-  const session = getServerSession(authOption);
-  if (!session || !datacard) {
-    redirect('/')
+  const session = await getServerSession(authOption);
+  if (!session) {
+    redirect('/signin')
   }
 
 

@@ -26,17 +26,22 @@ import { DialogTitle } from "@radix-ui/react-dialog"
 import { CreateLinkCart } from "./createfolder"
 import { folderdata, getuserdata } from "@/server/actions/links"
 import { Skeleton } from "@/components/ui/skeleton"
-import { usePathname } from "next/navigation"
+import { redirect, usePathname } from "next/navigation"
+import { SettingsDialog } from "./setting/settings-dialog"
+import { useSession } from "next-auth/react"
 
 
 export function AppSidebar() {
+  
 
   const [isLoading, setIsLoading] = React.useState(true)
   const [cartdata, setCartdata] = React.useState<any>([])
-  const [userdata, setUserdata] = React.useState<any>("");
+  const [userdata, setUserdata] = React.useState<any >(null);
   const [activeRoute, setActiveRoute] = React.useState<any>();
   const pathname = usePathname();
 
+ 
+  
   React.useEffect(() => {
     function handleRouteChange() {
       const pathId = pathname.split('/').pop();
@@ -44,6 +49,8 @@ export function AppSidebar() {
     }
     handleRouteChange();
   }, [pathname])
+
+  
 
   React.useEffect(() => {
     async function fetchfolderdata() {
@@ -56,10 +63,11 @@ export function AppSidebar() {
     fetchfolderdata();
   }, [])
 
-  const handleFolderCreate = (newfolder) =>{
-    setCartdata([...cartdata,newfolder])
+  const handleFolderCreate = (newfolder) => {
+    setCartdata([...cartdata, newfolder])
   }
-
+  
+  
 
   return (
     <Sidebar className="border-r-0  text-zinc-100">
@@ -135,7 +143,7 @@ export function AppSidebar() {
                       Create LinkCart
                     </DialogTitle>
                   </DialogHeader>
-                  <CreateLinkCart onfoldercreate={handleFolderCreate}  />
+                  <CreateLinkCart onfoldercreate={handleFolderCreate} />
                 </DialogContent>
               </Dialog>
 
@@ -205,18 +213,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         {/*  */}
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
-                  <Settings className="h-4 w-4" />
-                  <span>Setting</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+
+        <SettingsDialog />
+
         {/*  */}
         <SidebarGroup className="mt-auto border-t border-zinc-800">
           <SidebarGroupContent>
