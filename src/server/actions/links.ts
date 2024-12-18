@@ -3,7 +3,7 @@
 import { authOption } from "@/lib/auth";
 import { error } from "console";
 import { getServerSession } from "next-auth"
-import { createlinkcarterdb, deltelinkcarddb, folderdatadb, getsettingdatadb, getuserdatadb, linkformdetaildb, retrivedatadb, toggleclouddb, updatelinkformdb, updateuserdatadb, updateusernamedb } from "../db/links";
+import { createlinkcarterdb, deleteAccountdb, deltelinkcarddb, folderdatadb, getsettingdatadb, getuserdatadb, linkformdetaildb, retrivedatadb, toggleclouddb, updatelinkformdb, updateuserdatadb, updateusernamedb, verifyOTPdb, verifyUserdb } from "../db/links";
 import { number, string } from "zod";
 import { redirect } from "next/navigation"
 import exp from "constants";
@@ -186,4 +186,34 @@ export async function updateusernameaction(username : any){
     error : isSucces.error,
     message : isSucces.error ? "There was an error while updating the username" : "Succesfully updated"
   }
+}
+
+export async function verifyOTP( value : string , email : string){
+  const auth = await getServerSession(authOption);
+  if(!auth){
+    redirect('/signin');
+  }
+
+  const isSucces = await verifyOTPdb(value , email);
+  if(!isSucces.error){
+    await verifyUserdb(auth.user.id);
+  }
+  return{
+    error : isSucces.error,
+    message : isSucces.error ? "There was an error while verifying the OTP" : "Succesfully verified"
+  }
+}
+
+export async function deleteAccount( email : string){
+  const auth = await getServerSession(authOption);
+  if(!auth){
+    return {error : true , message : "User is not logged in"}
+  }
+  const isSucces = await deleteAccountdb(email , auth.user.id);
+
+  return{
+    error : isSucces.error,
+    message : isSucces.error ? "There was an error while deleting the account" : "Succesfully deleted"
+  }
+
 }

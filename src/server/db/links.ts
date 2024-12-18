@@ -248,3 +248,55 @@ export async function updateusernamedb(data : { username : string}, userId : str
     return { error : true , message : "error"}
   }
 }
+
+export async function verifyOTPdb(value : any , email : string){
+  if(!value){
+    return { error : true , message : "no otp given"}
+  }
+  try{
+    await prisma.verification.findFirst({
+      where : {
+        email : email ,
+        token : value,
+      }
+    })
+    return { error : false , message : "success"}
+  } catch(e){
+    return { error : true , message : "error"}
+  }
+}
+
+export async function verifyUserdb(user_id : string){
+  if(!user_id){
+    return { error : true , message : "error"}
+  }
+  try{
+    await prisma.user.update({
+      where : {
+        id : parseInt(user_id , 10)
+      },
+      data: {
+        varified : true
+      }
+    })
+    return { error : false , message : "success"}
+  }catch(e){
+    return { error : true , message : "error"}
+  }
+}
+
+export async function deleteAccountdb( email : string , 
+  user_id : string
+){
+  try{
+    await prisma.user.delete({
+      where : {
+        id : parseInt(user_id , 10),
+        email : email
+      }
+    })
+    return { error : false , message : "success"}
+  }catch(e){
+    return { error : true , message : "error"}
+  }
+}

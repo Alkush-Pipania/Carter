@@ -47,8 +47,16 @@ export const updateusername = z.object({
   username: z.string().describe('Username').min(4, { message: 'Username must be at least 4 characters long' }),
 })
 
+// export const OTPSchema = z.object({
+//   otp: z.string()
+//     .length(6, { message: "OTP must be exactly 6 digits" })
+//     .regex(/^\d+$/, { message: "OTP must contain only numbers" })
+// });
+
 export const OTPSchema = z.object({
-  otp: z.string()
-    .length(6, { message: "OTP must be exactly 6 digits" })
-    .regex(/^\d+$/, { message: "OTP must contain only numbers" })
+  otp: z.string().length(6, "OTP must be 6 digits")
 });
+
+export const DeleteAccountSchema = z.object({
+  email: z.string().email({ message: 'Invalid email' })
+})

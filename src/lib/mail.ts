@@ -5,7 +5,7 @@ import nodemailer from "nodemailer";
 const domain = 'http://localhost:3000';
 
 export const sendVerificationEmail = async (email : string, token : string) => {
-  const confirmationLink = `${domain}/verify-email?token=${token}`;
+  
 
   // Configure the transport service (e.g., Gmail, custom SMTP)
   const transporter = nodemailer.createTransport({
@@ -23,7 +23,7 @@ export const sendVerificationEmail = async (email : string, token : string) => {
     from: `workofalkushpipania@gmail.com`, 
     to: email, //
     subject: "Verify your email", 
-    html: `<p>Click <a href="${confirmationLink}">here</a> to verify your email.</p>`, 
+    html: `<p>Here is your OTP . ${token}</p>`, 
   };
 
   try {

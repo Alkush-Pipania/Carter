@@ -4,13 +4,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
+import { sendVerificationEmail } from "@/lib/mail"
+import { generateVerificationToken } from "@/lib/token"
 import { OTPSchema, updateusername } from "@/lib/types/zod"
-import { updateusernameaction } from "@/server/actions/links"
+import { updateusernameaction, verifyOTP } from "@/server/actions/links"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Label } from "@radix-ui/react-label"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { Deletedialog } from "./deletedialog"
 
 type UserSettings = {
   username: string;
@@ -23,6 +26,7 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
   const { toast } = useToast();
   const [verificationsend, setverificationsend] = useState<boolean>(false);
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
+  const [loading , setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof updateusername>>({
     resolver: zodResolver(updateusername),
@@ -32,25 +36,32 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
   })
 
   const verificationcode = useForm<z.infer<typeof OTPSchema>>({
-    resolver: zodResolver(updateusername),
+    resolver: zodResolver(OTPSchema),
     defaultValues: {
       otp: "",
     },
   })
 
   async function codeSubmit(value: z.infer<typeof OTPSchema>) {
-    console.log(value)
-  }
-
-  const handleChange = (element: HTMLInputElement, index: number) => {
-    if (isNaN(parseInt(element.value))) return false
-
-    setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))])
-
-    if (element.nextSibling && element.value !== '') {
-      (element.nextSibling as HTMLInputElement).focus()
+    const otpString = otp.join('');
+    if(!userdata?.email){
+      return
     }
-  }
+    try{
+      const res = await verifyOTP(otpString , userdata?.email);
+      if(res.message){
+        toast({
+          title : res.error ? "Error" : "Success",
+          description : res.message,
+          variant : res.error ? "destructive" : "default"
+        })
+      }
+    }catch(e){
+      console.log(e)
+    }
+    
+
+  } 
 
   async function onSubmit(value: z.infer<typeof updateusername>) {
     const data = await updateusernameaction(value);
@@ -70,6 +81,30 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
     setIsDialogOpen(true);
   }
 
+
+  async function Sendverification() {
+      try {
+        setLoading(true)
+        const token = await generateVerificationToken(userdata?.email);
+        const success = await sendVerificationEmail(userdata?.email, token.token);
+        console.log(token , success)
+        setLoading(false)
+        setverificationsend(true)
+        if(success.success == true){
+          toast({
+            title: "Success",
+            description: success.message,
+            variant: "default"
+          })
+        }
+      }catch(e){
+        toast({
+          title: "Error",
+          description: 'Failed to send verification email',
+          variant: "destructive"
+        })
+      }
+    }
 
 
 
@@ -140,7 +175,11 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
                   <p>Your current email is{" "}
                     <span className=" gap-x-1 font-bold">{userdata.email}</span>. We'll send a temporary verification code to this email.</p>
                   {verificationsend == false ? (
-                    <Button
+                    <>
+                    {loading === true ? (
+                      <>loading...</>
+                    ): (
+                      <Button onClick={Sendverification}
                       className="bg-primary-blue/primary-blue-500
                     hover:bg-primary-blue/primary-blue-600
                     active:bg-primary-blue/primary-blue-700 transition-all
@@ -148,6 +187,8 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
                     ">
                       Send verification code
                     </Button>
+                    )}
+                    </>
                   ) : (
                     <Form {...verificationcode}>
                       <form className="flex flex-col items-start gap-y-3" onSubmit={verificationcode.handleSubmit(codeSubmit)}>
@@ -157,29 +198,31 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
-                                <div className="flex gap-2">
-                                  {otp.map((data, index) => {
-                                    return (
-                                      <Input
-                                        className="w-10 h-10 text-center"
-                                        type="text"
-                                        name="otp"
-                                        maxLength={1}
-                                        key={index}
-                                        value={data}
-                                        onChange={(e) => handleChange(e.target, index)}
-                                        onFocus={(e) => e.target.select()}
-                                      />
-                                    )
-                                  })}
-                                </div>
+                                <Input
+                                  {...field}
+                                  type="text"
+                                  maxLength={6}
+                                  value={otp.join('')}
+                                  onChange={(e) => {
+                                    const inputValue = e.target.value;
+                                    // Ensure only digits
+                                    if (/^\d*$/.test(inputValue)) {
+                                      // Split the input into individual digits
+                                      const newOtp = inputValue.split('').slice(0, 6);
+                                      setOtp(newOtp.concat(Array(6 - newOtp.length).fill('')));
+                                      field.onChange(e);
+                                    }
+                                  }}
+                                  className="w-full"
+                                  placeholder="Enter 6-digit OTP"
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
                         <Button
-                        disabled={form.formState.isSubmitting} type="submit"
+                          disabled={verificationcode.formState.isSubmitting} type="submit"
                           className="bg-primary-blue/primary-blue-500
                            hover:bg-primary-blue/primary-blue-600
                              active:bg-primary-blue/primary-blue-700 transition-all
@@ -200,16 +243,7 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
       </div>
 
 
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-white">Danger zone</h2>
-        <Button
-          type="button"
-          variant="destructive"
-        // onClick={handleDeleteAccount}
-        >
-          Delete my account
-        </Button>
-      </div>
+      <Deletedialog email = {userdata?.email}/>
 
 
 
