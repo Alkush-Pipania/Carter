@@ -16,6 +16,7 @@ import github from "../../../public/social/github.png"
 import instagram from "../../../public/social/instagram.png"
 
 import { FaHeart } from "react-icons/fa";
+import { WaitlistForm } from "@/components/waitinglist";
 
 
 export default function Home() {
@@ -37,22 +38,7 @@ export default function Home() {
           <div className="flex mx-3 max-w-[620px] gap-y-5 mt-10 flex-col items-start justify-start">
             <h3 className="text-3xl font-bold ">Save links to visit later</h3>
             <p className="max-w-[512px] text-gray-400">Store your links securely in a well-organized format and access them anytime with ease. Seamlessly share links with others without clutter, and manage them like a pro by categorizing, tagging, and sorting for quick retrieval. Accidentally delete something? No problem—restore links from trash with a single click.</p>
-            <div className="flex gap-4 sm:gap-6">
-              <div onClick={() => {
-                if (session.data) {
-                  router.push('/dashboard')
-                } else {
-                  signIn()
-                }
-              }}>
-                <ShinyButton className="bg-washed-purple/washed-purple-500 text-nowrap font-bold hover:bg-washed-purple/washed-purple-700">let's Carter</ShinyButton>
-              </div>
-              <div onClick={() => {
-                router.push('/find')
-              }}>
-                <ShinyButton className="bg-washed-purple/washed-purple-500 text-nowrap font-bold hover:bg-washed-purple/washed-purple-700">Secret code ? </ShinyButton>
-              </div>
-            </div>
+            
           </div>
           <div className="mx-10 flex items-center relative w-[250px]">
             <Image src={heroimg} alt='heroimg' className="w-full  " />
@@ -99,23 +85,9 @@ export default function Home() {
       </section>
 
       <section
-        className='overflow-hidden gap-y-5 px-4 h-[300px]   flex flex-col items-center justify-center sm:px-6 mb-[20px] sm:mb-12   '
+        className='  flex flex-col items-center justify-center sm:px-6 mb-[20px] sm:mb-12   '
       >
-        <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-primary-purple/primary-purple-500 -z-10 '
-        />
-        <div className="flex flex-row  items-center justify-center gap-2">
-          <Image src={link} alt="linklogo" className="sm:w-[60px] w-[120px] h-auto"></Image>
-          <h3 className="text-4xl font-bold font-portland ">Start saving links</h3>
-        </div>
-        <h2
-          onClick={() => {
-            if (session.data) {
-              router.push('/dashboard')
-            } else {
-              signIn()
-            }
-          }}
-          className="text-brand/brand-dark cursor-pointer font-medium hover:bg-gray-300  bg-gray-400 px-2 py-2 rounded-full">Get started now {'>'}</h2>
+        <WaitlistForm/>
       </section>
 
       <footer

@@ -71,3 +71,9 @@ model LinkformTrash {
 
   @@index([userID])
 }
+
+
+model watinglist{
+  Id    Int      @id @default(autoincrement())
+  email String
+}

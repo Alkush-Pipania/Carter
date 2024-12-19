@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth"
 import { deltelinkcarddb, linkformdetaildb, retrivedatadb, toggleclouddb, updatelinkformdb, updateuserdatadb } from "../db/links";
 import { number, string } from "zod";
 import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
 
 export async function togglecloud(id : string){
   const { user } = await getServerSession(authOption);
@@ -112,4 +113,15 @@ export async function updateuserdata(userdata : userdatatype ){
 
 }
 
-
+export async function waitinglist(email : string){
+  try{
+    const res = await prisma.watinglist.create({
+      data : {
+        email : email
+      }
+    })
+    return {error : false , msg : "succesfull"}
+  }catch(e){
+    return { error : true , msg : "error"}
+  }
+}

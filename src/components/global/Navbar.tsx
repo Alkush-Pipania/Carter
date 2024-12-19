@@ -14,15 +14,7 @@ const Navbar = () => {
       <Image src={carterlogo} alt='logo' className='w-[50px]' />
       Carter</Link>
 
-      <div className='bg-primary-purple/primary-purple-400 px-3 border-x-white border-x-2 py-1 rounded-full 
-      hover:border-x-primary-purple/primary-purple-500
-      hover:bg-primary-purple/primary-purple-500 duration-75 ease-in-out text-gray-200 hover:text-gray-100 cursor-pointer'>
-        {session ? (
-          <h3 onClick={() => signOut()}>Sign Out</h3>
-        ) : (
-          <h3 onClick={() => signIn()}>Sign In</h3>
-        )}
-      </div>
+      
     </div>
   );
 };
