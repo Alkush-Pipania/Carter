@@ -1,12 +1,10 @@
 "use client";
 import Link from 'next/link';
 import React from 'react';
-import { signOut, signIn, useSession } from "next-auth/react";
 import Image from 'next/image';
 import carterlogo from "../../../public/logo.png"
 
 const Navbar = () => {
-  const { data: session } = useSession();
 
   return (
     <div className='p-4 flex justify-between items-center'>

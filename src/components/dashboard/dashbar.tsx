@@ -16,7 +16,6 @@ import axios from 'axios';
 import carterlogo from "../../../public/logo.png"
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Rightmenu from './rightmenu';
 import { Loader2Icon } from 'lucide-react';
 import { Button } from '../ui/button';
 
@@ -280,7 +279,6 @@ const Dashbar = (
             <h3 >Sign Out</h3>
           </div>
 
-          <Rightmenu userid={userId} />
 
 
         </div>

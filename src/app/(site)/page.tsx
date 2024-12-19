@@ -1,9 +1,7 @@
 "use client"
-import { signIn, useSession } from "next-auth/react";
 import heroimg from "../../../public/Section 1.png"
 import Image from "next/image";
 import TitleSection from "@/components/landing-page/title-section";
-import ShinyButton from "@/components/ui/shiny-button";
 import { useRouter } from "next/navigation";
 import documlogo from "../../../public/Document.png"
 import Usecases from "@/components/global/landingcom";
@@ -20,7 +18,6 @@ import { WaitlistForm } from "@/components/waitinglist";
 
 
 export default function Home() {
-  const session = useSession();
   const router = useRouter();
   return (
     <>
