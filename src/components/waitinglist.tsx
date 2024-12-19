@@ -5,6 +5,7 @@ import { Sparkles } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
+import { waitinglist } from "@/server/actions/links"
 // import { waitinglist } from "@/server/actions/links"
 
 export function WaitlistForm() {
@@ -13,10 +14,10 @@ export function WaitlistForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // const res = await waitinglist(email);
-    // if(res.error === false){
-    //    setIsSubmitted(true)
-    // }
+    const res = await waitinglist(email);
+    if(res.error === false){
+       setIsSubmitted(true)
+    }
     setIsSubmitted(true)
    
   }
