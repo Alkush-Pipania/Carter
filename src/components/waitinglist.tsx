@@ -6,17 +6,20 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { waitinglist } from "@/server/actions/links"
+import Loader from "./global/Loader"
 // import { waitinglist } from "@/server/actions/links"
 
 export function WaitlistForm() {
   const [email, setEmail] = useState("")
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const  [ isloading , setloading ] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setloading(true)
     const res = await waitinglist(email);
     console.log(res)
-    
+    setloading(false)
        setIsSubmitted(true)
     
     
@@ -51,12 +54,17 @@ export function WaitlistForm() {
                   className="h-12 bg-purple-900/20 border-purple-500/20 text-white placeholder:text-purple-200/50"
                 />
               </div>
-              <Button 
+              {isloading  ?(
+                <div className="w-full h-12 flex items-center justify-center bg-purple-500 hover:bg-purple-600 text-white"> <Loader/></div>
+               
+              ):(
+                <Button 
                 type="submit" 
                 className="w-full h-12 bg-purple-500 hover:bg-purple-600 text-white"
               >
                 Join Waitlist
               </Button>
+              )}
             </form>
           ) : (
             <div className="p-4 text-center rounded-lg bg-purple-500/10">
