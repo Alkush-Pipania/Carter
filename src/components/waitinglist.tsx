@@ -12,11 +12,11 @@ export function WaitlistForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const res = await waitinglist(email);
-    if(res.error === false){
-       setIsSubmitted(true)
-    }
+    // e.preventDefault()
+    // const res = await waitinglist(email);
+    // if(res.error === false){
+    //    setIsSubmitted(true)
+    // }
    
   }
 
