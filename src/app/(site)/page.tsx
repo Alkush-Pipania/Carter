@@ -83,18 +83,21 @@ export default function Home() {
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            viewport={{ once: true, margin: "-50px" }}>
+            viewport={{ once: true, margin: "-50px" }} 
+          >
             <div className="flex lg:gap-24 lg:mx-32 items-start justify-start gap-6 sm:mx-8 mr-5 flex-col sm:flex-row">
               <Usecases logo={documlogo} label="Long useful articles" para="You found a long, useful, and important article but can't read it right now? Not a problem. Just save it to Carter to read later." />
               <Usecases logo={screenlogo} label="Interesting websites" para="You found a ridiculously cool and interesting website you want to check out later? Not a problem. Just save it to carter to visit later." />
             </div>
+
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: "easeInOut" }}
-            viewport={{ once: true, margin: "-50px" }}>
+            viewport={{ once: true, margin: "-50px" }} 
+          >
             <div className="flex lg:gap-24 lg:mx-32 items-start justify-start gap-6 sm:mx-8 mr-5 flex-col sm:flex-row">
               <Usecases logo={cart} label="Items on online shops" para="You found an item on an online shop you don't want now but might want to buy later? Not a problem. Just save it to Carter." />
               <Usecases logo={music} label="Videos and music" para="Your friend shared a video with you, but you want to watch it tonight. Not a problem. Just save it to Carter to watch it whenever you want." />
