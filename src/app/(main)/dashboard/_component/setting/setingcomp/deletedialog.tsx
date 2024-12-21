@@ -7,11 +7,12 @@ import { deleteAccount } from "@/server/actions/links";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { CircleAlert } from 'lucide-react';
+import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export function Deletedialog(data: { email: string }) {
-
+  
 
   const form = useForm<z.infer<typeof DeleteAccountSchema>>({
     resolver: zodResolver(DeleteAccountSchema),
@@ -23,6 +24,12 @@ export function Deletedialog(data: { email: string }) {
   async function onSubmit(value: z.infer<typeof DeleteAccountSchema>) {
     try{
       const res = await deleteAccount(value);
+      if(res.error == true){
+        form.setError('email',{
+          message : res.message
+        })
+      }
+      signOut({callbackUrl : '/signin'});
     }catch(e){
       console.log("error with your account")
     }
@@ -65,7 +72,7 @@ export function Deletedialog(data: { email: string }) {
                   <FormControl>
                     <Input
                       className="hover:border-gray-400
-                        focus:border-gray-300 text-center px-2
+                        focus:border-gray-300 text-start px-3
                         "
                       placeholder={data.email} {...field} />
                   </FormControl>
@@ -75,8 +82,8 @@ export function Deletedialog(data: { email: string }) {
             />
             <Button disabled={form.formState.isSubmitting} type="submit"
               className=" w-full
-              bg-primary-blue/primary-blue-500 active:bg-primary-blue/primary-blue-700 hover:bg-primary-blue/primary-blue-600">
-              Save changes
+              bg-red-500 hover:bg-red-600 active:bg-red-700">
+               Delete my Account
             </Button>
           </form>
         </Form>

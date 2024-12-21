@@ -113,7 +113,7 @@ const Dashbar = (
     }
   }
 
- 
+
 
 
   const onSubmit: SubmitHandler<z.infer<typeof AddLinkSchema>> = async (FormData) => {
@@ -173,15 +173,15 @@ const Dashbar = (
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
                           <div className='flex items-center justify-start  gap-4'>
-                          <FormLabel className='text-center text-xl'>Url:</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="url"
-                              placeholder="https://"
-                              className="w-full bg-Neutrals/neutrals-10 outline-none px-1 py-1 rounded-xl"
-                              {...field}
-                            />
-                          </FormControl>
+                            <FormLabel className='text-center text-xl'>Url:</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="url"
+                                placeholder="https://"
+                                className="w-full bg-Neutrals/neutrals-10 outline-none px-1 py-1 rounded-xl"
+                                {...field}
+                              />
+                            </FormControl>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -240,19 +240,19 @@ const Dashbar = (
                   </div>
 
                   {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-                  
+
                   <div className='flex justify-between items-center'>
-                  <button
-                    type="submit"
-                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 self-start rounded"
-                    disabled={isLoading}
-                  >
-                    {!isLoading ? 'Submit' : <Loader />}
-                  </button>
-                  <h3 onClick={() => reset()} 
-                  className='text-gray-400 underline underline-offset-4 hover:text-gray-300 active:text-gray-500 cursor-pointer'>
-                    clear
-                  </h3>
+                    <button
+                      type="submit"
+                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 self-start rounded"
+                      disabled={isLoading}
+                    >
+                      {!isLoading ? 'Submit' : <Loader />}
+                    </button>
+                    <h3 onClick={() => reset()}
+                      className='text-gray-400 underline underline-offset-4 hover:text-gray-300 active:text-gray-500 cursor-pointer'>
+                      clear
+                    </h3>
                   </div>
                 </form>
               </FormProvider>
@@ -270,9 +270,7 @@ const Dashbar = (
           </div>
           <div onClick={() => {
 
-            signOut();
-
-            router.push('/signin');
+            signOut({ callbackUrl: '/signin' });
 
           }} className='bg-primary-purple/primary-purple-400 px-3  py-1 rounded-full hidden sm:block
            hover:border-x-primary-purple/primary-purple-500

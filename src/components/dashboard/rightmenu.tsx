@@ -107,10 +107,7 @@ export default function Rightmenu({ userid }: { userid: string }) {
         <SheetFooter className="absolute bottom-2 right-2">
         <Button 
         onClick={() => {
-
-          signOut();
-
-          router.push('/signin');
+          signOut({callbackUrl : '/signin'});
 
         }} 
         className="bg-red-500 active:bg-red-400 hover:bg-red-600 ">

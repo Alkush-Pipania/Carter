@@ -15,3 +15,17 @@ export const getVerificationTokenbyEmail = async (email : string) =>{
     console.log(e)
   }
 }
+
+export const getforgotpasswordTokenbyEmail = async (email : string) =>{
+  try{
+    const forgotpasswordtoken = await prisma.forgotPassword.findFirst({
+      where : {
+        email : email
+      }
+    })
+
+    return forgotpasswordtoken;
+  }catch(e){
+    console.log(e)
+  }
+}

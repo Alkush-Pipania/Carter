@@ -66,28 +66,28 @@ const Signin = () => {
     <main className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
 
       <section className=' border-b-2 '>
-      <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
-          <Link href='/' className='w-full flex justify-start items-center'>
-            <span
-              className='font-semibold text-gray-400 hover:text-gray-300 flex items-center justify-center text-xl  first-letter:ml-1 '>
-              <Image src={carterlogo} alt='logo' className='w-[50px]' />
-              Carter
-            </span>
-          </Link>
-          <span className='text-gray-400 text-xs'>
-            Organize, Share, and Manage Your Links with Ease
+        <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
+        <Link href='/' className='w-full flex justify-start items-center'>
+          <span
+            className='font-semibold text-gray-400 hover:text-gray-300 flex items-center justify-center text-xl  first-letter:ml-1 '>
+            <Image src={carterlogo} alt='logo' className='w-[50px]' />
+            Carter
           </span>
-          <div className='flex my-5 flex-col items-center justify-center gap-3 w-full'>
-          <Button className='w-full bg-gray-500 hover:bg-gray-600 flex items-center justify-center gap-2' onClick={()=>{
+        </Link>
+        <span className='text-gray-400 text-xs'>
+          Organize, Share, and Manage Your Links with Ease
+        </span>
+        <div className='flex my-5 flex-col items-center justify-center gap-3 w-full'>
+          <Button className='w-full bg-gray-500 hover:bg-gray-600 flex items-center justify-center gap-2' onClick={() => {
             signIn("github")
           }}>
-          <FaGithub className='text-2xl' />  
-          Github</Button>
-          </div>
+            <FaGithub className='text-2xl' />
+            Github</Button>
+        </div>
       </section>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col' >
-          
+
           <FormField control={form.control}
             name='email'
             render={({ field }) => (
@@ -113,6 +113,9 @@ const Signin = () => {
           />
 
           {submitError && <FormMessage>{submitError}</FormMessage>}
+          <Link href="/auth-action" className='text-primary mx-2 text-primary-purple/primary-purple-400 hover:text-primary-purple/primary-purple-300'>
+            Forgot Password
+          </Link>
 
           <Button className='w-full p-6' type='submit' size='lg'
             disabled={isLoading}>

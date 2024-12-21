@@ -89,3 +89,12 @@ model Verification {
 
   @@unique([email , token])
 }
+
+model ForgotPassword {
+  id        String    @id @default(uuid())
+  email     String
+  token     String
+  expires   DateTime
+
+  @@unique([email , token])
+}
