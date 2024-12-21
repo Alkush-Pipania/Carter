@@ -35,8 +35,8 @@ export default function Home() {
         />
 
         <motion.div
-          initial={{ opacity: 0, x: -100 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
           viewport={{ once: true, margin: "-50px" }}
         >
@@ -66,7 +66,6 @@ export default function Home() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          viewport={{ once: true, margin: "-50px" }}
         >
           <div className="flex gap-y-2 flex-col items-center ">
             <Image src={link} alt="linklogo" className="sm:w-[60px] w-[120px] h-auto"></Image>
@@ -83,7 +82,6 @@ export default function Home() {
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            viewport={{ once: true, margin: "-50px" }} 
           >
             <div className="flex lg:gap-24 lg:mx-32 items-start justify-start gap-6 sm:mx-8 mr-5 flex-col sm:flex-row">
               <Usecases logo={documlogo} label="Long useful articles" para="You found a long, useful, and important article but can't read it right now? Not a problem. Just save it to Carter to read later." />
