@@ -123,13 +123,13 @@ export default function Home() {
 
 
       </section>
-      <LampContainer className="bg-brand/brand-dark">
+      
         <section
-          className='  flex flex-col items-center justify-center sm:px-6    '
+          className='flex flex-col items-center justify-center sm:px-6    '
         >
           <WaitlistForm />
         </section>
-      </LampContainer>
+      
 
 
       <footer
