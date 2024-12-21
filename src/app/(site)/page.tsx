@@ -93,7 +93,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeInOut" }}
+            transition={{ duration: 0.9, ease: "easeInOut" }}
             viewport={{ once: true, margin: "-50px" }}>
             <div className="flex lg:gap-24 lg:mx-32 items-start justify-start gap-6 sm:mx-8 mr-5 flex-col sm:flex-row">
               <Usecases logo={cart} label="Items on online shops" para="You found an item on an online shop you don't want now but might want to buy later? Not a problem. Just save it to Carter." />
