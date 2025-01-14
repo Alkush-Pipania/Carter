@@ -24,24 +24,40 @@ import Link from "next/link"
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "@/components/ui/dialog"
 import { DialogTitle } from "@radix-ui/react-dialog"
 import { CreateLinkCart } from "./createfolder"
-import { folderdata, getuserdata } from "@/server/actions/links"
+import { deleteFolder, folderdata, getuserdata } from "@/server/actions/links"
 import { Skeleton } from "@/components/ui/skeleton"
-import { redirect, usePathname } from "next/navigation"
+import { redirect, usePathname, useRouter } from "next/navigation"
 import { SettingsDialog } from "./setting/settings-dialog"
 import { useSession } from "next-auth/react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
+import { useToast } from "@/hooks/use-toast"
+import { title } from "process"
+import { useFolderNameStore } from "@/lib/store/links"
+
 
 
 export function AppSidebar() {
-  
+  const { status } = useSession();
 
+  React.useEffect(() => {
+    if (status === 'unauthenticated') {
+      redirect('/signin')
+    }
+  }, [status])
   const [isLoading, setIsLoading] = React.useState(true)
-  const [cartdata, setCartdata] = React.useState<any>([])
-  const [userdata, setUserdata] = React.useState<any >(null);
+  const [folderloading, setfolderloading] = React.useState<boolean>(true);
+  const [cartdata, setCartdata] = React.useState<any>([]);
+  const [userdata, setUserdata] = React.useState<any>(null);
   const [activeRoute, setActiveRoute] = React.useState<any>();
+  const [search, setSearch] = React.useState<string>('');
+  const [open, setOpen] = React.useState<boolean>(false);
+  const { foldername , setFoldername , addFoldername , deleteFoldername } = useFolderNameStore();
   const pathname = usePathname();
+  const router = useRouter();
 
- 
-  
+
+
   React.useEffect(() => {
     function handleRouteChange() {
       const pathId = pathname.split('/').pop();
@@ -50,27 +66,41 @@ export function AppSidebar() {
     handleRouteChange();
   }, [pathname])
 
-  
 
   React.useEffect(() => {
     async function fetchfolderdata() {
-      const res = await folderdata()
       const userdata = await getuserdata();
       setUserdata(userdata.data);
-      setCartdata(res.data)
       setIsLoading(false)
     }
     fetchfolderdata();
   }, [])
 
-  const handleFolderCreate = (newfolder) => {
-    setCartdata([...cartdata, newfolder])
+  React.useEffect(() => {
+    async function fetchuserfolder() {
+      setfolderloading(true);
+      const res = await folderdata(search);
+      setFoldername(res.data);
+      setCartdata(res.data)
+      setfolderloading(false);
+    }
+    fetchuserfolder();
+  }, [search])
+ 
+
+  const handleFolderCreate = (newfolder: any) => {
+    addFoldername(newfolder);
+    setOpen(false);
   }
-  
-  
+  const handleMenuClick = (e) => {
+    e.stopPropagation();
+  };
+
+  const { toast } = useToast();
 
   return (
-    <Sidebar className="border-r-0  text-zinc-100">
+    <Sidebar
+      className="border-r-0  text-zinc-100">
       <SidebarHeader className="border-b border-zinc-800">
         <div className="flex items-center gap-2 px-2 py-1">
           {isLoading ? (
@@ -90,6 +120,7 @@ export function AppSidebar() {
           <div className="relative">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 transform text-zinc-500" />
             <Input
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search"
               className="w-full bg-zinc-800/50 pl-8 text-sm text-zinc-100 placeholder-zinc-500 border-zinc-700 hover:border-zinc-600 focus-visible:ring-zinc-700"
             />
@@ -119,20 +150,20 @@ export function AppSidebar() {
 
               <SidebarMenuItem key="#2">
                 <SidebarMenuButton asChild>
-                  <a href="/" className="flex items-center gap-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
+                  <Link href="/dashboard/trash" className="flex items-center gap-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
                     <Trash2 className="h-4 w-4" />
                     <span >Trash</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               {/* CReate folder here ! */}
-              <Dialog>
-                <DialogTrigger>
+              <Dialog open={open} onOpenChange={setOpen} >
+                <DialogTrigger onChange={() => setOpen(true)}>
                   <SidebarMenuItem key="#3">
                     <SidebarMenuButton asChild>
                       <h3 className="flex items-center gap-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
                         <Plus className="h-4 w-4" />
-                        <span >Create LinkCart</span>
+                        <span >Create Folder</span>
                       </h3>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -140,7 +171,7 @@ export function AppSidebar() {
                 <DialogContent className="bg-brand/brand-dark/80">
                   <DialogHeader>
                     <DialogTitle>
-                      Create LinkCart
+                      Create Folder
                     </DialogTitle>
                   </DialogHeader>
                   <CreateLinkCart onfoldercreate={handleFolderCreate} />
@@ -159,18 +190,18 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton className="font-medium text-zinc-100 hover:text-white hover:bg-zinc-800/50">
                   <Star className="h-4 w-4 text-yellow-500" />
-                  <span>LinkCarts</span>
+                  <span>Folders</span>
                 </SidebarMenuButton>
                 <SidebarMenuSub>
                   {
-                    isLoading ? (
+                    isLoading || folderloading ? (
                       Array(5).fill(0).map((_, index) => (
                         <SidebarMenuSubItem key={index}>
                           <Skeleton className="h-5 my-2 w-ful bg-zinc-800" />
                         </SidebarMenuSubItem>
                       ))
                     ) : (
-                      cartdata?.map((data: any) => (
+                      foldername?.map((data: any) => (
                         <SidebarMenuSubItem className="cursor-pointer" key={data.id}>
                           <SidebarMenuSubButton asChild>
                             <Link onClick={() => setActiveRoute(data.id)}
@@ -183,23 +214,55 @@ export function AppSidebar() {
                                 `}
                             >
                               <span className="truncate">{data.name}</span>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="#ffffff"
+                                    stroke-width="1.75"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    className="lucide lucide-ellipsis"
+                                  >
+                                    <circle cx="12" cy="12" r="1" />
+                                    <circle cx="19" cy="12" r="1" />
+                                    <circle cx="5" cy="12" r="1" />
+                                  </svg>
+                                  <span className="sr-only">open menu</span>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent onClick={handleMenuClick}
+                                  className="bg-darkBg font-mono text-white sm:relative sm:left-20 border-zinc-400 rounded-xl
+                                 ">
+                                  <DropdownMenuItem className="text-white cursor-pointer ">
+                                    Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={async (e) => {
+                                    e.stopPropagation();
+                                    deleteFoldername(data.id);
+                                    if(activeRoute == data.id){
+                                      router.replace('/dashboard')
+                                    }
+                                    const res = await deleteFolder(data.id)
+                                    if(res.error == false){
+                                      toast({
+                                        title: data.error ? "Error" : "Success",
+                                        description: data.error ? "Error while deleting" : "Folder deleted successfully",
+                                        variant: data.error ? "destructive" : "default",
+                                      })
+                                    }
+                                      
+                                    
+                                  }}
+                                    className="cursor-pointer ">
+                                    Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
 
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="#ffffff"
-                                stroke-width="1.75"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                className="lucide lucide-ellipsis"
-                              >
-                                <circle cx="12" cy="12" r="1" />
-                                <circle cx="19" cy="12" r="1" />
-                                <circle cx="5" cy="12" r="1" />
-                              </svg>
                             </Link>
 
                           </SidebarMenuSubButton>
@@ -214,7 +277,7 @@ export function AppSidebar() {
         </SidebarGroup>
         {/*  */}
 
-        <SettingsDialog />
+        <SettingsDialog loading={isLoading} />
 
         {/*  */}
         <SidebarGroup className="mt-auto border-t border-zinc-800">

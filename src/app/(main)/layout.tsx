@@ -11,12 +11,14 @@ const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const hideDashbar = pathname?.includes("/edit");
   return (
-    <main className=' '>
-      {!hideDashbar && <Dashbar />}
+    <>
+    {!hideDashbar && <Dashbar />}
+    <main className='mt-10'>
+      
       <SidebarProvider className="m-0 p-0">
       <div className="flex">
-       <AppSidebar />
-      <SidebarTrigger/>
+       <AppSidebar  />
+      <SidebarTrigger className='md:hidden'/>
       
       </div>
         {children}
@@ -24,6 +26,7 @@ const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
       
       <Toaster />
     </main>
+    </>
 
   )
 }

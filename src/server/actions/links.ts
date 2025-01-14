@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { authOption } from "@/lib/auth";
 import { error } from "console";
 import { getServerSession } from "next-auth"
-import { createlinkcarterdb, deleteAccountdb, deltelinkcarddb, folderdatadb, getsettingdatadb, getuserdatadb, linkformdetaildb, retrivedatadb, toggleclouddb, updatelinkformdb, updatePassworddb, updateuserdatadb, updateusernamedb, verifyforgotOTPdb, verifyOTPdb, verifyUserdb } from "../db/links";
+import { AddLinkDb, createlinkcarterdb, deleteAccountdb, deltelinkcarddb, folderdatadb, getFolderDataDB, getFoldernameDB, getlinklistdb, getsettingdatadb, getuserdatadb, linkformdetaildb, retrivedatadb, toggleclouddb, updatelinkformdb, updatePassworddb, updateuserdatadb, updateusernamedb, verifyforgotOTPdb, verifyOTPdb, verifyUserdb } from "../db/links";
 import { number, string } from "zod";
 import { redirect } from "next/navigation"
 import exp from "constants";
@@ -135,13 +135,13 @@ export async function createlinkcarter(values: { name: any }) {
   }
 }
 
-export async function folderdata() {
+export async function folderdata(search: string) {
   const user = await getServerSession(authOption);
   if (!user) {
     redirect("/signin");
   }
   const user_id = user.user.id;
-  const isSucces = await folderdatadb(user_id);
+  const isSucces = await folderdatadb(user_id, search);
 
   return {
     data: isSucces.data,
@@ -267,5 +267,138 @@ export async function updatePassword(password: string,
     error: isSucces.error,
     message: isSucces.error ? "There was an error while updating the password" : "Succesfully updated"
   }
-  
+
+}
+
+export async function getLinklist(search: string) {
+  const session = await getServerSession(authOption);
+
+
+  if (!session || !session.user) {
+    return { redirect: '/login' };
+  }
+
+  const isSucces = await getlinklistdb(session.user.id, search);
+
+  return {
+    data: isSucces.data,
+    error: isSucces.error,
+  };
+}
+
+
+type LinkData = {
+  url: string;
+  title: string;
+  description: string;
+  userId: string;
+  action: string;
+};
+
+
+function validateLinkData(data: LinkData): { isValid: boolean; error?: string } {
+  if (!data.url?.trim()) return { isValid: false, error: "URL is required" };
+  if (!data.title?.trim()) return { isValid: false, error: "Title is required" };
+  if (!data.description?.trim()) return { isValid: false, error: "Description is required" };
+  if (!data.userId?.trim()) return { isValid: false, error: "User ID is required" };
+  if (!data.action?.trim()) return { isValid: false, error: "Action is required" };
+
+  return { isValid: true };
+}
+
+
+
+
+export async function AddLink(url: string, title: string, description: string, userId: string, action: string) {
+  try {
+    const session = await getServerSession(authOption);
+    if (!session && session.user.id == userId) {
+      redirect('/signin')
+    }
+    const validation = validateLinkData({ url, title, description, userId, action });
+    if (!validation.isValid) {
+      return { error: true, message: validation.error };
+    }
+    const result = await AddLinkDb(url, title, description, userId, action);
+    return {error : false , data : result.data};
+  } catch (e) {
+    console.error('Error in AddLink:', error);
+    return { 
+      error: true, 
+      message: error instanceof Error ? error.message : "An unexpected error occurred" 
+    };
+  }
+
+}
+
+
+export async function getfolderdata (folderId : number , searchvalue : string){
+  const session = await getServerSession(authOption);
+  if(!session){
+    return{redirect : '/signin'}
+  }
+  if(!folderId){
+    return { error : true , message : "folder id is required"}
+  }
+
+  const result = await getFolderDataDB(folderId , session.user.id , searchvalue);
+  return { error : result.error , data : result?.data}
+}
+
+export async function getfoldername(folderId : string){
+  const session = await getServerSession(authOption);
+  if(!session){
+    return{redirect : '/signin'}
+  }
+  if(!folderId){
+    return { error : true , message : "folder id is required"}
+  }
+
+  const result = await getFoldernameDB(folderId , session.user.id );
+  return { error : result.error , data : result?.data}
+}
+
+
+export async function deleteFolder(folderId: number) {
+  try {
+    const auth = await getServerSession(authOption)
+    const userId = parseInt(auth.user.id, 10);
+    const folder = await prisma.folder.findUnique({
+      where: { id: folderId },
+      include: { links: true },
+    });
+
+    if (!folder || folder.userID !== userId) {
+      return { error: true, message: "Folder not found or unauthorized" };
+    }
+
+
+    const trashedFolder = await prisma.trashFolder.create({
+      data: {
+        name: folder.name,
+        secretKey: folder.secretKey,
+        userID: userId,
+        createdAt: folder.createdAt,
+        links: {
+          create: folder.links.map((link) => ({
+            secret_Id: link.secret_Id,
+            links: link.links,
+            title: link.title,
+            imgurl: link.imgurl,
+            description: link.description,
+            createdAt: link.createdAt,
+            userID: userId,
+          })),
+        },
+      },
+    });
+
+    // Delete folder and links from active tables
+    await prisma.linkform.deleteMany({ where: { folderID: folderId } });
+    await prisma.folder.delete({ where: { id: folderId } });
+    return { error: false, message: "Folder deleted and moved to trash" };
+  } catch (err) {
+    console.error(err);
+    return { error: true, message: "Error deleting folder" };
+  }
 }

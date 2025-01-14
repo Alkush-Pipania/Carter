@@ -40,7 +40,7 @@ export const CreateLinkCartSchema = z.object({
     required_error: "Name is required", 
   })
   .min(1, { message: "Name must be at least 1 character long" })
-  .max(40, { message: "Too long to be a name" }),
+  .max(20, { message: "Too long to be a name" }),
 })
 
 export const updateusername = z.object({

@@ -13,7 +13,7 @@ const formSchema = z.object({
 })
 
 interface EmailFormProps {
-  onSubmit: (email: string , form : any) => void
+  onSubmit: (email: string, form: any) => void
   isLoading: boolean
 }
 
@@ -26,15 +26,13 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
   })
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    onSubmit(values.email , form)
-    
+    onSubmit(values.email, form)
   }
 
   return (
-    <div className="space-y-6
-        ">
-      <h2 className="text-start text-2xl font-bold">Reset Password</h2>
-      <p className="text-start text-sm text-gray-400">
+    <div className="space-y-6 w-full max-w-md mx-auto px-4 sm:px-6 md:px-8">
+      <h2 className="text-start text-2xl font-bold sm:text-3xl">Reset Password</h2>
+      <p className="text-start text-sm text-gray-400 sm:text-base">
         Enter your email address and we'll send you a verification code.
       </p>
       <Form {...form}>
@@ -49,7 +47,7 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
                     {...field}
                     type="email"
                     placeholder="Email"
-                    className="rounded-lg border border-gray-600 bg-transparent px-4 py-3 text-white placeholder-gray-400 focus:border-[#8d33ff] focus:outline-none"
+                    className="rounded-lg border border-gray-600 bg-transparent px-4 py-3 text-white placeholder-gray-400 focus:border-[#8d33ff] focus:outline-none w-full"
                     disabled={isLoading}
                   />
                 </FormControl>

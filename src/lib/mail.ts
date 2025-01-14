@@ -1,72 +1,41 @@
 "use server";
+import { Resend } from "resend";
+import VerificationEmail from "../../emails/FogotPasswordmail";
+import MainVerificationEmail from "../../emails/verificationEmail";
 
-import nodemailer from "nodemailer";
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const domain = 'http://localhost:3000';
 
-export const sendVerificationEmail = async (email : string, token : string ) => {
-  
-
-  // Configure the transport service (e.g., Gmail, custom SMTP)
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com", // Replace with your email provider's SMTP server
-    port: 587,
-    secure: false, 
-    auth: {
-      user: "workofalkushpipania@gmail.com", 
-      pass: "sosgkuystpvuqqmh",
-    },
-  });
-
-  
-  const mailOptions = {
-    from: `workofalkushpipania@gmail.com`, 
-    to: email, //
-    subject: "Verify your email", 
-    html: `<p>Here is your OTP  -  ${token}</p>`, 
-  };
-
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent:", info.messageId);
-    return { success: true, message: "Verification email sent successfully!" };
-  } catch (error) {
-    console.error("Error sending email:", error);
-    return { success: false, message: "Failed to send verification email." };
+export const sendVerificationEmail = async (email : string, token : string) => {
+  try{
+    const res = await resend.emails.send({
+      from : "Carter <noreply@carter.fun>" ,
+      to : email,
+      subject : 'Carter - Forgot Password OTP',
+      react : MainVerificationEmail({email ,token})
+    })
+    return {success : true , message : "Email sent successfully"}
+  }catch(emailError){
+    console.error("Error sending email" , emailError);
+    return {success : false , message : "Failed to send email"}
   }
-};
+}
 
-export const sendFogotpasswordmail = async (email : string, token : string ) => {
-  
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com", // Replace with your email provider's SMTP server
-    port: 587,
-    secure: false, 
-    auth: {
-      user: "workofalkushpipania@gmail.com", 
-      pass: "sosgkuystpvuqqmh",
-    },
-  });
-
-  
-  const mailOptions = {
-    from: `workofalkushpipania@gmail.com`, 
-    to: email, //
-    subject: "Your Forgot Password OTP", 
-    html: `<p>Here is your OTP to change your password -  ${token}</p>`, 
-  };
-
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(info)
-    console.log("Email sent:", info.messageId);
-    return { success: true, message: "Forgot email sent successfully!" };
-  } catch (error) {
-    console.error("Error sending email:", error);
-    return { success: false, message: "Failed to send Forgot email." };
-  }
-};
+export const sendFogotpasswordmail = async (email : string, token : string , username : string ) => {
+    try{
+      const res = await resend.emails.send({
+        from : "Carter <noreply@carter.fun>" ,
+        to : email,
+        subject : 'Carter - Forgot Password OTP',
+        react : VerificationEmail({email ,token})
+      })
+      return {success : true , message : "Email sent successfully"}
+    }catch(emailError){
+      console.error("Error sending email" , emailError);
+      return {success : false , message : "Failed to send email"}
+    }
+}
 
 
 
@@ -80,25 +49,3 @@ export const sendFogotpasswordmail = async (email : string, token : string ) => 
 
 
 
-
-
-// "use server"
-// import { Resend } from 'resend';
-
-// const resend = new Resend("86cca72e573d527acd89a4560f339bf0ebc48e6f")
-
-
-// const domain = 'http://localhost:3000'
-
-// export const sendVerificationEmail = async (email : string , token : string) =>{
-  
-//     const confirmationLink = `${domain}/verify-email?token=${token}`
-
-//   await resend.emails.send({
-//     from: "onboarding@resend.dev",
-//     to : email,
-//     subject : "Verify your email",
-//     html : `<p>Click <a href="${confirmationLink}">here</a> to verify your email</p>`
-//   })
-  
-// }

@@ -14,20 +14,23 @@ datasource db {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  secretkey     String          @unique   @default(uuid())
-  email         String          @unique
-  username      String?
-  password      String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id              Int             @id @default(autoincrement())
+  secretkey       String          @unique @default(uuid())
+  email           String          @unique
+  username        String?
+  password        String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   
-  linkform      Linkform[]      // Global links
-  LinkformTrash LinkformTrash[]
-  varified      Boolean         @default(false)
+  linkform        Linkform[]      // Global links
+  LinkformTrash   LinkformTrash[]
+  varified        Boolean         @default(false)
 
-  // New relation for folders
-  folders       Folder[]        // Folders owned by the user
+  // Relation for active folders
+  folders         Folder[]        
+
+  // New relation for trashed folders
+  trashFolders    TrashFolder[]   // Add this field to resolve the error
 }
 
 model Folder {
@@ -63,20 +66,38 @@ model Linkform {
   @@index([userID])
 }
 
-model LinkformTrash {
-  trash_Id    Int      @id @default(autoincrement())
-  secret_Id   Int
-  links       String 
-  title       String?
-  imgurl      String?
-  description String?
-  createdAt   DateTime
-  deletedAt   DateTime @default(now())
+model TrashFolder {
+  id          Int       @id @default(autoincrement())
+  name        String    // Name of the deleted folder
+  secretKey   String    // Unique key for the folder
   userID      Int
-  user        User     @relation(fields: [userID], references: [id])
+  user        User      @relation(fields: [userID], references: [id])
+  createdAt   DateTime  // Original creation date of the folder
+  deletedAt   DateTime  @default(now()) // Date the folder was deleted
+  restoredAt  DateTime? // Optional field if restored later
 
-  // Optional restoredAt if you want to restore from trash
-  restoredAt DateTime?
+  links       LinkformTrash[] // Links in this trash folder
+
+  @@index([userID])
+}
+
+
+model LinkformTrash {
+  trash_Id        Int       @id @default(autoincrement())
+  secret_Id       String    // Original ID of the link
+  links           String
+  title           String?
+  imgurl          String?
+  description     String?
+  createdAt       DateTime
+  deletedAt       DateTime  @default(now())
+  userID          Int
+  user            User      @relation(fields: [userID], references: [id])
+
+  trashFolderID   Int?      // Optional reference to a trashed folder
+  trashFolder     TrashFolder? @relation(fields: [trashFolderID], references: [id])
+
+  restoredAt      DateTime? // If restored later
 
   @@index([userID])
 }

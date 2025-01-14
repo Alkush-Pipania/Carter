@@ -14,6 +14,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Deletedialog } from "./deletedialog"
+import Loader from "@/components/global/Loader"
 
 type UserSettings = {
   username: string;
@@ -21,7 +22,7 @@ type UserSettings = {
   email: string;
 }
 
-export default function MyAccount({ userdata }: { userdata: UserSettings | null }) {
+export default function MyAccount({ userdata , onhandleclick }: { userdata: UserSettings | null , onhandleclick : any}) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const { toast } = useToast();
   const [verificationsend, setverificationsend] = useState<boolean>(false);
@@ -49,12 +50,19 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
     }
     try{
       const res = await verifyOTP(otpString , userdata?.email);
+      if(res.error == true){
+        verificationcode.setError("otp",{
+          message : "Invalid OTP"
+        })
+        return
+      }
       if(res.message){
         toast({
           title : res.error ? "Error" : "Success",
           description : res.message,
           variant : res.error ? "destructive" : "default"
         })
+        setIsDialogOpen(false);
       }
     }catch(e){
       console.log(e)
@@ -66,6 +74,7 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
   async function onSubmit(value: z.infer<typeof updateusername>) {
     const data = await updateusernameaction(value);
     if (data?.message) {
+      onhandleclick(value.username);
       toast({
         title: data.error ? "Error" : "Success",
         description: data.message,
@@ -177,7 +186,14 @@ export default function MyAccount({ userdata }: { userdata: UserSettings | null 
                   {verificationsend == false ? (
                     <>
                     {loading === true ? (
-                      <>loading...</>
+                      <Button 
+                      className="bg-primary-blue/primary-blue-500
+                    hover:bg-primary-blue/primary-blue-600
+                    active:bg-primary-blue/primary-blue-700 transition-all
+                     duration-75 ease-in-out
+                    ">
+                      <Loader/>
+                    </Button>
                     ): (
                       <Button onClick={Sendverification}
                       className="bg-primary-blue/primary-blue-500

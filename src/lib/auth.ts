@@ -5,6 +5,7 @@ import prisma from "./prisma";
 
 
 
+
 export const authOption = {
   providers: [
     CredentialsProvider({
@@ -67,7 +68,6 @@ export const authOption = {
     //fix the type here? Using any is bad
     async session({ token, session }: any) {
       session.user.id = token.sub
-
       return session
     }
   },

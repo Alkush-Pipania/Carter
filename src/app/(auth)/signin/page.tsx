@@ -65,7 +65,7 @@ const Signin = () => {
   return (
     <main className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
 
-      <section className=' border-b-2 '>
+      <section className=''>
         <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
         <Link href='/' className='w-full flex justify-start items-center'>
           <span
@@ -77,13 +77,13 @@ const Signin = () => {
         <span className='text-gray-400 text-xs'>
           Organize, Share, and Manage Your Links with Ease
         </span>
-        <div className='flex my-5 flex-col items-center justify-center gap-3 w-full'>
+        {/* <div className='flex my-5 flex-col items-center justify-center gap-3 w-full'>
           <Button className='w-full bg-gray-500 hover:bg-gray-600 flex items-center justify-center gap-2' onClick={() => {
             signIn("github")
           }}>
             <FaGithub className='text-2xl' />
             Github</Button>
-        </div>
+        </div> */}
       </section>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col' >

@@ -12,7 +12,7 @@ export const getVerificationTokenbyEmail = async (email : string) =>{
 
     return verificationToken;
   }catch(e){
-    console.log(e)
+    console.log("something up with the server")
   }
 }
 
@@ -26,6 +26,6 @@ export const getforgotpasswordTokenbyEmail = async (email : string) =>{
 
     return forgotpasswordtoken;
   }catch(e){
-    console.log(e)
+    console.log("something up with the server")
   }
 }

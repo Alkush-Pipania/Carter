@@ -10,7 +10,7 @@ import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from 'next/navigation';
-import { DialogClose } from "@/components/ui/dialog";
+import { DialogClose, DialogTrigger } from "@/components/ui/dialog";
 
 export  function CreateLinkCart({ onfoldercreate }) {
   const router = useRouter();
@@ -54,12 +54,13 @@ export  function CreateLinkCart({ onfoldercreate }) {
      )}
      />
      <div>
-      <DialogClose>
-        <Button className="flex justify-between gap-x-2" disabled={form.formState.isSubmitting} type="submit">
+     
+      <Button className="flex justify-between gap-x-2" disabled={form.formState.isSubmitting} type="submit">
         <Plus/>
         Create
       </Button>
-      </DialogClose>
+    
+      
       
      </div>
     </form>

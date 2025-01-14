@@ -28,7 +28,7 @@ export default function ForgotPassword() {
       } else {
         try {
           const token = await generateForgotPasswordToken(email);
-          const success = await sendFogotpasswordmail(email, token.token);
+          const success = await sendFogotpasswordmail(email, token.token , "carter");
           if (success.success == false) {
             emailform.setError('email', { message: success.message })
           } else {
@@ -36,7 +36,6 @@ export default function ForgotPassword() {
             setIsLoading(false)
             setCurrentStep('otp')
           }
-
         } catch (e) {
           emailform.setError('email', { message: 'some problem with the server' })
         }
@@ -86,7 +85,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="flex min-h-screen w-[60%] px-10 flex-col items-center justify-center bg-[#030014] text-white">
+    <div className="flex min-h-screen w-full px-10 items-center flex-col  justify-center bg-[#030014] text-white">
 
       <div
         className="pointer-events-none absolute inset-0 flex items-center justify-center"
@@ -95,9 +94,9 @@ export default function ForgotPassword() {
         }}
       />
 
-      <div className="z-10 w-full space-y-8">
+      <div className="z-10 w-full  space-y-8">
         {/* Logo */}
-        <section className=' '>
+        {/* <section className='flex flex-col items-start'>
           <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
           <Link href='/' className='w-full flex justify-start items-center'>
             <span
@@ -109,7 +108,7 @@ export default function ForgotPassword() {
           <span className='text-gray-400 text-xs'>
             Organize, Share, and Manage Your Links with Ease
           </span>
-        </section>
+        </section> */}
 
         {currentStep === 'email' && (
           <EmailForm onSubmit={handleEmailSubmit} isLoading={isLoading} />

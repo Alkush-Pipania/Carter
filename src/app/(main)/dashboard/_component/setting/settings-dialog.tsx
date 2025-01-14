@@ -16,6 +16,7 @@ import { MyNotifications } from "./my-notifications"
 import MyAccount from "./setingcomp/myaccount"
 import { Separator } from "@/components/ui/separator"
 import { getsettingdata } from "@/server/actions/links"
+import { Skeleton } from "@/components/ui/skeleton"
 
 
 type UserSettings = {
@@ -24,7 +25,7 @@ type UserSettings = {
   email: string;
 }
 
-export function SettingsDialog() {
+export function SettingsDialog({loading}: {loading : boolean}) {
   const [open, setOpen] = React.useState(false)
   const [settingsdata, setSettingsdata] = React.useState<any>(null)
   const [activeItem, setActiveItem] = React.useState('#account')
@@ -37,16 +38,24 @@ export function SettingsDialog() {
     fetchSettingsdata();
   },[])
 
+  function onhandleclick(username : any){
+    settingsdata.username = username;
+  }
+
   
 
   
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
+       {loading ? (
+        <Skeleton className="h-4 w-24 bg-zinc-800" />
+       ):(
         <Button className="bg-transparent flex justify-start text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
-          <Settings className="mr-2" />
-          Open Settings
-        </Button>
+        <Settings className="mr-2" />
+        Open Settings
+      </Button>
+       )}
       </DialogTrigger>
       <DialogContent className="max-w-4xl  p-0 overflow-hidden">
         <div className="flex bg-zinc-900 h-[80vh]">
@@ -60,7 +69,7 @@ export function SettingsDialog() {
             <Separator className="my-5 border-t border-gray-500 h-[1px]" />
             
                 {activeItem === '#account' && (
-                 <MyAccount userdata={settingsdata}/>
+                 <MyAccount onhandleclick={onhandleclick} userdata={settingsdata}/>
                 )}
                 {activeItem === '#settings' && <MySettings />}
                 {activeItem === '#notifications' && <MyNotifications />}
