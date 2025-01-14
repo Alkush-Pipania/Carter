@@ -15,17 +15,15 @@ import Loader from '../global/Loader';
 import axios from 'axios';
 import carterlogo from "../../../public/logo.png"
 import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Rightmenu from './rightmenu';
 import { Loader2Icon } from 'lucide-react';
 import { Button } from '../ui/button';
-
-
-
-interface UserDetail {
-  username: string;
-  email: string;
-}
+import { AddLink } from '@/server/actions/links';
+import { useFolderlinkStore, useLinkStore } from '@/lib/store/links';
+import Button2 from '../ui/atomicui/Button'
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 
@@ -38,26 +36,24 @@ const Dashbar = (
   const boxRef = useRef<HTMLDivElement>(null);
   const toggleBox = () => setIsOpen(!isOpen);
   const router = useRouter();
-
+  const [activeRoute, setActiveRoute] = useState<string>();
   const [dataloading, setdataLoading] = useState(false);
+  const pathname = usePathname();
 
 
 
 
-
-
-
-
-  const [searchQuery, setSearchQuery] = useState('');
-
-
-
-
-
-
-
-
-
+  React.useEffect(() => {
+    function handleRouteChange() {
+      const pathId = pathname.split('/').pop();
+      if (pathId == 'dashboard') {
+        setActiveRoute('global')
+      } else {
+        setActiveRoute(pathId);
+      }
+    }
+    handleRouteChange();
+  }, [pathname]);
 
 
 
@@ -95,7 +91,7 @@ const Dashbar = (
         if (isValid) {
           clearErrors('url')
           setdataLoading(true)
-          const response = await axios.post('https://gemini.alkush.workers.dev/getdata', {
+          const response = await axios.post(process.env.NEXT_PUBLIC_GEMINI_BACKEND_URL, {
             prompt: url,
           });
           const { title, description } = response.data.data;
@@ -113,45 +109,51 @@ const Dashbar = (
     }
   }
 
- 
+
 
 
   const onSubmit: SubmitHandler<z.infer<typeof AddLinkSchema>> = async (FormData) => {
     const { url, title, description } = FormData;
+
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}api/addLink`, {
-        url,
-        title,
-        description,
-        userId,
-      }).then((res) => {
-        console.log(res.data);
-      }).catch((error) => {
-        console.error(error.response ? error.response.data : error.message);
-      });
+      const res = await AddLink(url, title, description, userId, activeRoute);
+      // Add the new link to the store
+      const newLink = {
+        secret_Id: res.data.secret_Id,
+        imgurl: res.data.imgurl,
+        links: url,
+        title: title,
+        description: description,
+      };
+      if (activeRoute === "global") {
+        useLinkStore.getState().addLink(newLink);
+      } else {
+        useFolderlinkStore.getState().addfolderLink(parseInt(activeRoute, 10), newLink);
+      }
       form.reset();
       setIsOpen(false);
-      router.refresh();
     } catch (error) {
       setErrorMessage("Failed to add link");
     }
-
-
-
   };
 
   return (
-    <div className='w-[100%] my-3 flex justify-between items-start px-2'>
-      <Link href="/" >
+    <div className='w-[100%] border-b border-gray-500 z-10 h-20  bg-brand/brand-dark/60 flex gap-x-3 justify-between sticky top-0 items-center px-2'>
+      <Link href="/dashboard" >
 
         <Image src={carterlogo} alt='logo' className='w-[50px]' />
       </Link>
-      <div className='flex flex-col-reverse gap-y-5 sm:gap-y-0 sm:mr-12 mr-8 sm:items-center items-end justify-center sm:flex-row sm:justify-center gap-x-5'>
-        <button onClick={toggleBox} className='flex text-sm items-center gap-1 p-2 border border-white rounded-full'>
-          <Image src={docu} alt='add button' className='w-[21px]' />
+      <div className='flex sm:mt-0 sm:gap-y-0 sm:mr-12 mr-8 sm:items-center items-center justify-between sm:flex-row sm:justify-center gap-x-5'>
+        <Button2 onClick={toggleBox} className='flex shadow-purpleShadow justify-between items-center gap-1' variant="clicky" volume={0.2}>
+          <Image src={docu} alt='add button' className='w-[25px]' />
+          ADD
+        </Button2>
+
+        {/* <button onClick={toggleBox} className='flex text-slate-200 hover:text-white font-semibold font-mono text-xl active:bg-purple-700 transition-all ease-in-out duration-200 hover:bg-purple-600 items-center gap-1 p-2 bg-purple-500  rounded-full'>
+          <Image src={docu} alt='add button' className='w-[25px]' />
           Add
-        </button>
-        <div className='absolute top-4 sm:right-36'>
+        </button> */}
+        <div className='absolute  top-4 sm:right-36'>
           {isOpen && (
             <motion.div
               ref={boxRef}
@@ -173,15 +175,15 @@ const Dashbar = (
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
                           <div className='flex items-center justify-start  gap-4'>
-                          <FormLabel className='text-center text-xl'>Url:</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="url"
-                              placeholder="https://"
-                              className="w-full bg-Neutrals/neutrals-10 outline-none px-1 py-1 rounded-xl"
-                              {...field}
-                            />
-                          </FormControl>
+                            <FormLabel className='text-center text-xl'>Url:</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="url"
+                                placeholder="https://"
+                                className="w-full bg-Neutrals/neutrals-10 outline-none px-1 py-1 rounded-xl"
+                                {...field}
+                              />
+                            </FormControl>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -240,45 +242,43 @@ const Dashbar = (
                   </div>
 
                   {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-                  
+
                   <div className='flex justify-between items-center'>
-                  <button
-                    type="submit"
-                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 self-start rounded"
-                    disabled={isLoading}
-                  >
-                    {!isLoading ? 'Submit' : <Loader />}
-                  </button>
-                  <h3 onClick={() => reset()} 
-                  className='text-gray-400 underline underline-offset-4 hover:text-gray-300 active:text-gray-500 cursor-pointer'>
-                    clear
-                  </h3>
+                    <button
+                      type="submit"
+                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 self-start rounded"
+                      disabled={isLoading}
+                    >
+                      {!isLoading ? 'Submit' : <Loader />}
+                    </button>
+                    <h3 onClick={() => reset()}
+                      className='text-gray-400 underline underline-offset-4 hover:text-gray-300 active:text-gray-500 cursor-pointer'>
+                      clear
+                    </h3>
                   </div>
                 </form>
               </FormProvider>
             </motion.div>
           )}
         </div>
-        <div className='flex justify-center items-center gap-7'>
-          <div className='bg-Neutrals/neutrals-10 flex items-center w-[171px] justify-start p-2 gap-2 rounded-full'>
+        <div className='flex justify-center items-center gap-3 sm:gap-7'>
+          <div className='bg-Neutrals/neutrals-10 flex items-center sm:w-[171px] w-24 justify-start p-2 gap-2 rounded-full'>
             <Image src={search} alt='search button' className='w-[21px]' />
             <input placeholder='Search' onChange={(event) => {
-              const query = event.target.value;
-              setSearchQuery(event.target.value);
+              event.preventDefault();
+              router.push(`${pathname}?search=${event.target.value}`);
             }} className='bg-transparent outline-none focus:outline-none w-full' />
 
           </div>
-          <div onClick={() => {
+          {/* <div onClick={() => {
 
-            signOut();
+            signOut({ callbackUrl: '/signin' });
 
-            router.push('/signin');
-
-          }} className='bg-primary-purple/primary-purple-400 px-3  py-1 rounded-full hidden sm:block
-           hover:border-x-primary-purple/primary-purple-500
-           hover:bg-primary-purple/primary-purple-500 duration-75 ease-in-out text-gray-200 hover:text-gray-100 cursor-pointer'>
+          }} className=' px-3  py-1 rounded-full hidden sm:block
+           bg-red-600 
+            duration-75 ease-in-out  cursor-pointer'>
             <h3 >Sign Out</h3>
-          </div>
+          </div> */}
 
           <Rightmenu userid={userId} />
 

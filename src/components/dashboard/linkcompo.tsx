@@ -93,7 +93,7 @@ const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boole
             </DropdownMenuTrigger>
             <DropdownMenuContent className='bg-darkBg font-mono text-white'>
               <DropdownMenuItem asChild>
-              <Link href={`/dashboard/links/${secretId}/edit`}>Edit</Link>
+              <Link href={`/dashboard/links/${secretId}/edit`}>Edit/open</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
               <h3 

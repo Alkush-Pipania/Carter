@@ -44,8 +44,8 @@ export function ProductDetailsForm({ product  }: { product: producttype  }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}
-        className='flex gap-6 flex-col'>
-        <div className='grid gap-6 grid-cols-1 lg:grid-cols-2'>
+        className='flex gap-6 w-full flex-col'>
+        <div className='grid gap-6 w-full grid-cols-1 lg:grid-cols-2'>
           <FormField
             control={form.control}
             name='url'

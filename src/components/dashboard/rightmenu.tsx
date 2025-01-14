@@ -3,18 +3,22 @@ import { retrivedata } from "@/server/actions/links";
 import { useToast } from "@/hooks/use-toast";
 import { EllipsisVertical } from 'lucide-react';
 import { Editprofile } from "../form/Editprofile";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { Badge } from "../ui/badge";
 import { verificationq } from "@/server/db/links";
 import { Button } from "../ui/button";
 import { generateVerificationToken } from "@/lib/token";
 import Email from "next-auth/providers/email";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Rightmenu({ userid }: { userid: string }) {
   const { toast } = useToast();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false); 
   const [verfication, setVerficationq] = useState<any>(false);
+  const router =  useRouter();
+  
   
 
   useEffect(() => {
@@ -100,8 +104,19 @@ export default function Rightmenu({ userid }: { userid: string }) {
             </Badge>
           </div>
         </SheetHeader>
+        <SheetFooter className="absolute bottom-2 right-2">
+        <Button 
+        onClick={() => {
+          signOut({callbackUrl : '/signin'});
+
+        }} 
+        className="bg-red-500 active:bg-red-400 hover:bg-red-600 ">
+          Sign out
+        </Button>
+      </SheetFooter>
         
       </SheetContent>
+      
       
     </Sheet>
   );

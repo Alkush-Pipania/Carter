@@ -58,14 +58,16 @@ function DetailsTAb( {product } : {product : producttype } ){
   
 
   return(
-   <Card className="bg-transparent text-white ">
+   <Card className="bg-transparent w-full text-white ">
     <div className=' w-[75%] blur-[100px] rounded-full h-44 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
+    <div className="w-full">
     <CardHeader>
       <CardTitle className="text-xl">Linkform Details</CardTitle>
     </CardHeader>
-    <CardContent>
+    <CardContent className="w-full">
       <ProductDetailsForm  product={product}/>
     </CardContent>
+    </div>
    </Card>
   )
 }
