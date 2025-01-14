@@ -22,7 +22,7 @@ export  function CreateLinkCart({ onfoldercreate }) {
     },
   })
 
-  async function onSubmit(values : z.infer<typeof CreateLinkCartSchema>){
+  async function onSubmit(values : z.infer<typeof CreateLinkCartSchema>){ //@ts-ignore
     const data = await createlinkcarter(values);
     onfoldercreate(data.data)
     if(data?.message){
