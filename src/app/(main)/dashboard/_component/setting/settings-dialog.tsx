@@ -71,8 +71,8 @@ export function SettingsDialog({loading}: {loading : boolean}) {
                 {activeItem === '#account' && (
                  <MyAccount onhandleclick={onhandleclick} userdata={settingsdata}/>
                 )}
-                {activeItem === '#settings' && <MySettings />}
-                {activeItem === '#notifications' && <MyNotifications />}
+                {/* {activeItem === '#settings' && <MySettings />}
+                {activeItem === '#notifications' && <MyNotifications />} */}
             
           </div>
         </div>

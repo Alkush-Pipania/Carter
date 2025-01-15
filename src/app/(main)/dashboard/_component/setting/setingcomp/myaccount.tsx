@@ -28,6 +28,7 @@ export default function MyAccount({ userdata , onhandleclick }: { userdata: User
   const [verificationsend, setverificationsend] = useState<boolean>(false);
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [loading , setLoading] = useState<boolean>(false);
+  const [ switchstate , setSwitchSTate] = useState<boolean>(userdata?.varified)
 
   const form = useForm<z.infer<typeof updateusername>>({
     resolver: zodResolver(updateusername),
@@ -62,6 +63,7 @@ export default function MyAccount({ userdata , onhandleclick }: { userdata: User
           description : res.message,
           variant : res.error ? "destructive" : "default"
         })
+        setSwitchSTate(true);
         setIsDialogOpen(false);
       }
     }catch(e){
@@ -174,7 +176,7 @@ export default function MyAccount({ userdata , onhandleclick }: { userdata: User
 
             <Switch
               id="emailverification"
-              checked={userdata?.varified}
+              checked={switchstate}
               onClick={handleSwitchClick}
               className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-400 hover:data-[state=unchecked]:bg-orange-500"
             />
