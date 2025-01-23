@@ -29,8 +29,13 @@ export function Deletedialog(data: { email: string }) {
           message : res.message
         })
       }
-      signOut({callbackUrl : '/signin'});
+      else{
+        signOut({callbackUrl : '/signin'});
+      }
     }catch(e){
+      form.setError('email',{
+        message : "something went wrong"
+      })
       console.log("error with your account")
     }
   }
