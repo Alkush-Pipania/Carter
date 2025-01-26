@@ -18,7 +18,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@nextui-org/react": "^2.4.8",
     "@nextui-org/spinner": "^2.0.34",
-    "@prisma/client": "^6.1.0",
+    "@prisma/client": "^6.2.1",
     "@prisma/extension-accelerate": "^1.2.1",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.2",
