@@ -7,6 +7,9 @@ import { LinkCardLoading } from "@/components/dashboard/link-card-loading";
 import { getLinklist } from "@/server/actions/links";
 import { useSearchParams } from "next/navigation";
 import { useLinkStore } from '@/lib/store/links';
+import { Link2Off, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Nolinks } from "@/components/dashboard/Nolinks";
 
 export default function Content() {
   const [isloading, setloading] = useState<boolean>(true);
@@ -25,32 +28,33 @@ export default function Content() {
   }, [searchParams, setLinks])
 
   return (
-    <main className='flex sm:flex-row flex-col flex-wrap items-start px-5 justify-start mx-10 content-start gap-8'>
+    <section >
       {isloading ? (
-        <>{Array.from({ length: 6 }).map((_, index) => (
+        <main className='grid md:grid-cols-2 md:gap-6 gap-x-1 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
+        2xl:grid-cols-4'>{Array.from({ length: 6 }).map((_, index) => (
           <LinkCardLoading key={index} />
-        ))}</>
+        ))}</main>
       ) : (
         <>
           {links?.length > 0 ? (
-            links.map((link: any) => (
-              <Linkcompo
-                key={link.secret_Id}
-                tobefind={link.tobefind}
-                secretId={link.secret_Id}
-                url={link.links}
-                title={link.title || "no title"}
-                imgurl={link.imgurl || "no image"}
-              />
-            ))
+            <main className='grid md:grid-cols-2 md:gap-6 gap-x-1 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
+            2xl:grid-cols-4'>
+              {links.map((link: any) => (
+                <Linkcompo
+                  key={link.secret_Id}
+                  tobefind={link.tobefind}
+                  secretId={link.secret_Id}
+                  url={link.links}
+                  title={link.title || "no title"}
+                  imgurl={link.imgurl || "no image"}
+                />
+              ))}
+            </main>
           ) : (
-            <div className='flex gap-2 items-center justify-center text-slate-500'>
-              <Image src={empty} alt='empty' className='w-[30px]' />
-              Nothing?
-            </div>
+            <Nolinks/>
           )}
         </>
       )}
-    </main>
+    </section>
   )
 }

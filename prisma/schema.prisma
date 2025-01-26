@@ -119,3 +119,8 @@ model ForgotPassword {
 
   @@unique([email , token])
 }
+
+model fallbackImage{
+  id       Int       @id @default(autoincrement())
+  imgurl    String
+}

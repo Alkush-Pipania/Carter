@@ -24,15 +24,31 @@ import { DeleteProductAlertDialogContent } from './Deletealertdialog';
 
 const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boolean, secretId: string, url: string, title: string, imgurl: string }) => {
   const [ iscloudPending , startcloudtransition ] = useTransition()
+  const [local_tobefind , setLocal_tobefind ] = useState(tobefind);
   const { toast } = useToast();
   const router = useRouter();
 
- const [local_tobefind , setLocal_tobefind ] = useState(tobefind);
-
+ 
+ const handleCopy = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast({
+      title: "Success",
+      description: "Copied to clipboard",
+      variant: "default",
+    });
+  } catch (e) {
+    toast({
+      title: "Error",
+      description: "Failed to copy to clipboard",
+      variant: "destructive",
+    });
+  }
+};
 
 
   return (
-    <div className='w-full  bg-darkBg shadow-2xl hover:shadow-sm shadow-purpleShadow sm:max-w-[321px] h-[227px] flex flex-col p-2  rounded-lg '>
+    <div className='w-full bg-darkBg shadow-2xl hover:shadow-sm shadow-purpleShadow sm:max-w-[321px] h-full max-h-[350px] flex flex-col p-2  rounded-lg '>
 
       <Link href={url} target="_blank" rel="noopener noreferrer" className='w-full flex items-center justify-center'>
         <div className="w-full h-[150px] overflow-hidden flex items-center justify-center">
@@ -50,10 +66,10 @@ const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boole
         </div>
       </Link>
       <div className='flex flex-col gap-y-1 mt-1 px-2 w-full'>
-        <div className='flex items-center justify-between'>
-          <h2 className='text-sm font-medium text-slate-300'>
-            {url.length > 20 ? `${url.slice(0, 20)}...` : url}
-          </h2>
+        <div className='flex items-center gap-x-2 justify-between'>
+          <div onClick={()=> handleCopy(url)} className='text-sm cursor-copy font-medium truncate w-full text-slate-300'>
+            {url}
+          </div>
           <button
           className='p-0 '
             onClick={()=>{
@@ -99,6 +115,8 @@ const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boole
               <h3 
               onClick={()=>{
                 startcloudtransition(async ()=>{
+                  try{
+                    setLocal_tobefind(!local_tobefind)
                   const data = await togglecloud(secretId);
                   if(data.message){
                     toast({
@@ -108,7 +126,14 @@ const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boole
                       variant : data.changeto ? "great": "destructive",
                     })
                   }
-                 setLocal_tobefind(data.changeto)
+                  }catch(e){
+                    toast({
+                      title : "unexpected error",
+                      description : "something up with the server",
+                      variant : "destructive",
+                    })
+                  }
+                 
                 })
               }}
               >{local_tobefind == true ? "remove from cloud" : "add to cloud" }</h3>

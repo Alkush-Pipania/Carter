@@ -492,15 +492,25 @@ export async function AddLinkDb(url: string, title: string, description: string,
       throw new Error('Invalid user ID');
     }
     const linkAction = parseAction(action);
+
     let imageURl = "no image";
 
     try {
       const apiResponse = await axios.get(
         `${process.env.Image_API_RETRIVE_URL}=${url}`
       );
-      imageURl = apiResponse.data.image || "no image";
+      imageURl = apiResponse.data.image;
+      console.log(imageURl)
     } catch (e) {
-      console.log("error while fetching image url ", e);
+      console.log(e)
+      const imgfallback = await prisma.fallbackImage.findMany({
+        orderBy:{
+          id : 'asc',
+        },
+        take : 1,
+        skip : Math.floor(Math.random() * (await prisma.fallbackImage.count())),
+      })
+      imageURl = imgfallback[0].imgurl;
     }
 
     const baseLinkData = {

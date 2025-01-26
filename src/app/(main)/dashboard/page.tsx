@@ -12,7 +12,7 @@ const Dashboard = async () => {
 
 
   return (
-    <section className=" w-full   ">
+    <section className=" w-full  px-5  ">
 
       <Content />
 

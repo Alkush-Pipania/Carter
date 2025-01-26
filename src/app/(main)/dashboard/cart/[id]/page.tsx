@@ -45,7 +45,7 @@ export default function LinkCart() {
            </>
         )}
       </div>
-      <section className="w-full h-full my-9">
+      <section className="w-full px-5 h-full my-9">
       <Content folderid={foldername?.id} />
       </section>
 

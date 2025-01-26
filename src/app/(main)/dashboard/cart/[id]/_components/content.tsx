@@ -7,6 +7,7 @@ import { redirect, usePathname, useRouter, useSearchParams } from "next/navigati
 import { useFolderlinkStore } from "@/lib/store/links";
 import { getfolderdata } from "@/server/actions/links";
 import { useToast } from "@/hooks/use-toast";
+import { Nolinks } from "@/components/dashboard/Nolinks";
 
 
 export default function Content({ folderid }: { folderid: number }) {
@@ -49,30 +50,30 @@ export default function Content({ folderid }: { folderid: number }) {
 
 
   return (
-    <main className='flex sm:flex-row flex-col flex-wrap items-start px-5 justify-start mx-10 content-start gap-8'>
+    <main>
       {isloading == true ? (
-        <>{Array.from({ length: 6 }).map((_, index) => (
+        <main className='grid md:grid-cols-2 md:gap-6 gap-x-2 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
+        2xl:grid-cols-4'>{Array.from({ length: 6 }).map((_, index) => (
           <LinkCardLoading key={index} />
-        ))}</>
+        ))}</main>
       ) : (
         <>
           {currentFolder && currentFolder.links.length > 0 ? (
-            // use current folder
-            currentFolder.links.map((link: any) => (
-              <Linkcompo
-                key={link.secret_Id}
-                tobefind={link.tobefind}
-                secretId={link.secret_Id}
-                url={link.links}
-                title={link.title || "no title"}
-                imgurl={link.imgurl || "no image"}
-              />
-            ))
+            <main className='grid md:grid-cols-2 md:gap-6 gap-x-2 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
+             2xl:grid-cols-4'>
+              {currentFolder.links.map((link: any) => (
+                <Linkcompo
+                  key={link.secret_Id}
+                  tobefind={link.tobefind}
+                  secretId={link.secret_Id}
+                  url={link.links}
+                  title={link.title || "no title"}
+                  imgurl={link.imgurl || "no image"}
+                />
+              ))}
+            </main>
           ) : (
-            <div className='flex gap-2 items-center justify-center text-slate-500'>
-              <Image src={empty} alt='empty' className='w-[30px]' />
-              Nothing?
-            </div>
+            <Nolinks/>
           )}
         </>
       )}
