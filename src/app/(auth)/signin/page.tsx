@@ -49,14 +49,16 @@ const Signin = () => {
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (FormData) => {
     setLoading(true);
     const { email, password } = FormData;
+  
     const res = await signIn("credentials", {
       email,
       password,
-      redirect: false
+      redirect: false,
     });
-
+  
     if (res?.error || !res?.ok) {
       setSubmitError("Invalid email or password");
+      setLoading(false);
     } else {
       setLoading(false);
       router.push("/dashboard");

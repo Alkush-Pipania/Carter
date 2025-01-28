@@ -41,18 +41,44 @@ const Signin = () => {
 
   const onSubmit: SubmitHandler<z.infer<typeof SignupSchema>> = async (FormData) => {
     setLoading(true);
-    const { username , email, password } = FormData;
-    const res = await signIn("credentials", {
-      username,
-      email,
-      password,
-      redirect: false
-    });
-
-    if (res?.error || !res?.ok) {
-      setSubmitError("Invalid email or password");
-    } else {
-      router.push("/dashboard");
+    const { username, email, password } = FormData;
+  
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      });
+  
+      if (response.ok) {
+        // Automatically log the user in
+        const signInResult = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+  
+        if (signInResult?.error) {
+          setSubmitError(signInResult.error);
+        } else {
+          router.push("/dashboard"); // Redirect to home/dashboard
+        }
+      } else {
+        // Attempt to parse the error response
+        const data = await response.json().catch(() => null); 
+        setSubmitError(data?.message || "Sign-up failed");
+      }
+    } catch (error) {
+      console.error(error);
+      setSubmitError("An error occurred during sign-up");
+    } finally {
+      setLoading(false);
     }
   };
   return (

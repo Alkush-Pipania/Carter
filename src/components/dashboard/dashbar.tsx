@@ -39,7 +39,8 @@ const Dashbar = (
   const [activeRoute, setActiveRoute] = useState<string>();
   const [dataloading, setdataLoading] = useState(false);
   const pathname = usePathname();
-
+  const pathsToHide = ['/trash','links'];
+  const hideFeature = pathsToHide.some(path => pathname?.includes(path));
 
 
 
@@ -144,15 +145,16 @@ const Dashbar = (
         <Image src={carterlogo} alt='logo' className='w-[50px]' />
       </Link>
       <div className='flex sm:mt-0 sm:gap-y-0 sm:mr-12 mr-8 sm:items-center items-center justify-between sm:flex-row sm:justify-center gap-x-5'>
-        <Button2 onClick={toggleBox} className='flex shadow-purpleShadow justify-between items-center gap-1' variant="clicky" volume={0.2}>
+        {/* <Button2 onClick={toggleBox} className='flex shadow-purpleShadow justify-between items-center gap-1' variant="clicky" volume={0.2}>
           <Image src={docu} alt='add button' className='w-[25px]' />
           ADD
-        </Button2>
-
-        {/* <button onClick={toggleBox} className='flex text-slate-200 hover:text-white font-semibold font-mono text-xl active:bg-purple-700 transition-all ease-in-out duration-200 hover:bg-purple-600 items-center gap-1 p-2 bg-purple-500  rounded-full'>
+        </Button2> */}
+        {!hideFeature &&
+         <button onClick={toggleBox} className='flex text-slate-200 hover:text-white font-semibold font-mono text-xl active:bg-purple-700 transition-all ease-in-out duration-200 hover:bg-purple-600 items-center gap-1 p-2 bg-purple-500  rounded-full'>
           <Image src={docu} alt='add button' className='w-[25px]' />
           Add
-        </button> */}
+        </button>
+        }
         <div className='absolute  top-4 sm:right-36'>
           {isOpen && (
             <motion.div
@@ -262,6 +264,7 @@ const Dashbar = (
           )}
         </div>
         <div className='flex justify-center items-center gap-3 sm:gap-7'>
+          {!hideFeature &&
           <div className='bg-Neutrals/neutrals-10 flex items-center sm:w-[171px] w-24 justify-start p-2 gap-2 rounded-full'>
             <Image src={search} alt='search button' className='w-[21px]' />
             <input placeholder='Search' onChange={(event) => {
@@ -270,6 +273,7 @@ const Dashbar = (
             }} className='bg-transparent outline-none focus:outline-none w-full' />
 
           </div>
+          }
           {/* <div onClick={() => {
 
             signOut({ callbackUrl: '/signin' });

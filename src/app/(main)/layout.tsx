@@ -8,11 +8,9 @@ import { AppSidebar } from './dashboard/_component/Sidebar'
 
 
 const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname();
-  const hideDashbar = pathname?.includes("/edit");
   return (
     <>
-    {!hideDashbar && <Dashbar />}
+     <Dashbar />
     <main className='mt-10'>
       
       <SidebarProvider className="m-0 p-0">

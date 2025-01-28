@@ -19,42 +19,34 @@ export const authOption = {
         password: { label: "Password", type: "password", required: true }
       },
       async authorize(credentials: any) {
-        const hashedPassword = await bcrypt.hash(credentials.password, 10);
+        // Check if the user exists
         const existingUser = await prisma.user.findFirst({
           where: {
-            email: credentials.email
-          }
+            email: credentials.email,
+          },
         });
 
-        if (existingUser) {
-          const passwordValidation = await bcrypt.compare(credentials.password, existingUser.password);
-          if (passwordValidation) {
-            return {
-              id: existingUser.id.toString(),
-              username: existingUser.username,
-              email: existingUser.email
-            }
-          }
+        // If the user doesn't exist, reject the login attempt
+        if (!existingUser) {
           return null;
         }
 
-        try {
-          const user = await prisma.user.create({
-            data: {
-              username: credentials.username,
-              email: credentials.email,
-              password: hashedPassword
-            }
-          });
+        // Validate the password
+        const passwordValidation = await bcrypt.compare(
+          credentials.password,
+          existingUser.password
+        );
 
+        // If the password is valid, return the user object
+        if (passwordValidation) {
           return {
-            id: user.id.toString(),
-            username: user.username,
-            email: user.email
-          }
-        } catch (e) {
-          console.log(e);
+            id: existingUser.id.toString(),
+            username: existingUser.username,
+            email: existingUser.email,
+          };
         }
+
+        // If the password is invalid, reject the login attempt
         return null;
       },
     }),

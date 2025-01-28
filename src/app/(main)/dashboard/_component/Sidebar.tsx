@@ -35,6 +35,7 @@ import { useToast } from "@/hooks/use-toast"
 import { title } from "process"
 import { useFolderNameStore } from "@/lib/store/links"
 import { Button } from "@/components/ui/button"
+import { BeautifulDropdownMenu } from "./BeautifullDropdownMenu"
 
 
 
@@ -53,7 +54,7 @@ export function AppSidebar() {
   const [activeRoute, setActiveRoute] = React.useState<any>();
   const [search, setSearch] = React.useState<string>('');
   const [open, setOpen] = React.useState<boolean>(false);
-  const { foldername , setFoldername , addFoldername , deleteFoldername } = useFolderNameStore();
+  const { foldername, setFoldername, addFoldername, deleteFoldername } = useFolderNameStore();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -87,7 +88,7 @@ export function AppSidebar() {
     }
     fetchuserfolder();
   }, [search])
- 
+
 
   const handleFolderCreate = (newfolder: any) => {
     addFoldername(newfolder);
@@ -99,8 +100,53 @@ export function AppSidebar() {
 
   const { toast } = useToast();
 
+  const handleEdit = () => {
+   
+    toast({
+      title: "Edit",
+      description: "You clicked the Edit option",
+    })
+   
+  }
+
+  const handleShare = () => {
+    toast({
+      title: "Share",
+      description: "You clicked the Share option",
+    })
+  }
+
+  const handleCloud = () => {
+    toast({
+      title: "Cloud",
+      description: "You clicked the Cloud option",
+    })
+  }
+
+  const handleDelete = async(folderid : string) => {
+    try{
+      deleteFoldername(folderid);
+      if(activeRoute === folderid){
+        router.push('/dashboard')
+      }
+      const res = await deleteFolder(parseInt(folderid));
+      if(res.error == false)
+        toast({
+      title: "Move to Trash",
+      description: "successfully moved to trash",
+      variant: "default",
+    })
+    }catch(e){
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive",
+      })
+    }
+  }
+
   return (
-    <Sidebar 
+    <Sidebar
       className="border-r-0  text-zinc-100">
       <SidebarHeader className="border-b bg-brand/brand-dark border-zinc-800">
         <div className="flex  items-center gap-2 px-2 py-1">
@@ -216,62 +262,20 @@ export function AppSidebar() {
                                   `}
                               >
                                 <span className="truncate">{data.name}</span>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger>
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="24"
-                                      height="24"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="#ffffff"
-                                      stroke-width="1.75"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      className="lucide lucide-ellipsis"
-                                    >
-                                      <circle cx="12" cy="12" r="1" />
-                                      <circle cx="19" cy="12" r="1" />
-                                      <circle cx="5" cy="12" r="1" />
-                                    </svg>
-                                    <span className="sr-only">open menu</span>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent onClick={handleMenuClick}
-                                    className="bg-darkBg font-mono text-white sm:relative sm:left-20 border-zinc-400 rounded-xl
-                                   ">
-                                    <DropdownMenuItem className="text-white cursor-pointer ">
-                                      Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={async (e) => {
-                                      e.stopPropagation();
-                                      deleteFoldername(data.id);
-                                      if(activeRoute == data.id){
-                                        router.replace('/dashboard')
-                                      }
-                                      const res = await deleteFolder(data.id)
-                                      if(res.error == false){
-                                        toast({
-                                          title: data.error ? "Error" : "Success",
-                                          description: data.error ? "Error while deleting" : "Folder deleted successfully",
-                                          variant: data.error ? "destructive" : "default",
-                                        })
-                                      }
-                                        
-                                      
-                                    }}
-                                      className="cursor-pointer ">
-                                      Delete
-                                    </DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-  
+                                <BeautifulDropdownMenu
+                                  onEdit={()=> handleEdit()}
+                                  onShare={handleShare}
+                                  onCloud={handleCloud}
+                                  onDelete={()=>handleDelete(data.id)}
+                                />
+
                               </Link>
-  
+
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         ))
-                      ):(
-                        <NoFolder createfolder={setOpen}/>
+                      ) : (
+                        <NoFolder createfolder={setOpen} />
                       )
                     )
                   }
@@ -303,26 +307,26 @@ export function AppSidebar() {
 }
 
 
-function NoFolder({createfolder} : {createfolder : any}){
-  return(
+function NoFolder({ createfolder }: { createfolder: any }) {
+  return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-zinc-800 px-4 py-8 text-center">
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900">
-      <Folder className="h-6 w-6 text-zinc-500" />
-    </div>
-    <h3 className="mt-4 text-sm font-medium text-zinc-400">No folders available</h3>
-    <p className="mt-1 text-xs text-zinc-500">Create a new folder to organize your content</p>
-    <Button
-      onClick={()=> createfolder(true)}
-      variant="outline"
-      size="sm"
-      className="mt-4 border-zinc-800
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900">
+        <Folder className="h-6 w-6 text-zinc-500" />
+      </div>
+      <h3 className="mt-4 text-sm font-medium text-zinc-400">No folders available</h3>
+      <p className="mt-1 text-xs text-zinc-500">Create a new folder to organize your content</p>
+      <Button
+        onClick={() => createfolder(true)}
+        variant="outline"
+        size="sm"
+        className="mt-4 border-zinc-800
       text-white
       hover:bg-primary-purple/primary-purple-600 active:bg-primary-purple/primary-purple-700 bg-primary-purple/primary-purple-500  hover:text-zinc-300"
-    >
-      <Plus className="mr-2 h-4 w-4" />
-      Create Folder
-    </Button>
-  </div>
+      >
+        <Plus className="mr-2 h-4 w-4" />
+        Create Folder
+      </Button>
+    </div>
   )
 }
 
