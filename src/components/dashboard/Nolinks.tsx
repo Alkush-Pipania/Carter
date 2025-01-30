@@ -15,10 +15,6 @@ export function Nolinks(){
                     <p className="text-sm text-muted-foreground max-w-sm">
                       Get started by adding your first link. Your collection will grow from here!
                     </p>
-                    <Button className="mt-2" variant="default">
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Link
-                    </Button>
                   </div>
                 </div>
               </div>

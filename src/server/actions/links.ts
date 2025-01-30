@@ -9,6 +9,7 @@ import { redirect } from "next/navigation"
 import exp from "constants";
 import prisma from "@/lib/prisma";
 import { signOut } from "next-auth/react";
+import { UUID } from "crypto";
 
 export async function togglecloud(id: string) {
   const { user } = await getServerSession(authOption);
@@ -505,4 +506,42 @@ export async function togglefolderCloud(folderId : string){
   const success = await togglefolderCloudDB(userid , folderId);
 
   return{error: success.error , message : success.message}
+}
+
+
+export async function retriveAnnonmousData(secretkey : string , isFolder : boolean){
+  if(!secretkey){
+    return {error : true , message : "incomplete data provided"}
+  }
+
+ try{
+  if(isFolder){
+    const res = await prisma.folder.findUnique({
+      where:{
+        secretKey : secretkey
+      },
+      select:{
+        links : true
+      }
+    })
+    return {error : false , data : res?.links}
+  }else{
+    const userWithLinkforms = await prisma.user.findUnique({
+      where: { secretkey: secretkey },
+      select: {
+        linkform: {
+          where: {
+            tobefind: true,
+          },
+        },
+      },
+    });
+    if(!userWithLinkforms){
+      return {error : true , message : "secret key not found"}
+    }
+    return {error : false , data : userWithLinkforms.linkform}
+  }
+ }catch(e){
+  return{error : true , message : "Internal server error"}
+ }
 }
