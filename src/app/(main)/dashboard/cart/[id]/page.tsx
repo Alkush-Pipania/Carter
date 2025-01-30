@@ -35,14 +35,14 @@ export default function LinkCart() {
 
   return (
     <section className=" w-full flex flex-col h-screen  ">
-      <div className="fixed  flex mx-3 justify-start gap-x-1 items-center ">
+      <div className="fixed right-0 sm: flex mx-3 justify-center gap-x-1 items-center ">
         {isloading ?(
           <Skeleton className="h-6 w-24 bg-zinc-800" />
         ) : (
-          <>
+          <div className="flex bg-brand/brand-dark px-2 py-1 rounded-full items-center capitalize text-xl justify-between">
           {foldername?.name} 
           <DownCircle className="" />
-           </>
+           </div>
         )}
       </div>
       <section className="w-full px-5 h-full my-9">

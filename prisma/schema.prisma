@@ -34,7 +34,7 @@ model User {
 }
 
 model Folder {
-  id            Int             @id @default(autoincrement())
+  id            Int             @unique @id @default(autoincrement())
   name          String          // Folder name
   secretKey     String          @unique @default(uuid()) // Secret key for the folder
   userID        Int
@@ -67,7 +67,7 @@ model Linkform {
 }
 
 model TrashFolder {
-  id          Int       @id @default(autoincrement())
+  id          Int      @unique @id @default(autoincrement())
   name        String    // Name of the deleted folder
   secretKey   String    // Unique key for the folder
   userID      Int

@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react"
 import { MoreHorizontal, Edit, Share, Cloud, Trash2 } from "lucide-react"
 
@@ -11,13 +12,14 @@ import {
 import { Button } from "@/components/ui/button"
 
 interface BeautifulDropdownMenuProps {
-  onEdit: () => void
+  // onEdit: () => void
   onShare: () => void
   onCloud: () => void
   onDelete: () => void
 }
 
-export function BeautifulDropdownMenu({ onEdit, onShare, onCloud, onDelete }: BeautifulDropdownMenuProps) {
+export function BeautifulDropdownMenu({ onShare, onCloud, onDelete }: BeautifulDropdownMenuProps) {
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -30,7 +32,7 @@ export function BeautifulDropdownMenu({ onEdit, onShare, onCloud, onDelete }: Be
         align="end"
         className="w-[160px] text-foreground border border-border rounded-lg shadow-lg"
       >
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           onClick={(e) => {
             e.stopPropagation()
             onEdit()
@@ -39,7 +41,7 @@ export function BeautifulDropdownMenu({ onEdit, onShare, onCloud, onDelete }: Be
         >
           <Edit className="mr-2 h-4 w-4" />
           <span>Edit</span>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem
           onClick={(e) => {
             e.stopPropagation()
@@ -62,7 +64,10 @@ export function BeautifulDropdownMenu({ onEdit, onShare, onCloud, onDelete }: Be
         </DropdownMenuItem>
         <DropdownMenuSeparator className="my-1 bg-border" />
         <DropdownMenuItem
-          onClick={onDelete}
+          onClick={(e)=>{
+            e.stopPropagation()
+            onDelete();
+          }}
           className="flex items-center px-3 py-2 text-sm cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground"
         >
           <Trash2 className="mr-2 h-4 w-4" />

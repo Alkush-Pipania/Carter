@@ -59,7 +59,7 @@ export function SettingsDialog({loading}: {loading : boolean}) {
       </DialogTrigger>
       <DialogContent className="max-w-4xl  p-0 overflow-hidden">
         <div className="flex bg-zinc-900 h-[80vh]">
-          <div className="w-64 bg-muted p-6 bg-zinc-700 overflow-y-auto">
+          <div className="w-64 bg-muted sm:block hidden p-6 bg-zinc-700 overflow-y-auto">
             <SettingsSidebar activeItem={activeItem} setActiveItem={setActiveItem} />
           </div>
           <div className="flex-1 p-6 overflow-y-auto">

@@ -16,7 +16,7 @@ const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
       <SidebarProvider className="m-0 p-0">
       <div className="flex">
        <AppSidebar  />
-      <SidebarTrigger className='md:hidden'/>
+      <SidebarTrigger className='md:hidden fixed left-0'/>
       
       </div>
         {children}

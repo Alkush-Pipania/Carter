@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from 'next/navigation';
 import { DialogClose, DialogTrigger } from "@/components/ui/dialog";
+import { link } from "fs";
 
 export  function CreateLinkCart({ onfoldercreate }) {
   const router = useRouter();
@@ -24,7 +25,11 @@ export  function CreateLinkCart({ onfoldercreate }) {
 
   async function onSubmit(values : z.infer<typeof CreateLinkCartSchema>){ //@ts-ignore
     const data = await createlinkcarter(values);
-    onfoldercreate(data.data)
+    onfoldercreate({
+      id : data.data.id,
+      name : data.data.name,
+      _count : {links : 0}
+    })
     if(data?.message){
       toast({
         title : data.error ? "Error" : "Success",

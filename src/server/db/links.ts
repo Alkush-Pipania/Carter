@@ -62,7 +62,7 @@ export async function linkformdetaildb(id: string, user_id: string) {
         description: true,
         secret_Id: true,
       },
-      cacheStrategy: {ttl: 60},
+      cacheStrategy: { ttl: 60 },
     })
     return { error: false, data: linkform }
   } catch (e) {
@@ -109,7 +109,7 @@ export async function retrivedatadb(userid: string) {
         email: true,
         secretkey: true,
       },
-      cacheStrategy: {ttl: 60},
+      cacheStrategy: { ttl: 60 },
     })
 
     return { error: false, data: userdata }
@@ -186,7 +186,16 @@ export async function folderdatadb(user_id: string, search: string) {
           mode: 'insensitive',
         },
       },
-      cacheStrategy: {ttl: 60},
+      select:{
+        id : true,
+        name : true,
+        _count:{
+          select:{
+            links:true
+          }
+        }
+      },
+      cacheStrategy: { ttl: 60 },
     });
 
     return { error: false, data: data };
@@ -208,7 +217,7 @@ export async function getuserdatadb(userId: string) {
       select: {
         username: true,
       },
-      cacheStrategy: {ttl: 60},
+      cacheStrategy: { ttl: 60 },
     })
     return { error: false, data: data }
   } catch (e) {
@@ -374,7 +383,7 @@ export async function getlinklistdb(userid: string, search: string) {
     if (!search || search.trim() === '') {
       const linklist = await prisma.linkform.findMany({
         where: {
-          folderID : null,
+          folderID: null,
           userID: parseInt(userid, 10),
         },
         orderBy: {
@@ -504,11 +513,11 @@ export async function AddLinkDb(url: string, title: string, description: string,
     } catch (e) {
       console.log(e)
       const imgfallback = await prisma.fallbackImage.findMany({
-        orderBy:{
-          id : 'asc',
+        orderBy: {
+          id: 'asc',
         },
-        take : 1,
-        skip : Math.floor(Math.random() * (await prisma.fallbackImage.count())),
+        take: 1,
+        skip: Math.floor(Math.random() * (await prisma.fallbackImage.count())),
       })
       imageURl = imgfallback[0].imgurl;
     }
@@ -543,22 +552,22 @@ export async function AddLinkDb(url: string, title: string, description: string,
 
   } catch (error) {
     console.error('Error in AddLinkDb:', error);
-    
+
     if (error instanceof Error) {
       // Handle specific database errors
       if (error.message.includes('Foreign key constraint failed')) {
-        return { 
-          error: true, 
-          message: "The specified folder does not exist" 
+        return {
+          error: true,
+          message: "The specified folder does not exist"
         };
       }
     }
-    
-    return { 
-      error: true, 
-      message: error instanceof Error 
-        ? error.message 
-        : "Failed to create link" 
+
+    return {
+      error: true,
+      message: error instanceof Error
+        ? error.message
+        : "Failed to create link"
     };
   }
 }
@@ -599,7 +608,7 @@ export async function getFolderDataDB(folderId: number, userId: string, search: 
           }
         }
       },
-      cacheStrategy: {ttl: 60},
+      cacheStrategy: { ttl: 60 },
     });
     return { error: false, data: link }
   } catch (e) {
@@ -608,21 +617,174 @@ export async function getFolderDataDB(folderId: number, userId: string, search: 
 }
 
 
-export async function getFoldernameDB(folderId : string , userId : string){
-  try{
+export async function getFoldernameDB(folderId: string, userId: string) {
+  try {
     const link = await prisma.folder.findFirst({
-      where : {
-        id : parseInt(folderId, 10),
-        userID : parseInt(userId , 10)
+      where: {
+        id: parseInt(folderId, 10),
+        userID: parseInt(userId, 10)
       },
-      select:{
-        name : true,
-        id : true,
+      select: {
+        name: true,
+        id: true,
       }
     })
-    return { error : false , data : link}
-  }catch(e){
-    return { error : true , message : "error"}
+    return { error: false, data: link }
+  } catch (e) {
+    return { error: true, message: "error" }
   }
 }
 
+export async function gettrashFolderDatadb(userId: string) {
+  try {
+    const res = await prisma.trashFolder.findMany({
+      where: {
+        userID: parseInt(userId, 10),
+      },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            links: true
+          }
+        },
+      }
+    })
+    console.log(res)
+
+    const formattedData = res.map((folder) => ({
+      folderId: folder.id,
+      folderName: folder.name,
+      numberOfLinks: folder._count.links,
+    }));
+
+    return { error: false, data: formattedData }
+  } catch (e) {
+    return { error: true, message: "error" }
+  }
+}
+
+export async function restoreTrashFolderDB(userId: string, folderId: string) {
+  try {
+    const restoredData = await prisma.$transaction(async (tx) => {
+      const trashFolder = await tx.trashFolder.findFirst({
+        where: {
+          id: parseInt(folderId, 10),
+          userID: parseInt(userId, 10)
+        },
+        include: { links: true },
+      })
+      if (!trashFolder) {
+        return { error: true, message: "Folder not found" }
+      }
+      const restoredFolder = await tx.folder.create({
+        data: {
+          id: trashFolder.id,
+          name: trashFolder.name,
+          secretKey: trashFolder.secretKey,
+          userID: trashFolder.userID,
+          createdAt: trashFolder.createdAt,
+          updatedAt: new Date(),
+        },
+      });
+
+      const restoredLinks = await Promise.all(
+        trashFolder.links.map(async (trashLink) => {
+          return tx.linkform.create({
+            data: {
+              secret_Id: trashLink.secret_Id,
+              links: trashLink.links,
+              title: trashLink.title ?? "",
+              imgurl: trashLink.imgurl,
+              description: trashLink.description ?? "",
+              createdAt: trashLink.createdAt,
+              userID: trashLink.userID,
+              folderID: restoredFolder.id, // Assign to restored folder
+            },
+          });
+        })
+      );
+
+      await tx.linkformTrash.deleteMany({
+        where: {
+          trashFolderID: parseInt(folderId, 10),
+          userID : parseInt(userId , 10)
+        },
+      });
+
+      await tx.trashFolder.delete({
+        where: { id: parseInt(folderId , 10) },
+      });
+      return {restoredFolder ,  restoredLinks}
+    })
+    console.log(restoredData)
+    return { error : false , data : restoredData.restoredFolder , message : "success"};
+  } catch (e) {
+    console.log(e)
+    return { error : true , message : "some error occured"}
+  }
+}
+
+export async function deleteTrashFolderDB(userId : string , folderId : string){
+  try{
+    await prisma.$transaction(async (tx) =>{
+      await tx.linkformTrash.deleteMany({
+        where:{
+          userID : parseInt(userId , 10),
+          trashFolderID : parseInt(folderId , 10)
+        }
+      })
+      await tx.trashFolder.delete({
+        where:{
+          id : parseInt(folderId , 10),
+          userID : parseInt(userId , 10)
+        }
+      })
+    })
+    return {error : false , message : "success"}
+  }catch(e){
+    return {error : true , message : "error"}
+  }
+}
+
+
+export async function deleteAllTrashFolderDB(userId : string){
+  try{
+    await prisma.$transaction(async(tx)=>{
+      await tx.linkformTrash.deleteMany({
+        where:{
+          userID : parseInt(userId,10)
+        }
+      })
+      await tx.trashFolder.deleteMany({
+        where:{
+          userID : parseInt(userId, 10)
+        }
+      })
+    })
+    return {error : false , message : "success"}
+  }catch(e){
+    return {error : true , message : "error"}
+  }
+}
+
+
+export async function togglefolderCloudDB(userid : string , folderId : string){
+  try{
+    await prisma.$transaction(async(tx)=>{
+      await prisma.linkform.updateMany({
+        where:{
+          userID : parseInt(userid , 10),
+          folderID : parseInt(folderId,10)
+        },
+        data:{
+          tobefind: true,
+        }
+      })
+    })
+    return { error : false , message : "succesfull"}
+  }catch(e){
+    return {error : true , message : "error"}
+  }
+}

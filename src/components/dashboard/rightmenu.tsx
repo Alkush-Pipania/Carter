@@ -95,13 +95,14 @@ export default function Rightmenu({ userid }: { userid: string }) {
 
         <SheetHeader>
           <SheetTitle className="text-gray-100 hover:text-white">Global Secret key</SheetTitle>
-          <div>
+          <div className="flex w-fit flex-col gap-y-2">
             <Badge
               onClick={() => handleCopy(data?.data.secretkey)}
               className="w-auto cursor-copy"
             >
               {data?.data.secretkey}
             </Badge>
+            <h3 className="text-xs text-red-500">*do not share it anyone </h3>
           </div>
         </SheetHeader>
         <SheetFooter className="absolute bottom-2 right-2">

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import empty from "@/../public/Danger.png"
 import Image from "next/image";
 import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useFolderlinkStore } from "@/lib/store/links";
+import { useFolderlinkStore, useRenderStore } from "@/lib/store/links";
 import { getfolderdata } from "@/server/actions/links";
 import { useToast } from "@/hooks/use-toast";
 import { Nolinks } from "@/components/dashboard/Nolinks";
@@ -17,6 +17,7 @@ export default function Content({ folderid }: { folderid: number }) {
   const searchParams = useSearchParams();
   const searchvalue = searchParams.get('search') || '';
   const { folderlinks, setfolderLinks } = useFolderlinkStore();
+  const shouldRerender = useRenderStore((state) => state.shouldRerender);
 
   useEffect(() => {
     async function fetchfolderdata() {
@@ -45,21 +46,21 @@ export default function Content({ folderid }: { folderid: number }) {
 
     }
     fetchfolderdata();
-  }, [searchParams, folderid])
+  }, [searchParams, folderid,shouldRerender])
   const currentFolder = folderlinks.find((folder) => folder.id === folderid)
 
 
   return (
     <main>
       {isloading == true ? (
-        <main className='grid md:grid-cols-2 md:gap-6 gap-x-2 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
+        <main className='grid md:grid-cols-2 md:gap-6 gap-x-2 sm:grid-cols-2 gap-y-3 grid-cols-1 lg:grid-cols-3 
         2xl:grid-cols-4'>{Array.from({ length: 6 }).map((_, index) => (
           <LinkCardLoading key={index} />
         ))}</main>
       ) : (
         <>
           {currentFolder && currentFolder.links.length > 0 ? (
-            <main className='grid md:grid-cols-2 md:gap-6 gap-x-2 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
+            <main className='grid md:grid-cols-2 md:gap-6 gap-x-2 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-y-3 
              2xl:grid-cols-4'>
               {currentFolder.links.map((link: any) => (
                 <Linkcompo

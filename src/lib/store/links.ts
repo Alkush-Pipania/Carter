@@ -33,6 +33,36 @@ export const useFolderNameStore = create<FoldernameStore>((set)=>({
   }))
 }))
 
+export const useTrashFolderStore = create<any>((set)=>({
+  trashfolder : [],
+  setTrashfolder : (trashfolder) => set({trashfolder}),
+  addTrashfolder : (folder) => set((state) => ({trashfolder : [folder, ...state.trashfolder]})),
+  deleteFolder : (folderId) => set((state) => ({
+    trashfolder : state.trashfolder.filter(folder => folder.folderId !== folderId)
+  }))
+}))
+
+interface RenderStore {
+  shouldRerender: boolean;
+  triggerRerender: () => void;
+}
+
+export const useRenderStore = create<RenderStore>((set) => ({
+  shouldRerender: false,
+  triggerRerender: () => set((state) => ({ shouldRerender: !state.shouldRerender })),
+}))
+
+
+export const useNameStore = create<any>((set) => ({
+  name: '', // Initial state
+  setName: (newName : string) => set({ name: newName }), 
+}));
+
+
+
+
+
+
 // interface folderLinksStore {
 //   folderlinks: any[];
 //   setfolderLinks: (links: any[]) => void;

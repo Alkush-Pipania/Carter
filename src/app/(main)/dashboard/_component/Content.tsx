@@ -30,14 +30,14 @@ export default function Content() {
   return (
     <section >
       {isloading ? (
-        <main className='grid md:grid-cols-2 md:gap-6 gap-x-1 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
+        <main className='grid md:grid-cols-2 md:gap-6 gap-x-1 sm:grid-cols-2 gap-y-2 grid-cols-1 lg:grid-cols-3 
         2xl:grid-cols-4'>{Array.from({ length: 6 }).map((_, index) => (
           <LinkCardLoading key={index} />
         ))}</main>
       ) : (
         <>
           {links?.length > 0 ? (
-            <main className='grid md:grid-cols-2 md:gap-6 gap-x-1 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
+            <main className='grid gap-y-3  md:grid-cols-2 md:gap-6 gap-x-1 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
             2xl:grid-cols-4'>
               {links.map((link: any) => (
                 <Linkcompo

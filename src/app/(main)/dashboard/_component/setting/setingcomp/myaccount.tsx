@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Deletedialog } from "./deletedialog"
 import Loader from "@/components/global/Loader"
+import { useNameStore } from "@/lib/store/links"
 
 type UserSettings = {
   username: string;
@@ -26,6 +27,7 @@ export default function MyAccount({ userdata , onhandleclick }: { userdata: User
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const { toast } = useToast();
   const [verificationsend, setverificationsend] = useState<boolean>(false);
+  const {setName} = useNameStore();
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [loading , setLoading] = useState<boolean>(false);
   const [ switchstate , setSwitchSTate] = useState<boolean>(userdata?.varified)
@@ -77,6 +79,7 @@ export default function MyAccount({ userdata , onhandleclick }: { userdata: User
     const data = await updateusernameaction(value);
     if (data?.message) {
       onhandleclick(value.username);
+      setName(value.username)
       toast({
         title: data.error ? "Error" : "Success",
         description: data.message,
@@ -166,7 +169,7 @@ export default function MyAccount({ userdata , onhandleclick }: { userdata: User
             </p>
           </div>
           <Button type="button"
-            className="text-gray-200 bg-transparent active:bg-zinc-800 border-gray-400 hover:bg-zinc-700 border border-spacing-1">Change email</Button>
+            className="text-gray-200 bg-transparent active:bg-zinc-800 border-gray-400 hover:bg-zinc-700 border border-spacing-1 cursor-not-allowed">Change not Available</Button>
 
         </div>
 

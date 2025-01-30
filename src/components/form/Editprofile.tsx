@@ -40,14 +40,14 @@ export function Editprofile({ data, verified }: { data: Editprofileprops, verifi
   })
 
   async function onSubmit(values: z.infer<typeof EditProfileSchema>) {
-    const data = await updateuserdata(values);
-    if (data?.message) {
-      toast({
-        title: data.error ? "Error" : "Success",
-        description: data.message,
-        variant: data.error ? "destructive" : "default"
-      })
-    }
+    // const data = await updateuserdata(values);
+    // if (data?.message) {
+    //   toast({
+    //     title: data.error ? "Error" : "Success",
+    //     description: data.message,
+    //     variant: data.error ? "destructive" : "default"
+    //   })
+    // }
   }
 
   async function verify() {
@@ -80,10 +80,10 @@ export function Editprofile({ data, verified }: { data: Editprofileprops, verifi
               name='username'
               render={({ field }) => (
                 <FormItem >
-                  <div className="grid grid-cols-2 gap-4  items-center justify-start ">
+                  <div className="flex gap-4  items-center ">
                     <FormLabel className="text-right">username</FormLabel>
                     <FormControl>
-                      <Input className="w-full" {...field} />
+                      <Input readOnly className="w-full cursor-not-allowed" {...field} />
                     </FormControl>
                   </div>
                   <FormMessage />
@@ -101,39 +101,19 @@ export function Editprofile({ data, verified }: { data: Editprofileprops, verifi
                       <Input readOnly className="w-full cursor-not-allowed" {...field} />
                     </FormControl>
                   </div>
-                  <FormMessage>*Email cannot be changed</FormMessage>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <div className='flex justify-end'>
-              <Button disabled={form.formState.isSubmitting} type='submit'>
+              {/* <Button disabled={form.formState.isSubmitting} type='submit'>
                 Save
-              </Button>
+              </Button> */}
             </div>
           </div>
         </form>
       </Form>
-      <SheetHeader className="my-3">
-        <SheetTitle className="text-white">Verification</SheetTitle>
-        <div className="   ">
-          {verified == false ? (
-            <div className="flex flex-col items-end justify-center gap-y-2">
-              <span className=" flex gap-2 cursor-not-allowed  items-center ">
-                <h3 className="text-gray-500 ">Not Verified</h3>
-                <Image src={verifylogo} className="w-7 h-7" alt="not verify" />
-              </span>
-              <div>
-                {loading == true ? (<Loader/>) : (
-                  <Button onClick={verify} className=" bg-primary-purple/primary-purple-700 hover:bg-primary-purple/primary-purple-600 active:bg-brand/brand-dark ">
-                  verify?
-                </Button>
-                )}
-              </div>
-              <h3 className="text-xs">{verificationmsg}</h3>
-            </div>) : (<div>You are verified</div>)}
-        </div>
-      </SheetHeader>
+      
 
     </>
   )
