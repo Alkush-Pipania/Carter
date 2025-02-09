@@ -131,17 +131,25 @@ export default async function Home() {
           </a>
         </div>
         <div className="flex my-8 w-full items-center sm:justify-center gap-4">
+          <Link href="">
           <Image
             src={twitter}
             className="w-[34px] cursor-pointer"
             alt="twitter"
           />
+          </Link>
+          <Link href="https://www.instagram.com/al_ways_kush/">
           <Image
             src={instagram}
             className="w-[34px] cursor-pointer"
             alt="instagram"
           />
+          </Link>
+          <Link href="https://github.com/Alkush-Pipania">
           <Image src={github} className="w-[34px] cursor-pointer" alt="github" />
+          </Link>
+          
+          
         </div>
         <div className="w-full mb-8 sm:flex-row flex-col flex sm:justify-between sm:items-center">
           <h3>&copy; {new Date().getFullYear()}</h3>
