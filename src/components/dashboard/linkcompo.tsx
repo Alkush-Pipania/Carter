@@ -74,6 +74,7 @@ const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boole
           className='p-0 '
             onClick={()=>{
               startcloudtransition(async ()=>{
+                setLocal_tobefind(!local_tobefind)
                 const data = await togglecloud(secretId);
                 if(data.message){
                   toast({
@@ -83,7 +84,7 @@ const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boole
                     variant : data.changeto ? "great": "destructive",
                   })
                 }
-               setLocal_tobefind(data.changeto)
+               
               })
             }}
           >

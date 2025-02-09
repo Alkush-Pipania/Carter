@@ -31,9 +31,9 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading }: OtpFormP
   }
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="space-y-6 items-center justify-start  flex flex-col">
       <h2 className="text-start text-2xl font-bold">Enter Verification Code</h2>
-      <p className="text-start text-sm w-full text-gray-400">
+      <p className="text-sm  text-gray-400">
         We've sent a verification code to {email}
       </p>
       <Form {...form}>

@@ -38,9 +38,9 @@ export default function NewPasswordForm({ onSubmit, isLoading }: NewPasswordForm
   }
 
   return (
-    <div className="space-y-6 w-full">
-      <h2 className="text-start text-2xl font-bold">Create New Password</h2>
-      <p className="text-start text-sm text-gray-400">
+    <div className="space-y-6 flex flex-col justify-start items-center w-full">
+      <h2 className=" text-2xl font-bold">Create New Password</h2>
+      <p className=" text-sm text-gray-400">
         Please enter your new password
       </p>
       <Form {...form}>
@@ -51,7 +51,7 @@ export default function NewPasswordForm({ onSubmit, isLoading }: NewPasswordForm
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <div className="relative">
+                  <div className="relative w-full min-w-64">
                     <Input
                       {...field}
                       type={showPassword ? 'text' : 'password'}
