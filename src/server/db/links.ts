@@ -609,7 +609,6 @@ export async function getFolderDataDB(folderId: number, userId: string, search: 
           }
         }
       },
-      cacheStrategy: { ttl: 60 },
     });
     return { error: false, data: link }
   } catch (e) {
