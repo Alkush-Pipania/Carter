@@ -181,7 +181,7 @@ export function AppSidebar() {
   const handleDelete = async (folderId: string, folderName: string, numberOfLinks: string) => {
     const folder = { folderId, folderName, numberOfLinks }
      deleteFoldername(folderId);
-      if (activeRoute === folderId) {
+      if (activeRoute == folderId) {
         router.push('/dashboard')
       }
       addTrashfolder(folder);
