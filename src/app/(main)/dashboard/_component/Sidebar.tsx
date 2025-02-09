@@ -30,7 +30,7 @@ import { redirect, usePathname, useRouter } from "next/navigation"
 import { SettingsDialog } from "./setting/settings-dialog"
 import { useSession } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
-import { useFolderNameStore, useNameStore, useRenderStore,  useTrashFolderStore } from "@/lib/store/links"
+import { useFolderNameStore, useNameStore, useRenderStore, useTrashFolderStore } from "@/lib/store/links"
 import { Button } from "@/components/ui/button"
 import { BeautifulDropdownMenu } from "./BeautifullDropdownMenu"
 
@@ -53,7 +53,7 @@ export function AppSidebar() {
   const { foldername, setFoldername, addFoldername, deleteFoldername } = useFolderNameStore();
   const { addTrashfolder, trashfolder } = useTrashFolderStore();
   const triggerRerender = useRenderStore((state) => state.triggerRerender);
-  const {name , setName} = useNameStore();
+  const { name, setName } = useNameStore();
   // const [isedit, setisEdit] = React.useState<string>(null);
   // const [editValue, setEditValue] = React.useState<string>("");
   // const inputRef = React.useRef<HTMLInputElement>(null);
@@ -159,32 +159,28 @@ export function AppSidebar() {
     }
   };
 
-  const handleCloud = async(id : string) => {
-    try{
+  const handleCloud = async (id: string) => {
+    try {
       const res = await togglefolderCloud(id);
-      if(res.error == false){
+      if (res.error == false) {
         triggerRerender();
         toast({
           title: "Cloud",
           description: "all links are now in cloud state",
         })
       }
-    }catch(e){
+    } catch (e) {
       toast({
-      title: "Cloud",
-      description: "You clicked the Cloud option",
-    })
+        title: "Cloud",
+        description: "You clicked the Cloud option",
+      })
     }
-    
+
   }
 
   const handleDelete = async (folderId: string, folderName: string, numberOfLinks: string) => {
     const folder = { folderId, folderName, numberOfLinks }
-     deleteFoldername(folderId);
-      if (activeRoute == folderId) {
-        router.push('/dashboard')
-      }
-      addTrashfolder(folder);
+    addTrashfolder(folder);
     try {
       const res = await deleteFolder(parseInt(folderId));
       if (res.error == false)
@@ -335,7 +331,14 @@ export function AppSidebar() {
                                   // onEdit={() => handleEdit(data.id, data.name)}
                                   onShare={() => handleShare(data.id)}
                                   onCloud={() => handleCloud(data.id)}
-                                  onDelete={() => handleDelete(data.id, data.name, data._count.links)}
+                                  onDelete={() => {
+                                    deleteFoldername(data.id);
+                                    if (activeRoute == data.id) {
+                                      router.push('/dashboard')
+                                    }
+                                    handleDelete(data.id, data.name, data._count.links)
+                                  }
+                                  }
                                 />
 
                               </Link>
