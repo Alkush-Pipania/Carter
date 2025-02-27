@@ -13,14 +13,15 @@ import Loader from '@/components/global/Loader'
 import { signIn, useSession } from 'next-auth/react'
 import carterlogo from "../../../../public/logo.png"
 import Image from 'next/image'
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaGoogle } from "react-icons/fa";
+import GoogleAuthButton from '../_components/google-auth-button'
 
 
 const Signin = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
-
+  const [authloading , setAuthLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -49,13 +50,13 @@ const Signin = () => {
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (FormData) => {
     setLoading(true);
     const { email, password } = FormData;
-  
+
     const res = await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
-  
+
     if (res?.error || !res?.ok) {
       setSubmitError("Invalid email or password");
       setLoading(false);
@@ -79,13 +80,15 @@ const Signin = () => {
         <span className='text-gray-400 text-xs'>
           Organize, Share, and Manage Your Links with Ease
         </span>
-        {/* <div className='flex my-5 flex-col items-center justify-center gap-3 w-full'>
-          <Button className='w-full bg-gray-500 hover:bg-gray-600 flex items-center justify-center gap-2' onClick={() => {
-            signIn("github")
-          }}>
-            <FaGithub className='text-2xl' />
-            Github</Button>
-        </div> */}
+        <div className='flex my-5 flex-col items-center justify-center gap-3 w-full'>
+          <GoogleAuthButton
+           onClick={()=> {
+            setAuthLoading(true)
+            signIn("google")
+           } }
+           isLoading={authloading}
+          />
+        </div>
       </section>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col' >
