@@ -13,7 +13,6 @@ import Loader from '@/components/global/Loader'
 import { signIn, useSession } from 'next-auth/react'
 import carterlogo from "../../../../public/logo.png"
 import Image from 'next/image'
-import { FaGithub, FaGoogle } from "react-icons/fa";
 import GoogleAuthButton from '../_components/google-auth-button'
 
 
@@ -68,7 +67,7 @@ const Signin = () => {
   return (
     <main className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
 
-      <section className=''>
+      <section className='border-b'>
         <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
         <Link href='/' className='w-full flex justify-start items-center'>
           <span
@@ -85,6 +84,7 @@ const Signin = () => {
            onClick={()=> {
             setAuthLoading(true)
             signIn("google")
+            setAuthLoading(false)
            } }
            isLoading={authloading}
           />

@@ -10,13 +10,13 @@ interface GoogleAuthButtonProps {
 export default function GoogleAuthButton({ onClick, isLoading = false }: GoogleAuthButtonProps) {
   return (
     <Button
-      variant="outline"
-      className="w-full relative text-xl h-12 hover:text-white text-washed-purple/washed-purple-200 font-medium from-orange-300 to-red-400 bg-gradient-to-l  transition-colors"
+      variant="default"
+      className="w-full relative duration-100 ease-in-out focus:bg-primary-purple/primary-purple-900 bg-primary-purple/primary-purple-800 hover:bg-primary-purple/primary-purple-700  transition-colors"
       onClick={onClick}
       disabled={isLoading}
     >
       {isLoading ? (
-        <span className="flex items-center justify-center">
+        <span className="flex items-center  justify-center">
           <svg
             className="animate-spin -ml-1 mr-2 h-4 w-4 text-slate-700"
             xmlns="http://www.w3.org/2000/svg"
