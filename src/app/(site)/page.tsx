@@ -131,7 +131,7 @@ export default async function Home() {
           </a>
         </div>
         <div className="flex my-8 w-full items-center sm:justify-center gap-4">
-          <Link href="">
+          <Link href="https://x.com/alkushx">
           <Image
             src={twitter}
             className="w-[34px] cursor-pointer"
