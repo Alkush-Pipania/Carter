@@ -49,31 +49,30 @@ export function SettingsDialog({loading}: {loading : boolean}) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
        {loading ? (
-        <Skeleton className="h-4 w-24 bg-zinc-800" />
+        <Skeleton className="h-4 w-24 bg-Neutrals/neutrals-11" />
        ):(
-        <Button className="bg-transparent flex justify-start text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
+        <Button className="bg-transparent flex justify-start text-Neutrals/neutrals-6 hover:bg-Neutrals/neutrals-10 hover:text-Neutrals/neutrals-1">
         <Settings className="mr-2" />
         Open Settings
       </Button>
        )}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl  p-0 overflow-hidden">
-        <div className="flex bg-zinc-900 h-[80vh]">
-          <div className="w-64 bg-muted sm:block hidden p-6 bg-zinc-700 overflow-y-auto">
+      <DialogContent className="max-w-4xl p-0 overflow-hidden bg-Neutrals/neutrals-12 border-Neutrals/neutrals-11">
+        <div className="flex flex-col sm:flex-row h-[80vh]">
+          <div className="w-full sm:w-64 bg-Neutrals/neutrals-11 sm:block hidden p-6 overflow-y-auto border-r border-Neutrals/neutrals-10">
             <SettingsSidebar activeItem={activeItem} setActiveItem={setActiveItem} />
           </div>
           <div className="flex-1 p-6 overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="text-white">Settings</DialogTitle>
+            <DialogHeader className="space-y-2">
+              <DialogTitle className="text-2xl font-semibold text-Neutrals/neutrals-1">Settings</DialogTitle>
             </DialogHeader>
-            <Separator className="my-5 border-t border-gray-500 h-[1px]" />
+            <Separator className="my-6 border-Neutrals/neutrals-10" />
             
-                {activeItem === '#account' && (
-                 <MyAccount onhandleclick={onhandleclick} userdata={settingsdata}/>
-                )}
-                {/* {activeItem === '#settings' && <MySettings />}
-                {activeItem === '#notifications' && <MyNotifications />} */}
-            
+            {activeItem === '#account' && (
+              <MyAccount onhandleclick={onhandleclick} userdata={settingsdata}/>
+            )}
+            {/* {activeItem === '#settings' && <MySettings />}
+            {activeItem === '#notifications' && <MyNotifications />} */}
           </div>
         </div>
       </DialogContent>
