@@ -38,165 +38,156 @@ import { BeautifulDropdownMenu } from "./BeautifullDropdownMenu"
 
 export function AppSidebar() {
   const { status } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { toast } = useToast();
 
-  React.useEffect(() => {
-    if (status === 'unauthenticated') {
-      redirect('/signin')
-    }
-  }, [status])
-  const [isLoading, setIsLoading] = React.useState(true)
-  const [folderloading, setfolderloading] = React.useState<boolean>(true);
-  const [userdata, setUserdata] = React.useState<any>(null);
-  const [activeRoute, setActiveRoute] = React.useState<any>();
-  const [search, setSearch] = React.useState<string>('');
-  const [open, setOpen] = React.useState<boolean>(false);
+  // State management with proper types
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [folderLoading, setFolderLoading] = React.useState(true);
+  const [userData, setUserData] = React.useState<any>(null);
+  const [activeRoute, setActiveRoute] = React.useState<string>();
+  const [search, setSearch] = React.useState('');
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = React.useState(false);
+
+  // Store hooks
   const { foldername, setFoldername, addFoldername, deleteFoldername } = useFolderNameStore();
-  const { addTrashfolder, trashfolder } = useTrashFolderStore();
+  const { addTrashfolder } = useTrashFolderStore();
   const triggerRerender = useRenderStore((state) => state.triggerRerender);
   const { name, setName } = useNameStore();
-  // const [isedit, setisEdit] = React.useState<string>(null);
-  // const [editValue, setEditValue] = React.useState<string>("");
-  // const inputRef = React.useRef<HTMLInputElement>(null);
-  const pathname = usePathname();
-  const router = useRouter();
 
-
-
+  // Authentication check
   React.useEffect(() => {
-    function handleRouteChange() {
-      const pathId = pathname.split('/').pop();
-      setActiveRoute(pathId);
+    if (status === 'unauthenticated') {
+      redirect('/signin');
     }
-    handleRouteChange();
-  }, [pathname])
+  }, [status]);
 
-
+  // Route change handler
   React.useEffect(() => {
-    async function fetchfolderdata() {
-      const userdata = await getuserdata();
-      setUserdata(userdata.data);
-      setName(userdata.data.username)
-      setIsLoading(false)
-    }
-    fetchfolderdata();
-  }, [])
+    const pathId = pathname.split('/').pop();
+    setActiveRoute(pathId);
+  }, [pathname]);
 
+  // Fetch user data
   React.useEffect(() => {
-    async function fetchuserfolder() {
-      setfolderloading(true);
-      const res = await folderdata(search);
-      // console.log(res.data)
-      setFoldername(res.data);
-
-      setfolderloading(false);
+    async function fetchUserData() {
+      try {
+        const response = await getuserdata();
+        if (response.data) {
+          setUserData(response.data);
+          setName(response.data.username);
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch user data",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
-    fetchuserfolder();
-  }, [search])
+    fetchUserData();
+  }, [setName, toast]);
 
+  // Fetch folders with debounced search
+  React.useEffect(() => {
+    const debounceTimer = setTimeout(async () => {
+      try {
+        setFolderLoading(true);
+        const response = await folderdata(search);
+        if (response.data) {
+          setFoldername(response.data);
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch folders",
+          variant: "destructive",
+        });
+      } finally {
+        setFolderLoading(false);
+      }
+    }, 300); // Debounce search for 300ms
+
+    return () => clearTimeout(debounceTimer);
+  }, [search, setFoldername, toast]);
 
   const handleFolderCreate = (newfolder: any) => {
     addFoldername(newfolder);
-    setOpen(false);
+    setIsCreateFolderOpen(false);
   }
 
-  const { toast } = useToast();
-
-  // const handleEdit = (id: string, currentName: string) => {
-  //   setisEdit(id);
-  //   setEditValue(currentName);
-
-  //   // Use setTimeout to ensure the input is rendered before focusing
-  //   setTimeout(() => {
-  //     inputRef.current?.focus();
-  //   }, 0);
-
-  //   toast({
-  //     title: "Edit",
-  //     description: "You clicked the Edit option",
-  //   });
-  // };
-
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setEditValue(e.target.value);
-  // };
-
-  // const handleInputKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>, folderId: string) => {
-  //   if (e.key === 'Enter') {
-  //     // Here you would add logic to save the new name
-  //     console.log(`Saving new name: ${editValue} for folder: ${folderId}`);
-  //     setisEdit(null);
-  //   } else if (e.key === 'Escape') {
-  //     setisEdit(null);
-  //   }
-  // };
-
-
-
-  const handleShare = async (id: string) => {
+  const handleShare = React.useCallback(async (id: string) => {
     try {
-      const res = await getSecretKey(id);
-      if (res.error === false) {
+      const response = await getSecretKey(id);
+      if (!response.error && response.data) {
         const shareMessage = `Hey! I've shared a folder with you on Carter. 🚀  
         
-  🔑 Secret Key: ${res.data}  
-  🔗 Access it here: https://carter.fun/find  
-  
-  Enter the secret key to view the saved links. 🔐`;
+🔑 Secret Key: ${response.data}  
+🔗 Access it here: https://carter.fun/find  
 
-        navigator.clipboard.writeText(shareMessage);
+Enter the secret key to view the saved links. 🔐`;
 
+        await navigator.clipboard.writeText(shareMessage);
         toast({
           title: "Share",
           description: "Secret key and instructions have been copied to clipboard.",
         });
       }
-    } catch (e) {
+    } catch (error) {
       toast({
         title: "Error",
-        description: "There is some error",
+        description: "Failed to share folder",
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
-  const handleCloud = async (id: string) => {
+  const handleCloud = React.useCallback(async (id: string) => {
     try {
-      const res = await togglefolderCloud(id);
-      if (res.error == false) {
+      const response = await togglefolderCloud(id);
+      if (!response.error) {
         triggerRerender();
         toast({
           title: "Cloud",
-          description: "all links are now in cloud state",
-        })
+          description: "All links are now in cloud state",
+        });
       }
-    } catch (e) {
-      toast({
-        title: "Cloud",
-        description: "You clicked the Cloud option",
-      })
-    }
-
-  }
-
-  const handleDelete = async (folderId: string, folderName: string, numberOfLinks: string) => {
-    const folder = { folderId, folderName, numberOfLinks }
-    addTrashfolder(folder);
-    try {
-      const res = await deleteFolder(parseInt(folderId));
-      if (res.error == false)
-        toast({
-          title: "Move to Trash",
-          description: "successfully moved to trash",
-          variant: "default",
-        })
-    } catch (e) {
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Something went wrong",
+        description: "Failed to update cloud state",
         variant: "destructive",
-      })
+      });
     }
-  }
+  }, [triggerRerender, toast]);
+
+  const handleDelete = React.useCallback(async (folderId: string, folderName: string, numberOfLinks: number) => {
+    try {
+      const folder = { folderId, folderName, numberOfLinks };
+      addTrashfolder(folder);
+      
+      const response = await deleteFolder(parseInt(folderId));
+      if (!response.error) {
+        deleteFoldername(folderId);
+        if (activeRoute === folderId) {
+          router.push('/dashboard');
+        }
+        toast({
+          title: "Move to Trash",
+          description: "Successfully moved to trash",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete folder",
+        variant: "destructive",
+      });
+    }
+  }, [addTrashfolder, deleteFoldername, activeRoute, router, toast]);
 
   return (
     <Sidebar
@@ -257,8 +248,8 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               {/* CReate folder here ! */}
-              <Dialog open={open} onOpenChange={setOpen} >
-                <DialogTrigger onChange={() => setOpen(true)}>
+              <Dialog open={isCreateFolderOpen} onOpenChange={setIsCreateFolderOpen} >
+                <DialogTrigger onChange={() => setIsCreateFolderOpen(true)}>
                   <SidebarMenuItem key="#3">
                     <SidebarMenuButton asChild>
                       <h3 className="flex items-center gap-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
@@ -294,7 +285,7 @@ export function AppSidebar() {
                 </SidebarMenuButton>
                 <SidebarMenuSub>
                   {
-                    isLoading || folderloading ? (
+                    isLoading || folderLoading ? (
                       Array(5).fill(0).map((_, index) => (
                         <SidebarMenuSubItem key={index}>
                           <Skeleton className="h-5 my-2 w-ful bg-zinc-800" />
@@ -314,21 +305,8 @@ export function AppSidebar() {
                                     flex w-full justify-between items-center gap-2  hover:bg-zinc-800/50 hover:text-zinc-100 active:bg-zinc-900
                                   `}
                               >
-                                {/* {isedit === data.id ? (
-                                  <Input
-                                    ref={inputRef}
-                                    value={editValue}
-                                    onChange={handleInputChange}
-                                    onKeyDown={(e) => handleInputKeyDown(e, data.id)}
-                                    className="border-none bg-transparent"
-                                    onClick={(e) => e.preventDefault()} // Prevent navigation when clicking input
-                                  />
-                                ) : (
-                                 
-                                )} */}
                                 <span className="truncate">{data.name}</span>
                                 <BeautifulDropdownMenu
-                                  // onEdit={() => handleEdit(data.id, data.name)}
                                   onShare={() => handleShare(data.id)}
                                   onCloud={() => handleCloud(data.id)}
                                   onDelete={() => {
@@ -347,7 +325,7 @@ export function AppSidebar() {
                           </SidebarMenuSubItem>
                         ))
                       ) : (
-                        <NoFolder createfolder={setOpen} />
+                        <NoFolder createfolder={setIsCreateFolderOpen} />
                       )
                     )
                   }

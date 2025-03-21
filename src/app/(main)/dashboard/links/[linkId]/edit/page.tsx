@@ -21,18 +21,20 @@ export default async function EditLinkPage( {
   console.log(session.user.id)
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <PageHeader title="Edit Link" description="Update your link details" backHref="/dashboard" />
-      <Card className="mt-8 bg-zinc-950 text-white">
-        <CardHeader>
-          <CardTitle>Link Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Suspense fallback={<LinkDetailsSkeleton />}>
-            <LinkDetails linkId={linkId} userId={session.user.id} />
-          </Suspense>
-        </CardContent>
-      </Card>
+    <main className="w-full px-4 py-4 sm:py-6">
+      <div className="max-w-7xl mx-auto">
+        <PageHeader title="Edit Link" description="Update your link details" backHref="/dashboard" />
+        <Card className="mt-4 sm:mt-6 bg-brand/brand-dark/60 backdrop-blur-md border-brand/brand-primaryblue/30 shadow-lg">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl sm:text-2xl text-white">Link Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Suspense fallback={<LinkDetailsSkeleton />}>
+              <LinkDetails linkId={linkId} userId={session.user.id} />
+            </Suspense>
+          </CardContent>
+        </Card>
+      </div>
     </main>
   )
 }

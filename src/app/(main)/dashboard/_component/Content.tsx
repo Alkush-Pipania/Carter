@@ -19,13 +19,13 @@ export default function Content() {
 
   useEffect(() => {
     async function fetchdata() {
-      setloading(true)
+      setloading(true);
       const data = await getLinklist(searchvalue);
       setLinks(data.data);
-      setloading(false)
+      setloading(false);
     }
     fetchdata();
-  }, [searchParams, setLinks])
+  }, [searchvalue, setLinks]);
 
   return (
     <section >
@@ -37,8 +37,7 @@ export default function Content() {
       ) : (
         <>
           {links?.length > 0 ? (
-            <main className='grid gap-y-3  md:grid-cols-2 md:gap-6 gap-x-1 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 
-            2xl:grid-cols-4'>
+            <main className='grid gap-y-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:gap-6'>
               {links.map((link: any) => (
                 <Linkcompo
                   key={link.secret_Id}

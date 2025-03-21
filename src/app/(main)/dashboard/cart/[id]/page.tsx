@@ -35,13 +35,15 @@ export default function LinkCart() {
 
   return (
     <section className=" w-full flex flex-col h-screen  ">
-      <div className="fixed right-0 sm: flex mx-3 justify-center gap-x-1 items-center ">
+      <div className="fixed right-0 flex mx-3 justify-center gap-x-1 items-center ">
         {isloading ?(
           <Skeleton className="h-6 w-24 bg-zinc-800" />
         ) : (
           <div className="flex bg-brand/brand-dark px-2 py-1 rounded-full items-center capitalize text-xl justify-between">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
+            
           {foldername?.name} 
-          <DownCircle className="" />
+          <DownCircle className="text-purple-400" />
            </div>
         )}
       </div>

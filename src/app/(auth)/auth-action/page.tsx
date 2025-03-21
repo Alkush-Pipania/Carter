@@ -5,8 +5,6 @@ import Link from 'next/link'
 import EmailForm from './_components/email-form'
 import OtpForm from './_components/otp-form'
 import NewPasswordForm from './_components/new-password'
-import carterlogo from "../../../../public/logo.png"
-import Image from 'next/image'
 import { emailexist, updatePassword, verifyforgotOTP } from '@/server/actions/links'
 import { generateForgotPasswordToken } from '@/lib/token'
 import { sendFogotpasswordmail } from '@/lib/mail'
@@ -85,16 +83,15 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="flex min-h-screen w-full px-10 items-center flex-col  justify-center bg-[#030014] text-white">
-
+    <div className="flex min-h-screen w-full px-4 sm:px-6 md:px-10 items-center flex-col justify-center bg-[#030014] text-white">
+      <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 left-20 sm:top-52 top-40' />
       <div
         className="pointer-events-none absolute inset-0 flex items-center justify-center"
         style={{
           background: 'radial-gradient(circle at center, #6889ff1a 0%, transparent 70%)',
         }}
       />
-
-      <div className="z-10 w-full  space-y-8">
+      <div className="z-10 w-full max-w-md mx-auto space-y-8">
         {/* Logo */}
         {/* <section className='flex flex-col items-start'>
           <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
@@ -141,6 +138,19 @@ export default function ForgotPassword() {
             </Link>
           </div>
         )}
+
+        {/* Sign Up Link */}
+        <div className="pt-6 text-center">
+          <span className="text-sm">
+            Don&apos;t have an account?{' '}
+            <Link
+              href="/signup"
+              className="text-primary mx-2 text-primary-purple/primary-purple-400 hover:text-primary-purple/primary-purple-300"
+            >
+              Sign up
+            </Link>
+          </span>
+        </div>
       </div>
     </div>
   )

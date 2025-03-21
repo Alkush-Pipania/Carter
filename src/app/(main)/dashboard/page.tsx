@@ -1,6 +1,5 @@
 import { getServerSession } from 'next-auth';
 import { authOption } from '@/lib/auth';
-import { getLinklist } from '@/lib/global/handler';
 import { redirect } from 'next/navigation';
 import Content from "./_component/Content";
 

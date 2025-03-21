@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import * as z from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import Link from 'next/link'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -14,13 +14,15 @@ import { signIn, useSession } from 'next-auth/react'
 import carterlogo from "../../../../public/logo.png"
 import Image from 'next/image'
 import GoogleAuthButton from '../_components/google-auth-button'
+import { Eye, EyeOff } from "lucide-react"
 
 
 const Signin = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
-  const [authloading , setAuthLoading] = useState<boolean>(false);
+  const [authloading, setAuthLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -28,13 +30,6 @@ const Signin = () => {
       router.push('/dashboard');
     }
   }, [session, status, router]);
-
-
-
-
-
-
-
 
   const [submitError, setSubmitError] = useState('');
 
@@ -45,7 +40,7 @@ const Signin = () => {
   });
 
   const isLoading = form.formState.isSubmitting;
-
+ 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (FormData) => {
     setLoading(true);
     const { email, password } = FormData;
@@ -64,6 +59,7 @@ const Signin = () => {
       router.push("/dashboard");
     }
   };
+
   return (
     <main className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
 
@@ -81,12 +77,12 @@ const Signin = () => {
         </span>
         <div className='flex my-5 flex-col items-center justify-center gap-3 w-full'>
           <GoogleAuthButton
-           onClick={()=> {
-            setAuthLoading(true)
-            signIn("google")
-            setAuthLoading(false)
-           } }
-           isLoading={authloading}
+            onClick={() => {
+              setAuthLoading(true)
+              signIn("google")
+              setAuthLoading(false)
+            }}
+            isLoading={authloading}
           />
         </div>
       </section>
@@ -105,13 +101,34 @@ const Signin = () => {
             )}
           />
 
-          <FormField control={form.control}
+          <FormField
+            control={form.control}
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormControl>
-                  <Input type='password' placeholder='Password' {...field} />
-                </FormControl>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder='Password'
+                      {...field}
+                      className="pr-10"
+                    />
+                  </FormControl>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 h-auto hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-zinc-400" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-zinc-400" />
+                    )}
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -122,10 +139,10 @@ const Signin = () => {
             Forgot Password
           </Link>
 
-          <Button className='w-full p-6' type='submit' size='lg'
-            disabled={isLoading}>
+          <Button className='w-full p-6' type='submit' size='lg' disabled={isLoading}>
             {!isLoading || !loading ? 'Sign in' : <Loader />}
           </Button>
+          
         </form>
         <section className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
           <span className='self-center '>

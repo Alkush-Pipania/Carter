@@ -1,9 +1,8 @@
 "use server"
 import prisma from "@/lib/prisma"
 import axios from "axios";
-import { error } from "console";
-import { UUID } from "crypto";
-import { FaLastfmSquare } from "react-icons/fa";
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Pinecone } from '@pinecone-database/pinecone'
 
 export async function toggleclouddb({
   user_id,
@@ -187,12 +186,12 @@ export async function folderdatadb(user_id: string, search: string) {
           mode: 'insensitive',
         },
       },
-      select:{
-        id : true,
-        name : true,
-        _count:{
-          select:{
-            links:true
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            links: true
           }
         }
       },
@@ -493,6 +492,14 @@ function parseAction(action: string): LinkAction {
   return { type: 'FOLDER', folderId };
 }
 
+const genAI = new GoogleGenerativeAI('AIzaSyBQU_NvXviDK6XnFC69eAwc8_Pn1055HOU');
+const pinecone = new Pinecone({ apiKey: 'pcsk_2Fv3cy_Q2fNvrNfV8eotfdhxfvb8A8DtV6SKxqMqbJ59JZJRyVWBztHXytHB2C9WRBmuUU' });
+
+async function generateGeminiEmbedding(text: string) {
+  const model = genAI.getGenerativeModel({ model: "embedding-001" });
+  const result = await model.embedContent(text);
+  return result.embedding.values; // Returns the 768-dimension vector
+}
 
 export async function AddLinkDb(url: string, title: string, description: string, userId: string, action: string) {
 
@@ -552,7 +559,7 @@ export async function AddLinkDb(url: string, title: string, description: string,
 
 
   } catch (error) {
-    console.error('Error in AddLinkDb:', error);
+    console.log('Error in AddLinkDb:', error);
 
     if (error instanceof Error) {
       // Handle specific database errors
@@ -709,83 +716,83 @@ export async function restoreTrashFolderDB(userId: string, folderId: string) {
       await tx.linkformTrash.deleteMany({
         where: {
           trashFolderID: parseInt(folderId, 10),
-          userID : parseInt(userId , 10)
+          userID: parseInt(userId, 10)
         },
       });
 
       await tx.trashFolder.delete({
-        where: { id: parseInt(folderId , 10) },
+        where: { id: parseInt(folderId, 10) },
       });
-      return {restoredFolder ,  restoredLinks}
+      return { restoredFolder, restoredLinks }
     })
     console.log(restoredData)
-    return { error : false , data : restoredData.restoredFolder , message : "success"};
+    return { error: false, data: restoredData.restoredFolder, message: "success" };
   } catch (e) {
     console.log(e)
-    return { error : true , message : "some error occured"}
+    return { error: true, message: "some error occured" }
   }
 }
 
-export async function deleteTrashFolderDB(userId : string , folderId : string){
-  try{
-    await prisma.$transaction(async (tx) =>{
+export async function deleteTrashFolderDB(userId: string, folderId: string) {
+  try {
+    await prisma.$transaction(async (tx) => {
       await tx.linkformTrash.deleteMany({
-        where:{
-          userID : parseInt(userId , 10),
-          trashFolderID : parseInt(folderId , 10)
+        where: {
+          userID: parseInt(userId, 10),
+          trashFolderID: parseInt(folderId, 10)
         }
       })
       await tx.trashFolder.delete({
-        where:{
-          id : parseInt(folderId , 10),
-          userID : parseInt(userId , 10)
+        where: {
+          id: parseInt(folderId, 10),
+          userID: parseInt(userId, 10)
         }
       })
     })
-    return {error : false , message : "success"}
-  }catch(e){
-    return {error : true , message : "error"}
+    return { error: false, message: "success" }
+  } catch (e) {
+    return { error: true, message: "error" }
   }
 }
 
 
-export async function deleteAllTrashFolderDB(userId : string){
-  try{
-    await prisma.$transaction(async(tx)=>{
+export async function deleteAllTrashFolderDB(userId: string) {
+  try {
+    await prisma.$transaction(async (tx) => {
       await tx.linkformTrash.deleteMany({
-        where:{
-          userID : parseInt(userId,10)
+        where: {
+          userID: parseInt(userId, 10)
         }
       })
       await tx.trashFolder.deleteMany({
-        where:{
-          userID : parseInt(userId, 10)
+        where: {
+          userID: parseInt(userId, 10)
         }
       })
     })
-    return {error : false , message : "success"}
-  }catch(e){
-    return {error : true , message : "error"}
+    return { error: false, message: "success" }
+  } catch (e) {
+    return { error: true, message: "error" }
   }
 }
 
 
-export async function togglefolderCloudDB(userid : string , folderId : string){
-  try{
-    await prisma.$transaction(async(tx)=>{
+export async function togglefolderCloudDB(userid: string, folderId: string) {
+  try {
+    await prisma.$transaction(async (tx) => {
       await prisma.linkform.updateMany({
-        where:{
-          userID : parseInt(userid , 10),
-          folderID : parseInt(folderId,10)
+        where: {
+          userID: parseInt(userid, 10),
+          folderID: parseInt(folderId, 10)
         },
-        data:{
+        data: {
           tobefind: true,
         }
       })
     })
-    return { error : false , message : "succesfull"}
-  }catch(e){
-    return {error : true , message : "error"}
+    return { error: false, message: "succesfull" }
+  } catch (e) {
+    return { error: true, message: "error" }
   }
 }
 

@@ -2,6 +2,7 @@ import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
+import { Copy } from 'lucide-react';
 
 const Retrive = ({ url, imgurl, description, title }: { url: string, imgurl: string, description: string, title: string }) => {
   const { toast } = useToast();
@@ -23,38 +24,44 @@ const Retrive = ({ url, imgurl, description, title }: { url: string, imgurl: str
     }
   };
 
-
   return (
-    <div className='w-full bg-darkBg shadow-2xl hover:shadow-sm shadow-purpleShadow sm:max-w-[321px] h-full flex flex-col p-2  rounded-lg '>
-      <Link href={url} target="_blank" rel="noopener noreferrer" className='w-full flex items-center justify-center'>
-        <div className="w-full h-[150px] overflow-hidden flex items-center justify-center">
+    <div className='w-full max-w-sm bg-darkBg hover:bg-darkBg/80 transition-all duration-200 shadow-lg hover:shadow-xl rounded-xl overflow-hidden'>
+      <Link href={url} target="_blank" rel="noopener noreferrer" className='block'>
+        <div className="aspect-video w-full overflow-hidden bg-gray-900">
           {imgurl === "no image" ? (
-            <div>Image not extracted</div>
+            <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
+              No image available
+            </div>
           ) : (
             <Image
               src={imgurl}
-              width={300}
-              height={150}
-              alt="logo"
-              className="w-full h-full object-cover"
+              width={400}
+              height={225}
+              alt={title}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
             />
           )}
         </div>
       </Link>
-      <div className='flex flex-col gap-y-2 mt-1 px-2 w-full'>
-        <div onClick={()=> handleCopy(url)} 
-        className='flex items-center justify-between'>
-          <h2 className='text-sm text-lightGray cursor-copy font-medium '>
-            {url.length > 25 ? `${url.slice(0, 25)}...` : url}
+
+      <div className='p-4 space-y-3'>
+        <div 
+          onClick={() => handleCopy(url)}
+          className='flex items-center justify-between group cursor-pointer'
+        >
+          <h2 className='text-sm text-lightGray font-medium truncate pr-2'>
+            {url}
           </h2>
+          <Copy className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
-        <div className='text-xl text-primary-purple/primary-purple-400 font-semibold flex justify-between items-center'>
+
+        <h3 className='text-lg font-semibold text-primary-purple/primary-purple-400 line-clamp-2'>
           {title}
-        </div>
-        <div>
-          <p className='text-sm text-gray-500 '>{description}</p>
-        </div>
-        
+        </h3>
+
+        <p className='text-sm text-gray-400 line-clamp-2'>
+          {description}
+        </p>
       </div>
     </div>
   )

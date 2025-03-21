@@ -1,7 +1,6 @@
 "use client";
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
-import docu from '../../../public/Document add.png';
 import Link from 'next/link';
 import search from '../../../public/Search.png';
 import { motion } from 'framer-motion';
@@ -14,14 +13,20 @@ import { Input } from '../ui/input';
 import Loader from '../global/Loader';
 import axios from 'axios';
 import carterlogo from "../../../public/logo.png"
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import Rightmenu from './rightmenu';
-import { Loader2Icon } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Loader2Icon, Plus } from 'lucide-react';
 import { AddLink } from '@/server/actions/links';
 import { useFolderlinkStore, useLinkStore } from '@/lib/store/links';
-import Button2 from '../ui/atomicui/Button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -41,7 +46,6 @@ const Dashbar = (
   const pathname = usePathname();
   const pathsToHide = ['/trash','links'];
   const hideFeature = pathsToHide.some(path => pathname?.includes(path));
-
 
 
   React.useEffect(() => {
@@ -93,15 +97,14 @@ const Dashbar = (
           clearErrors('url')
           setdataLoading(true)
           const response = await axios.post(process.env.NEXT_PUBLIC_GEMINI_BACKEND_URL, {
-            prompt: url,
+            Prompt: url,
           });
-          const { title, description } = response.data.data;
+          const { title, description } = response.data;
           setValue('title', title);
           setValue('description', description);
           setdataLoading(false)
-
+          	
         } else {
-          // URL is invalid; show a validation error
           setError("url", { type: "manual", message: "Invalid URL format" });
         }
       });
@@ -139,50 +142,51 @@ const Dashbar = (
   };
 
   return (
-    <div className='w-[100%] border-b border-gray-500 z-10 h-20  bg-brand/brand-dark/60 flex gap-x-3 justify-between sticky top-0 items-center px-2'>
-      <Link href="/dashboard" >
-
-        <Image src={carterlogo} alt='logo' className='w-[50px]' />
+    <div className='w-full border-b border-gray-500/30 backdrop-blur-md z-10 h-16 sm:h-20 bg-brand/brand-dark/60 flex items-center justify-between px-3 sm:px-6 sticky top-0'>
+      <Link href="/dashboard" className="flex items-center">
+        <Image src={carterlogo} alt='logo' className='w-10 sm:w-[50px] transition-all duration-200' />
       </Link>
-      <div className='flex sm:mt-0 sm:gap-y-0 sm:mr-12 mr-8 sm:items-center items-center justify-between sm:flex-row sm:justify-center gap-x-5'>
-        {/* <Button2 onClick={toggleBox} className='flex shadow-purpleShadow justify-between items-center gap-1' variant="clicky" volume={0.2}>
-          <Image src={docu} alt='add button' className='w-[25px]' />
-          ADD
-        </Button2> */}
-        {!hideFeature &&
-         <button onClick={toggleBox} className='flex text-slate-200 hover:text-white font-semibold font-mono text-xl active:bg-purple-700 transition-all ease-in-out duration-200 hover:bg-purple-600 items-center gap-1 p-2 bg-purple-500  rounded-full'>
-          <Image src={docu} alt='add button' className='w-[25px]' />
-          Add
-        </button>
-        }
-        <div className='absolute  top-4 sm:right-36'>
-          {isOpen && (
-            <motion.div
-              ref={boxRef}
-              className="bg-brand/brand-dark border-8 z-10 rounded-3xl py-4 px-5 border-brand/brand-primaryblue"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Form Component */}
+
+      <div className='flex items-center gap-3 sm:gap-6'>
+        {!hideFeature && (
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <button 
+                className='flex text-slate-200 hover:text-white font-medium text-sm sm:text-base 
+                         relative group px-3 py-1.5 sm:px-4 sm:py-2 bg-purple-500 
+                         hover:bg-purple-600 active:bg-purple-700 rounded-full 
+                         transition-all duration-200'
+              >
+                <div className='absolute inset-0 bg-purple-500/30 blur-lg rounded-full 
+                              transition-all duration-200 group-hover:bg-purple-500/40'></div>
+                <div className='relative flex items-center gap-1.5'>
+                  <Plus className="w-5 h-5" />
+                  <span className="hidden sm:inline">Add</span>
+                </div>
+              </button>
+            </DialogTrigger>
+            <DialogContent className="bg-brand/brand-dark border-brand/brand-primaryblue">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold text-white">Add New Link</DialogTitle>
+                <DialogDescription className="text-gray-400">
+                  Enter the URL of the website you want to save
+                </DialogDescription>
+              </DialogHeader>
               <FormProvider {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3 w-full">
-                  {/* URL Input */}
-                  <div className="flex flex-col justify-center  gap-4">
-
+                  <div className="flex flex-col justify-center gap-4">
                     <FormField
                       control={form.control}
                       name="url"
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
-                          <div className='flex items-center justify-start  gap-4'>
-                            <FormLabel className='text-center text-xl'>Url:</FormLabel>
+                          <div className='flex items-center justify-start gap-3 sm:gap-4'>
+                            <FormLabel className='text-base sm:text-xl whitespace-nowrap'>URL:</FormLabel>
                             <FormControl>
                               <Input
                                 type="url"
                                 placeholder="https://"
-                                className="w-full bg-Neutrals/neutrals-10 outline-none px-1 py-1 rounded-xl"
+                                className="w-full bg-Neutrals/neutrals-10 outline-none px-2 py-1.5 rounded-xl text-sm sm:text-base"
                                 {...field}
                               />
                             </FormControl>
@@ -191,64 +195,14 @@ const Dashbar = (
                         </FormItem>
                       )}
                     />
-
-                    <div className='bg-gray-500 w-fit px-2 rounded-full py-1'>
-                      {dataloading ? <Loader2Icon className='w-6 h-6 bg-transparent text-white' /> : (<h3 onClick={() => fetchData(url)}
-                        className='cursor-pointer'>✨Use AI
-                      </h3>)}
-                    </div>
-
-                  </div>
-
-                  {/* Title Input */}
-                  <div className="flex items-center justify-start gap-4">
-                    <h3 className="text-center text-xl">Title: </h3>
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              type="title"
-                              placeholder="Title of the link"
-                              className="w-full  bg-Neutrals/neutrals-10 outline-none px-2 py-1 rounded-xl"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Description Input */}
-                  <div className="flex  flex-col items-start justify-center gap-4">
-                    <h3 className="text-center text-xl">Description:</h3>
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <textarea
-                              placeholder="Summary"
-                              className=" bg-Neutrals/neutrals-10 resize-none outline-none px-1 py-1 rounded-xl"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
 
                   {errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
-                  <div className='flex justify-between items-center'>
+                  <div className='flex justify-between items-center mt-4'>
                     <button
                       type="submit"
-                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 self-start rounded"
+                      className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
                       disabled={isLoading}
                     >
                       {!isLoading ? 'Submit' : <Loader />}
@@ -260,33 +214,29 @@ const Dashbar = (
                   </div>
                 </form>
               </FormProvider>
-            </motion.div>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        <div className='flex items-center gap-3 sm:gap-6'>
+          {!hideFeature && (
+            <div className='relative group'>
+              <div className='absolute inset-0 bg-purple-500/20 blur-md rounded-full transition-all duration-200 group-hover:bg-purple-500/30'></div>
+              <div className='relative bg-Neutrals/neutrals-10 flex items-center h-9 sm:h-10 sm:w-[200px] w-[140px] justify-start px-3 rounded-full transition-all duration-200 group-hover:bg-opacity-90'>
+                <Image src={search} alt='search' className='w-4 sm:w-5 opacity-70 group-hover:opacity-100 transition-opacity' />
+                <input 
+                  placeholder='Search' 
+                  onChange={(event) => {
+                    event.preventDefault();
+                    router.push(`${pathname}?search=${event.target.value}`);
+                  }} 
+                  className='bg-transparent ml-2 outline-none focus:outline-none w-full text-sm sm:text-base placeholder-gray-400'
+                />
+              </div>
+            </div>
           )}
-        </div>
-        <div className='flex justify-center items-center gap-3 sm:gap-7'>
-          {!hideFeature &&
-          <div className='bg-Neutrals/neutrals-10 flex items-center sm:w-[171px] w-24 justify-start p-2 gap-2 rounded-full'>
-            <Image src={search} alt='search button' className='w-[21px]' />
-            <input placeholder='Search' onChange={(event) => {
-              event.preventDefault();
-              router.push(`${pathname}?search=${event.target.value}`);
-            }} className='bg-transparent outline-none focus:outline-none w-full' />
-
-          </div>
-          }
-          {/* <div onClick={() => {
-
-            signOut({ callbackUrl: '/signin' });
-
-          }} className=' px-3  py-1 rounded-full hidden sm:block
-           bg-red-600 
-            duration-75 ease-in-out  cursor-pointer'>
-            <h3 >Sign Out</h3>
-          </div> */}
 
           <Rightmenu userid={userId} />
-
-
         </div>
       </div>
     </div>

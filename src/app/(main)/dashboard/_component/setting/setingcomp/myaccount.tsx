@@ -125,23 +125,23 @@ export default function MyAccount({ userdata , onhandleclick }: { userdata: User
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center text-2xl text-black font-medium">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              <div className="h-20 w-20 rounded-full bg-Neutrals/neutrals-11 flex items-center justify-center text-2xl text-Neutrals/neutrals-1 font-medium border border-Neutrals/neutrals-10">
                 {userdata?.username.slice(0, 2).toUpperCase()}
               </div>
-              <div className="space-y-1">
+              <div className="space-y-2 flex-1">
                 <FormField
                   control={form.control}
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Your Name</FormLabel>
+                      <FormLabel className="text-Neutrals/neutrals-5">Your Name</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} className="bg-Neutrals/neutrals-11 border-Neutrals/neutrals-10 text-Neutrals/neutrals-1 placeholder:text-Neutrals/neutrals-7 focus:border-Neutrals/neutrals-9" />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -149,7 +149,7 @@ export default function MyAccount({ userdata , onhandleclick }: { userdata: User
             </div>
             <div className="flex justify-end">
               <Button disabled={form.formState.isSubmitting} type="submit"
-                className="bg-primary-blue/primary-blue-500 active:bg-primary-blue/primary-blue-700 hover:bg-primary-blue/primary-blue-600">
+                className="bg-primary-blue/primary-blue-500 active:bg-primary-blue/primary-blue-700 hover:bg-primary-blue/primary-blue-600 text-Neutrals/neutrals-1">
                 Save changes
               </Button>
             </div>
@@ -157,117 +157,41 @@ export default function MyAccount({ userdata , onhandleclick }: { userdata: User
         </form>
       </Form>
 
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-white">Account security</h2>
+      <div className="mt-8 space-y-6">
+        <h2 className="text-xl font-semibold text-Neutrals/neutrals-1">Account security</h2>
 
-        <div className="space-y-1 flex justify-between items-center gap-4">
-
-          <div className="flex flex-col items-start justify-center">
-            <Label htmlFor="email" className="text-gray-300">Email</Label>
-            <p className="text-sm text-muted-foreground">
-              {userdata?.email}
-            </p>
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 rounded-lg bg-Neutrals/neutrals-11 border border-Neutrals/neutrals-10">
+            <div className="space-y-1">
+              <Label htmlFor="email" className="text-Neutrals/neutrals-5">Email</Label>
+              <p className="text-sm text-Neutrals/neutrals-7">
+                {userdata?.email}
+              </p>
+            </div>
+            <Button type="button"
+              className="text-Neutrals/neutrals-7 bg-transparent hover:bg-Neutrals/neutrals-10 border-Neutrals/neutrals-10 cursor-not-allowed">
+              Change not Available
+            </Button>
           </div>
-          <Button type="button"
-            className="text-gray-200 bg-transparent active:bg-zinc-800 border-gray-400 hover:bg-zinc-700 border border-spacing-1 cursor-not-allowed">Change not Available</Button>
 
-        </div>
-
-        <div className="space-y-1">
-          <Label htmlFor="twoFactor" className="text-white">Email Verification</Label>
-          <div className="flex items-center justify-between">
-
-            <Switch
-              id="emailverification"
-              checked={switchstate}
-              onClick={handleSwitchClick}
-              className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-400 hover:data-[state=unchecked]:bg-orange-500"
-            />
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogContent className="bg-zinc-700 border-0">
-                <div className="flex flex-col mx-2 items-start gap-y-3 leading-5 my-2 ">
-                  <p>Your current email is{" "}
-                    <span className=" gap-x-1 font-bold">{userdata.email}</span>. We'll send a temporary verification code to this email.</p>
-                  {verificationsend == false ? (
-                    <>
-                    {loading === true ? (
-                      <Button 
-                      className="bg-primary-blue/primary-blue-500
-                    hover:bg-primary-blue/primary-blue-600
-                    active:bg-primary-blue/primary-blue-700 transition-all
-                     duration-75 ease-in-out
-                    ">
-                      <Loader/>
-                    </Button>
-                    ): (
-                      <Button onClick={Sendverification}
-                      className="bg-primary-blue/primary-blue-500
-                    hover:bg-primary-blue/primary-blue-600
-                    active:bg-primary-blue/primary-blue-700 transition-all
-                     duration-75 ease-in-out
-                    ">
-                      Send verification code
-                    </Button>
-                    )}
-                    </>
-                  ) : (
-                    <Form {...verificationcode}>
-                      <form className="flex flex-col items-start gap-y-3" onSubmit={verificationcode.handleSubmit(codeSubmit)}>
-                        <FormField
-                          control={verificationcode.control}
-                          name="otp"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  type="text"
-                                  maxLength={6}
-                                  value={otp.join('')}
-                                  onChange={(e) => {
-                                    const inputValue = e.target.value;
-                                    // Ensure only digits
-                                    if (/^\d*$/.test(inputValue)) {
-                                      // Split the input into individual digits
-                                      const newOtp = inputValue.split('').slice(0, 6);
-                                      setOtp(newOtp.concat(Array(6 - newOtp.length).fill('')));
-                                      field.onChange(e);
-                                    }
-                                  }}
-                                  className="w-full"
-                                  placeholder="Enter 6-digit OTP"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button
-                          disabled={verificationcode.formState.isSubmitting} type="submit"
-                          className="bg-primary-blue/primary-blue-500
-                           hover:bg-primary-blue/primary-blue-600
-                             active:bg-primary-blue/primary-blue-700 transition-all
-                             duration-75 ease-in-out
-                            ">
-                          Submit
-                        </Button>
-
-                      </form>
-                    </Form>
-                  )}
-                </div>
-              </DialogContent>
-            </Dialog>
-
+          <div className="p-4 rounded-lg bg-Neutrals/neutrals-11 border border-Neutrals/neutrals-10">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <Label htmlFor="twoFactor" className="text-Neutrals/neutrals-5">Email Verification</Label>
+                <p className="text-sm text-Neutrals/neutrals-7">Verify your email address to enable all features</p>
+              </div>
+              <Switch
+                id="emailverification"
+                checked={switchstate}
+                onClick={handleSwitchClick}
+                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-400 hover:data-[state=unchecked]:bg-orange-500"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-
-      <Deletedialog email = {userdata?.email}/>
-
-
-
+      <Deletedialog email={userdata?.email}/>
     </>
   )
 }

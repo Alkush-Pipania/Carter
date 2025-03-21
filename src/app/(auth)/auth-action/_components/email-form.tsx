@@ -30,11 +30,13 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
   }
 
   return (
-    <div className="space-y-6 w-full max-w-md mx-auto px-4 sm:px-6 md:px-8">
-      <h2 className="text-start text-2xl font-bold sm:text-3xl">Reset Password</h2>
-      <p className="text-start text-sm text-gray-400 sm:text-base">
-        Enter your email address and we'll send you a verification code.
-      </p>
+    <div className="space-y-4 sm:space-y-6 w-full mx-auto">
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-bold">Reset Password</h2>
+        <p className="text-sm sm:text-base text-gray-400">
+          Enter your email address and we'll send you a verification code.
+        </p>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <FormField
@@ -47,17 +49,17 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
                     {...field}
                     type="email"
                     placeholder="Email"
-                    className="rounded-lg border border-gray-600 bg-transparent px-4 py-3 text-white placeholder-gray-400 focus:border-[#8d33ff] focus:outline-none w-full"
+                    className="rounded-lg border border-gray-600 bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-400 focus:border-[#8d33ff] focus:outline-none w-full text-sm sm:text-base"
                     disabled={isLoading}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-sm" />
               </FormItem>
             )}
           />
           <Button
             type="submit"
-            className="w-full rounded-lg bg-[#8d33ff] px-4 py-3 font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-[#8d33ff] focus:ring-offset-2 focus:ring-offset-[#030014] disabled:opacity-50"
+            className="w-full rounded-lg bg-[#8d33ff] px-4 py-2 sm:py-3 font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-[#8d33ff] focus:ring-offset-2 focus:ring-offset-[#030014] disabled:opacity-50 text-sm sm:text-base"
             disabled={isLoading}
           >
             {isLoading ? 'Sending...' : 'Send Verification Code'}
