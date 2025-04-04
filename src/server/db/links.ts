@@ -501,84 +501,84 @@ async function generateGeminiEmbedding(text: string) {
   return result.embedding.values; // Returns the 768-dimension vector
 }
 
-export async function AddLinkDb(url: string, title: string, description: string, userId: string, action: string) {
+// export async function AddLinkDb(url: string, title: string, description: string, userId: string, action: string) {
 
-  try {
-    const parsedUserId = parseInt(userId, 10);
-    if (isNaN(parsedUserId)) {
-      throw new Error('Invalid user ID');
-    }
-    const linkAction = parseAction(action);
+//   try {
+//     const parsedUserId = parseInt(userId, 10);
+//     if (isNaN(parsedUserId)) {
+//       throw new Error('Invalid user ID');
+//     }
+//     const linkAction = parseAction(action);
 
-    let imageURl = "no image";
+//     let imageURl = "no image";
 
-    try {
-      const apiResponse = await axios.get(
-        `${process.env.Image_API_RETRIVE_URL}=${url}`
-      );
-      imageURl = apiResponse.data.image;
-      console.log(imageURl)
-    } catch (e) {
-      console.log(e)
-      const imgfallback = await prisma.fallbackImage.findMany({
-        orderBy: {
-          id: 'asc',
-        },
-        take: 1,
-        skip: Math.floor(Math.random() * (await prisma.fallbackImage.count())),
-      })
-      imageURl = imgfallback[0].imgurl;
-    }
+//     try {
+//       const apiResponse = await axios.get(
+//         `${process.env.Image_API_RETRIVE_URL}=${url}`
+//       );
+//       imageURl = apiResponse.data.image;
+//       console.log(imageURl)
+//     } catch (e) {
+//       console.log(e)
+//       const imgfallback = await prisma.fallbackImage.findMany({
+//         orderBy: {
+//           id: 'asc',
+//         },
+//         take: 1,
+//         skip: Math.floor(Math.random() * (await prisma.fallbackImage.count())),
+//       })
+//       imageURl = imgfallback[0].imgurl;
+//     }
 
-    const baseLinkData = {
-      links: url,
-      imgurl: imageURl,
-      title: title,
-      description: description,
-      user: {
-        connect: { id: parsedUserId },
-      },
-    };
+//     const baseLinkData = {
+//       links: url,
+//       imgurl: imageURl,
+//       title: title,
+//       description: description,
+//       user: {
+//         connect: { id: parsedUserId },
+//       },
+//     };
 
-    const link = await prisma.linkform.create({
-      data: linkAction.type === 'FOLDER'
-        ? {
-          ...baseLinkData,
-          folder: {
-            connect: { id: linkAction.folderId }
-          }
-        }
-        : baseLinkData
-    });
+//     const link = await prisma.linkform.create({
+//       data: linkAction.type === 'FOLDER'
+//         ? {
+//           ...baseLinkData,
+//           folder: {
+//             connect: { id: linkAction.folderId }
+//           }
+//         }
+//         : baseLinkData
+//     });
 
-    return {
-      error: false,
-      data: link,
-      message: "Link created successfully"
-    };
+//     return {
+//       error: false,
+//       data: link,
+//       message: "Link created successfully"
+//     };
 
 
-  } catch (error) {
-    console.log('Error in AddLinkDb:', error);
+//   } catch (error) {
+//     console.log('Error in AddLinkDb:', error);
 
-    if (error instanceof Error) {
-      // Handle specific database errors
-      if (error.message.includes('Foreign key constraint failed')) {
-        return {
-          error: true,
-          message: "The specified folder does not exist"
-        };
-      }
-    }
+//     if (error instanceof Error) {
+//       // Handle specific database errors
+//       if (error.message.includes('Foreign key constraint failed')) {
+//         return {
+//           error: true,
+//           message: "The specified folder does not exist"
+//         };
+//       }
+//     }
 
-    return {
-      error: true,
-      message: error instanceof Error
-        ? error.message
-        : "Failed to create link"
-    };
-  }
-}
+//     return {
+//       error: true,
+//       message: error instanceof Error
+//         ? error.message
+//         : "Failed to create link"
+//     };
+//   }
+// }
 
 
 

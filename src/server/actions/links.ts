@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { authOption } from "@/lib/auth";
 import { error } from "console";
 import { getServerSession } from "next-auth"
-import { AddLinkDb, createlinkcarterdb, deleteAccountdb, deleteAllTrashFolderDB, deleteTrashFolderDB, deltelinkcarddb, folderdatadb, getFolderDataDB, getFoldernameDB, getlinklistdb, getsettingdatadb, gettrashFolderDatadb, getuserdatadb, linkformdetaildb, restoreTrashFolderDB, retrivedatadb, toggleclouddb, togglefolderCloudDB, updatelinkformdb, updatePassworddb, updateuserdatadb, updateusernamedb, verifyforgotOTPdb, verifyOTPdb, verifyUserdb } from "../db/links";
+import { createlinkcarterdb, deleteAccountdb, deleteAllTrashFolderDB, deleteTrashFolderDB, deltelinkcarddb, folderdatadb, getFolderDataDB, getFoldernameDB, getlinklistdb, getsettingdatadb, gettrashFolderDatadb, getuserdatadb, linkformdetaildb, restoreTrashFolderDB, retrivedatadb, toggleclouddb, togglefolderCloudDB, updatelinkformdb, updatePassworddb, updateuserdatadb, updateusernamedb, verifyforgotOTPdb, verifyOTPdb, verifyUserdb } from "../db/links";
 import { number, string } from "zod";
 import { redirect } from "next/navigation"
 import exp from "constants";
@@ -310,27 +310,27 @@ function validateLinkData(data: LinkData): { isValid: boolean; error?: string } 
 
 
 
-export async function AddLink(url: string, title: string, description: string, userId: string, action: string) {
-  try {
-    const session = await getServerSession(authOption);
-    if (!session && session.user.id == userId) {
-      redirect('/signin')
-    }
-    const validation = validateLinkData({ url, title, description, userId, action });
-    if (!validation.isValid) {
-      return { error: true, message: validation.error };
-    }
-    const result = await AddLinkDb(url, title, description, userId, action);
-    return {error : false , data : result.data};
-  } catch (e) {
-    console.error('Error in AddLink:', error);
-    return { 
-      error: true, 
-      message: error instanceof Error ? error.message : "An unexpected error occurred" 
-    };
-  }
+// export async function AddLink(url: string, title: string, description: string, userId: string, action: string) {
+//   try {
+//     const session = await getServerSession(authOption);
+//     if (!session && session.user.id == userId) {
+//       redirect('/signin')
+//     }
+//     const validation = validateLinkData({ url, title, description, userId, action });
+//     if (!validation.isValid) {
+//       return { error: true, message: validation.error };
+//     }
+//     const result = await AddLinkDb(url, title, description, userId, action);
+//     return {error : false , data : result.data};
+//   } catch (e) {
+//     console.error('Error in AddLink:', error);
+//     return { 
+//       error: true, 
+//       message: error instanceof Error ? error.message : "An unexpected error occurred" 
+//     };
+//   }
 
-}
+// }
 
 
 export async function getfolderdata (folderId : number , searchvalue : string){

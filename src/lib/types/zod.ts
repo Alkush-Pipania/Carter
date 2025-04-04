@@ -17,8 +17,8 @@ export const SignupSchema = z.object({
 
 export const AddLinkSchema = z.object({
   url: z.string().describe('Url').url({ message: 'Invalid url' }),
-  title: z.string().describe('Title').max(280, { message: 'limit reached' }).min(2,{message: "invalid title"}),
-  description: z.string().describe("Description").max(1200, { message: 'limit reached' }).min(4,{message: "invalid description"})
+  // title: z.string().describe('Title').max(280, { message: 'limit reached' }).min(2,{message: "invalid title"}),
+  // description: z.string().describe("Description").max(1200, { message: 'limit reached' }).min(4,{message: "invalid description"})
 })
 
 export const SecretinputSchema = z.object({

@@ -42,6 +42,7 @@ model Linkform {
   createdAt   DateTime @default(now())
   links       String
   imgurl      String?
+  tags        String[]
   tobefind    Boolean  @default(false)
   userID      Int
   folderID    Int?

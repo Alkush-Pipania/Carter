@@ -1,9 +1,10 @@
-
 import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./provider";
 import { SpeedInsights } from "@vercel/speed-insights/next"
-
+import { Toaster } from "sonner"
+import { UserIdSetter } from "@/components/UserIdSetter";
+import StoreProvider from "./StoreProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -51,10 +52,6 @@ export const metadata = {
   },
 };
 
-
-
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -65,12 +62,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-brand/brand-dark text-white`}
       >
-       
-        <Providers>{children}</Providers>
-        <SpeedInsights />
-       
+        <StoreProvider>
+          <Providers>
+            <UserIdSetter />
+            {children}
+          </Providers>
+          <SpeedInsights />
+          <Toaster richColors position="top-right" />
+        </StoreProvider>
       </body>
-      
     </html>
   );
 }

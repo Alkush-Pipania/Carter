@@ -3,11 +3,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { IoMdCloudOutline } from "react-icons/io";
 import { AiFillCloud } from "react-icons/ai";
-import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useState, useTransition } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from "sonner"
 import { togglecloud } from '@/server/actions/links';
 import {
   DropdownMenu,
@@ -24,24 +23,17 @@ import { DeleteProductAlertDialogContent } from './Deletealertdialog';
 
 const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boolean, secretId: string, url: string, title: string, imgurl: string }) => {
   const [ iscloudPending , startcloudtransition ] = useTransition()
-  const [local_tobefind , setLocal_tobefind ] = useState(tobefind);
-  const { toast } = useToast();
-  const router = useRouter();
+  const [local_tobefind , setLocal_tobefind ] = useState(tobefind);;
 
- 
  const handleCopy = async (text: string) => {
   try {
     await navigator.clipboard.writeText(text);
-    toast({
-      title: "Success",
-      description: "Copied to clipboard",
-      variant: "default",
+    toast.success("Success", {
+      description: "Copied to clipboard"
     });
   } catch (e) {
-    toast({
-      title: "Error",
-      description: "Failed to copy to clipboard",
-      variant: "destructive",
+    toast.error("Error", {
+      description: "Failed to copy to clipboard"
     });
   }
 };
@@ -51,17 +43,19 @@ const handleCloudToggle = async () => {
     setLocal_tobefind(!local_tobefind);
     const data = await togglecloud(secretId);
     if (data.message) {
-      toast({
-        title: data.changeto ? "Added" : "Removed",
-        description: data.changeto ? "Successfully added to cloud" : "Successfully removed from cloud",
-        variant: data.changeto ? "great" : "destructive",
-      });
+      if (data.changeto) {
+        toast.success("Added", {
+          description: "Successfully added to cloud"
+        });
+      } else {
+        toast.error("Removed", {
+          description: "Successfully removed from cloud"
+        });
+      }
     }
   } catch (e) {
-    toast({
-      title: "Unexpected error",
-      description: "Something went wrong with the server",
-      variant: "destructive",
+    toast.error("Unexpected error", {
+      description: "Something went wrong with the server"
     });
     setLocal_tobefind(prev => !prev); // Revert state on error
   }
@@ -133,7 +127,7 @@ const handleCloudToggle = async () => {
                   </AlertDialogTrigger>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <DeleteProductAlertDialogContent id={secretId}/>
+              <DeleteProductAlertDialogContent  id={secretId}/>
             </AlertDialog>
           </Dialog>
         </div>

@@ -1,15 +1,9 @@
-"use client";
 import Link from 'next/link';
 import React from 'react';
-import { signOut, signIn, useSession } from "next-auth/react";
 import Image from 'next/image';
-import carterlogo from "../../../public/logo.png"
-import { useState } from "react";
-
-
+import CarterLogo from "../../../public/logo.png"
 
 function Navbar() {
-  const { data: session } = useSession();
 
   return (
     <nav className="w-full sticky  top-0 z-50 px-2">
@@ -18,7 +12,7 @@ function Navbar() {
           <div className="flex flex-1 items-center gap-2">
             {/* <IntentLogo src={images.intentLogoLight} /> */}
             <Image
-              src={carterlogo}
+              src={CarterLogo}
               width={24}
               height={16}
               className="w-11 h-11"
@@ -28,9 +22,6 @@ function Navbar() {
               Carter
             </Link>
           </div>
-
-
-
 
           <div className=" flex flex-1 items-center justify-end gap-4">
             <a
@@ -45,55 +36,19 @@ function Navbar() {
                 />
               </svg>
             </a>
-            <div className='bg-primary-purple/primary-purple-400 px-3  py-1 rounded-full 
-               hover:border-x-primary-purple/primary-purple-500
-               hover:bg-primary-purple/primary-purple-500 duration-75 ease-in-out text-gray-200 hover:text-gray-100 cursor-pointer'>
-              {session ? (
-                <h3 onClick={() => signOut()}>Sign Out</h3>
-              ) : (
-                <h3 onClick={() => signIn()}>Sign In</h3>
-              )}
-            </div>
-
+            <Link 
+              href="/api/auth/signin" 
+              className='bg-primary-purple/primary-purple-400 px-3 py-1 rounded-full 
+              hover:border-x-primary-purple/primary-purple-500
+              hover:bg-primary-purple/primary-purple-500 duration-75 ease-in-out text-gray-200 hover:text-gray-100 cursor-pointer'
+            >
+              <h3>Sign In</h3>
+            </Link>
           </div>
         </div>
-
-
       </div>
     </nav>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-// const Navbar = () => {
-//   const { data: session } = useSession();
-
-//   return (
-//     <div className='p-4 flex justify-between items-center'>
-//       <Link href="/" className='font-semibold flex items-center justify-center text-xl text-gray-400 hover:text-gray-300 '>
-//       <Image src={carterlogo} alt='logo' className='w-[50px]' />
-//       Carter</Link>
-
-//       <div className='bg-primary-purple/primary-purple-400 px-3 border-x-white border-x-2 py-1 rounded-full 
-//       hover:border-x-primary-purple/primary-purple-500
-//       hover:bg-primary-purple/primary-purple-500 duration-75 ease-in-out text-gray-200 hover:text-gray-100 cursor-pointer'>
-//         {session ? (
-//           <h3 onClick={() => signOut()}>Sign Out</h3>
-//         ) : (
-//           <h3 onClick={() => signIn()}>Sign In</h3>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
 
 export default Navbar;
