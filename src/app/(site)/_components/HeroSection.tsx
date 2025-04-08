@@ -43,7 +43,7 @@ export default function HeroSection() {
       >
         <TitleSection
           pill="✨ Introducing Carter"
-          title={`version 3 (with ai) will be available soon...`}
+          title={`V3 (with ai) will be available soon...`}
         />
       </motion.div>
 
