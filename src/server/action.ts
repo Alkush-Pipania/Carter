@@ -4,21 +4,23 @@ export const getVerificationTokenbyEmail = async (email: string) => {
   try {
     console.log("Getting verification token for email:", email);
     
-    // Use raw SQL instead of Prisma model
-    const tokens = await prisma.$queryRaw`
-      SELECT * FROM "Verification"
-      WHERE email = ${email}
-      ORDER BY expires DESC
-      LIMIT 1
-    `;
+    // Use Prisma findFirst instead of raw SQL
+    const token = await prisma.verification.findFirst({
+      where: {
+        email: email
+      },
+      orderBy: {
+        expires: 'desc'
+      }
+    });
     
-    if (!tokens || !Array.isArray(tokens) || tokens.length === 0) {
+    if (!token) {
       console.log("No token found for email:", email);
       return null;
     }
     
-    console.log("Token found:", tokens[0]);
-    return tokens[0];
+    console.log("Token found:", token);
+    return token;
   } catch (e) {
     console.error("Error getting verification token:", e);
     console.log("Something wrong with the server");
