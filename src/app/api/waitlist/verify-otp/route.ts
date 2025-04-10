@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { verifyOTPdb } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
@@ -57,19 +58,3 @@ export async function POST(req: Request) {
 
 
 
-export async function verifyOTPdb(value: any, email: string) {
-  if (!value) {
-    return { error: true, message: "no otp given" }
-  }
-  try {
-    await prisma.verification.findFirst({
-      where: {
-        email: email,
-        token: value,
-      }
-    })
-    return { error: false, message: "success" }
-  } catch (e) {
-    return { error: true, message: "error" }
-  }
-}

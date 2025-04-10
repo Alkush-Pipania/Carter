@@ -1,5 +1,5 @@
 "use server"
-import { getforgotpasswordTokenbyEmail, getVerificationTokenbyEmail } from '@/server/action';
+import { getVerificationTokenbyEmail } from '@/server/action';
 import { v4 as uuidv4 } from 'uuid';
 import prisma from './prisma';
 

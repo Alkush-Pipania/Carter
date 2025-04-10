@@ -1,13 +1,13 @@
 "use client"
 import TitleSection from "@/components/landing-page/title-section";
-import ShinyButton from "@/components/ui/shiny-button";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import heroimg from '../../../../public/Section 1.png';
 import { useInView } from 'react-intersection-observer';
+import React from "react";
 
-export const ScrollComponent = ({ children , x=0 , y=-50 }) => {
+export const ScrollComponent = ({ children, x = 0, y = -50 }: { children: React.ReactNode, x?: number, y?: number }) => {
   const { ref, inView } = useInView({
     triggerOnce: true, // Trigger animation only once
     threshold: 0.1, // Trigger when 10% of the element is visible
@@ -16,7 +16,7 @@ export const ScrollComponent = ({ children , x=0 , y=-50 }) => {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: y , x:x , }} // Initial state (hidden)
+      initial={{ opacity: 0, y: y, x: x, }} // Initial state (hidden)
       whileInView={{ opacity: 1, y: 0 }} // Animate when in view
       transition={{ duration: 0.5 }} // Animation duration
       viewport={{ once: true }} // Ensure animation happens only once
@@ -49,10 +49,10 @@ export default function HeroSection() {
 
       <div className="md:w-full w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 sm:top-52 top-40" />
       <motion.div
-      variants={fadeInUp}
-      initial="hidden"
-      animate="visible"
-      className="flex gap-4 sm:gap-6"
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        className="flex gap-4 sm:gap-6"
       >
         <div className="w-full sm:flex-row md:gap-16 flex-col-reverse flex justify-center mt-10">
           <div className="flex mx-3 max-w-[620px] gap-y-5 mt-10 flex-col items-start justify-start">
@@ -69,7 +69,7 @@ export default function HeroSection() {
             <Image src={heroimg} alt="heroimg" className="w-full" />
           </div>
         </div>
-    </motion.div >
+      </motion.div >
     </section>
   )
 }

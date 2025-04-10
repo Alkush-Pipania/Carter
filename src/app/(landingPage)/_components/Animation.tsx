@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import React from "react";
 
 
-export function SlideIn({children}){
+export function SlideIn({ children }: { children: React.ReactNode }) {
 
-  return(
+  return (
     <motion.div
       initial={{ opacity: 0, x: -100 }}
       whileInView={{ opacity: 1, x: 0 }}
