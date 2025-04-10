@@ -30,27 +30,28 @@ export async function verifyOTPdb(value: any, email: string) {
   }
   try {
     console.log("Looking for verification token in database");
-    // Look for the token directly with raw SQL to avoid Prisma model access issues
-    const verification = await prisma.$queryRaw`
-      SELECT * FROM "Verification" 
-      WHERE email = ${email} AND token = ${value}
-      LIMIT 1
-    `;
+    
+    // Use Prisma findFirst to look for the token
+    const verification = await prisma.verification.findFirst({
+      where: {
+        email: email,
+        token: value
+      }
+    });
     
     console.log("Verification query result:", verification);
     
     // Check if we found a matching verification record
-    if (!verification || !Array.isArray(verification) || verification.length === 0) {
+    if (!verification) {
       console.log("No verification record found");
       return { error: true, message: "invalid code" };
     }
     
-    const record = verification[0];
-    console.log("Verification record found:", record);
+    console.log("Verification record found:", verification);
     
     // Check if the token has expired
     const now = new Date();
-    const expires = new Date(record.expires);
+    const expires = new Date(verification.expires);
     if (expires < now) {
       console.log("Token has expired", expires, now);
       return { error: true, message: "code expired" };
