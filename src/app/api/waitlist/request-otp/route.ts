@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check if email already exists in waitlist
+    // @ts-ignore
     const existingWaitlist = await prisma.waitlist.findUnique({
       where: { email }
     });
