@@ -1,8 +1,4 @@
-import { getServerSession } from "next-auth/next";
-import heroimg from "../../../public/Section 1.png";
 import Image from "next/image";
-import TitleSection from "@/components/landing-page/title-section";
-import ShinyButton from "@/components/ui/shiny-button";
 import Link from "next/link";
 import documlogo from "../../../public/Document.png";
 import Usecases from "@/components/global/landingcom";
@@ -14,30 +10,25 @@ import twitter from "../../../public/social/twitter.png";
 import github from "../../../public/social/github.png";
 import instagram from "../../../public/social/instagram.png";
 import { FaHeart } from "react-icons/fa";
-import { authOption } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import Footer from "./_components/Fotter";
 import FAQ from "./_components/FAQ";
 import { CTASection } from "./_components/CTA_Section";
 import HeroSection, { ScrollComponent } from "./_components/HeroSection";
 import Extension from "./_components/extension";
+import WaitlistPage from "./_components/joinwatinglist";
 
 
 
 
 export default async function Home() {
-  const session = await getServerSession(authOption);
 
-  if (session) {
-    return redirect("/dashboard");
-  }
 
   return (
     <>
       <HeroSection/>
 
       <section className="overflow-hidden px-4 flex flex-col items-center justify-center sm:px-6 my-[100px] sm:my-10">
-        <div className="md:w-full w-[80%] blur-[120px] rounded-full h-32 absolute bg-primary-purple/primary-purple-700 -z-10" />
+        {/* <div className="md:w-full w-[80%] blur-[120px] rounded-full h-32 absolute bg-primary-purple/primary-purple-700 -z-10" /> */}
         <ScrollComponent>
           <div className="flex gap-y-2 flex-col items-center">
           <Image src={link} alt="linklogo" className="sm:w-[60px] w-[120px] h-auto" />
@@ -87,7 +78,8 @@ export default async function Home() {
         </div>
       </section>
 
-      <Extension/>
+      {/* <Extension/> */}
+      <WaitlistPage/>
 
       <section
         className='overflow-hidden gap-y-5 px-4 h-[300px] bg-primary-purple/primary-purple-900  flex flex-col items-center justify-center sm:px-6 my-[100px] sm:my-28'

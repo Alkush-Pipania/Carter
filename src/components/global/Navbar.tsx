@@ -45,7 +45,7 @@ function Navbar() {
                 />
               </svg>
             </a>
-            <div className='bg-primary-purple/primary-purple-400 px-3  py-1 rounded-full 
+            {/* <div className='bg-primary-purple/primary-purple-400 px-3  py-1 rounded-full 
                hover:border-x-primary-purple/primary-purple-500
                hover:bg-primary-purple/primary-purple-500 duration-75 ease-in-out text-gray-200 hover:text-gray-100 cursor-pointer'>
               {session ? (
@@ -53,7 +53,7 @@ function Navbar() {
               ) : (
                 <h3 onClick={() => signIn()}>Sign In</h3>
               )}
-            </div>
+            </div> */}
 
           </div>
         </div>
