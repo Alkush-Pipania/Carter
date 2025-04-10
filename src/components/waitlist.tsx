@@ -67,6 +67,7 @@ export function Waitlist() {
     setError(null)
 
     try {
+      console.log('Submitting email:', email);
       const response = await fetch("/api/waitlist/request-otp", {
         method: "POST",
         headers: {
@@ -74,8 +75,16 @@ export function Waitlist() {
         },
         body: JSON.stringify({ email }),
       })
+      console.log('Response status:', response.status);
+      // Convert headers to a simple object for logging
+      const headerObj: Record<string, string> = {};
+      response.headers.forEach((value, key) => {
+        headerObj[key] = value;
+      });
+      console.log('Response headers:', headerObj);
 
       const data = await response.json()
+      console.log('Response data:', data);
 
       if (!response.ok) {
         // Check if user is already on waitlist (409 Conflict)
@@ -93,6 +102,7 @@ export function Waitlist() {
 
       setStep(WaitlistStep.OTP)
     } catch (err) {
+      console.error('Error in email submit:', err);
       setError(err instanceof Error ? err.message : "Something went wrong")
     } finally {
       setLoading(false)
@@ -117,6 +127,7 @@ export function Waitlist() {
     setError(null)
 
     try {
+      console.log('Submitting OTP:', otp, 'for email:', email);
       const response = await fetch("/api/waitlist/verify-otp", {
         method: "POST",
         headers: {
@@ -124,9 +135,10 @@ export function Waitlist() {
         },
         body: JSON.stringify({ email, otp }),
       })
-      console.log(response)
+      console.log('Response status:', response.status);
 
       const data = await response.json()
+      console.log('Response data:', data);
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to verify OTP")
@@ -136,6 +148,7 @@ export function Waitlist() {
       setTimerActive(false)
       setStep(WaitlistStep.SUCCESS)
     } catch (err) {
+      console.error('Error in OTP submit:', err);
       setError(err instanceof Error ? err.message : "Something went wrong")
     } finally {
       setLoading(false)

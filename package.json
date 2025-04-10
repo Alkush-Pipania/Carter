@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build --no-lint",
+    "build": "prisma generate && prisma db push --accept-data-loss && next build --no-lint",
     "postinstall": "prisma generate",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "run-migration": "node -e \"const { execSync } = require('child_process'); const { DATABASE_URL } = process.env; if(DATABASE_URL) { try { execSync('psql ' + DATABASE_URL + ' -f ./prisma/migration.sql', {stdio: 'inherit'}); } catch (e) { console.error('Migration failed, but continuing build process:', e); }}\""
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
