@@ -14,7 +14,6 @@ import Footer from "./_components/Fotter";
 import FAQ from "./_components/FAQ";
 import { CTASection } from "./_components/CTA_Section";
 import HeroSection, { ScrollComponent } from "./_components/HeroSection";
-import Extension from "./_components/extension";
 import WaitlistPage from "./_components/joinwatinglist";
 
 

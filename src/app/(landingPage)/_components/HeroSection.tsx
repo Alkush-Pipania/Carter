@@ -2,8 +2,7 @@
 import TitleSection from "@/components/landing-page/title-section";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
-import heroimg from '../../../../public/Section 1.png';
+import heroimg from '/public/Section 1.png';
 import { useInView } from 'react-intersection-observer';
 import React from "react";
 
