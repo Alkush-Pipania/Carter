@@ -64,18 +64,6 @@ export default function HeroSection() {
               sorting for quick retrieval. Accidentally delete something? No
               problem—restore links from trash with a single click.
             </p>
-            <div className="flex gap-4 sm:gap-6">
-              <Link href="/dashboard">
-                <ShinyButton className="bg-washed-purple/washed-purple-500 text-nowrap font-bold hover:bg-washed-purple/washed-purple-700">
-                  let&apos;s Carter
-                </ShinyButton>
-              </Link>
-              <Link href="/find">
-                <ShinyButton className="bg-washed-purple/washed-purple-500 text-nowrap font-bold hover:bg-washed-purple/washed-purple-700">
-                  Secret code?
-                </ShinyButton>
-              </Link>
-            </div>
           </div>
           <div className="mx-10 flex items-center relative w-[250px]">
             <Image src={heroimg} alt="heroimg" className="w-full" />

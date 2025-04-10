@@ -1,36 +1,57 @@
-import { NextResponse } from "next/server"
-import { verifyOTP } from "@/lib/otp-service"
-import { addToWaitlist, getQueuePosition } from "@/lib/waitlist-service"
+import { NextResponse } from "next/server";
+import { verifyOTPdb } from "@/server/db/links";
+import prisma from "@/lib/prisma";
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const { email, otp } = await request.json()
+    const { email, otp } = await req.json();
 
     if (!email || !otp) {
-      return NextResponse.json({ message: "Email and OTP are required" }, { status: 400 })
+      return NextResponse.json(
+        { message: "Email and OTP are required" },
+        { status: 400 }
+      );
     }
 
-    // Verify the OTP
-    const isValid = await verifyOTP(email, otp)
-    if (!isValid) {
-      return NextResponse.json({ message: "Invalid or expired OTP" }, { status: 400 })
+    // Verify OTP
+    const verificationResult = await verifyOTPdb(otp, email);
+
+    if (verificationResult.error) {
+      return NextResponse.json(
+        { message: "Invalid or expired OTP" },
+        { status: 400 }
+      );
     }
 
     // Add user to waitlist
-    await addToWaitlist(email)
+    const waitlistEntry = await prisma.Waitlist.create({
+      data: {
+        email,
+        joinedAt: new Date(),
+      },
+    });
 
     // Get queue position
-    const queuePosition = await getQueuePosition(email)
+    const queuePosition = await prisma.Waitlist.count({
+      where: {
+        joinedAt: {
+          lte: waitlistEntry.joinedAt,
+        },
+      },
+    });
 
     return NextResponse.json(
-      {
-        message: "Successfully joined waitlist",
-        queuePosition,
+      { 
+        message: "Successfully verified and added to waitlist",
+        queuePosition 
       },
-      { status: 200 },
-    )
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error in verify-otp:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error("Error in verify-otp:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
   }
-}
+} 

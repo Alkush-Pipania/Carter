@@ -13,94 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id              Int             @id @default(autoincrement())
-  secretkey       String          @unique @default(uuid())
-  email           String          @unique
-  username        String?
-  password        String
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  
-  linkform        Linkform[]      // Global links
-  LinkformTrash   LinkformTrash[]
-  varified        Boolean         @default(false)
-
-  // Relation for active folders
-  folders         Folder[]        
-
-  // New relation for trashed folders
-  trashFolders    TrashFolder[]   // Add this field to resolve the error
-}
-
-model Folder {
-  id            Int             @unique @id @default(autoincrement())
-  name          String          // Folder name
-  secretKey     String          @unique @default(uuid()) // Secret key for the folder
-  userID        Int
-  user          User            @relation(fields: [userID], references: [id])
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-
-  // Links related to this folder
-  links         Linkform[]      // Relation to Linkform model
-
-  @@index([userID])
-}
-
-model Linkform {
-  secret_Id     String          @id @default(uuid())
-  links         String
-  title         String
-  imgurl        String?
-  tobefind      Boolean         @default(false)
-  description   String
-  createdAt     DateTime        @default(now())
-  userID        Int
-  user          User            @relation(fields: [userID], references: [id])
-
-  // Global links will not have a folder
-  folderID      Int?            // Null for global links, or an ID for links in a folder
-  folder         Folder?        @relation(fields: [folderID], references: [id])
-
-  @@index([userID])
-}
-
-model TrashFolder {
-  id          Int      @unique @id @default(autoincrement())
-  name        String    // Name of the deleted folder
-  secretKey   String    // Unique key for the folder
-  userID      Int
-  user        User      @relation(fields: [userID], references: [id])
-  createdAt   DateTime  // Original creation date of the folder
-  deletedAt   DateTime  @default(now()) // Date the folder was deleted
-  restoredAt  DateTime? // Optional field if restored later
-
-  links       LinkformTrash[] // Links in this trash folder
-
-  @@index([userID])
-}
-
-
-model LinkformTrash {
-  trash_Id        Int       @id @default(autoincrement())
-  secret_Id       String    // Original ID of the link
-  links           String
-  title           String?
-  imgurl          String?
-  description     String?
-  createdAt       DateTime
-  deletedAt       DateTime  @default(now())
-  userID          Int
-  user            User      @relation(fields: [userID], references: [id])
-
-  trashFolderID   Int?      // Optional reference to a trashed folder
-  trashFolder     TrashFolder? @relation(fields: [trashFolderID], references: [id])
-
-  restoredAt      DateTime? // If restored later
-
-  @@index([userID])
-}
 
 model Verification {
   id        String    @id @default(uuid())
@@ -111,16 +23,9 @@ model Verification {
   @@unique([email , token])
 }
 
-model ForgotPassword {
+model Waitlist {
   id        String    @id @default(uuid())
-  email     String
-  token     String
-  expires   DateTime
-
-  @@unique([email , token])
+  email     String    @unique
+  joinedAt  DateTime  @default(now())
 }
 
-model fallbackImage{
-  id       Int       @id @default(autoincrement())
-  imgurl    String
-}

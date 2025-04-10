@@ -11,7 +11,7 @@ export const sendVerificationEmail = async (email : string, token : string) => {
     const res = await resend.emails.send({
       from : "Carter <noreply@carter.fun>" ,
       to : email,
-      subject : 'Carter - Forgot Password OTP',
+      subject : 'Carter - verification code',
       react : MainVerificationEmail({email ,token})
     })
     return {success : true , message : "Email sent successfully"}

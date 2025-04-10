@@ -266,7 +266,7 @@ export function Waitlist() {
                   <Progress
                     value={(timeRemaining / 60) * 100}
                     className="h-1 bg-[#120a29]"
-                    indicatorClassName="bg-purple-600"
+                    // indicatorClassName="bg-purple-600"
                   />
                   <div className="flex justify-between">
                     <p className="text-xs text-gray-500">Verifying</p>
@@ -300,8 +300,8 @@ export function Waitlist() {
       </CardContent>
       {step === WaitlistStep.SUCCESS && (
         <CardFooter>
-          <Button className="w-full bg-purple-600 hover:bg-purple-700" onClick={() => router.push("/")}>
-            Back to Home
+          <Button className="w-full bg-purple-600  hover:bg-purple-700" onClick={() => setStep(0)} >
+            Thanks for joining
           </Button>
         </CardFooter>
       )}
