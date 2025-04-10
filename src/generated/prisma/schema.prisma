@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Verification {
+  id      String   @id @default(uuid())
+  email   String
+  token   String
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model Waitlist {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  joinedAt DateTime @default(now())
+}
