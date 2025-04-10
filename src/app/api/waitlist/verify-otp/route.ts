@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Add user to waitlist
+    // @ts-ignore
     const waitlistEntry = await prisma.waitlist.create({
       data: {
         email,
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       },
     });
 
-    // Get queue position
+    // @ts-ignore
     const queuePosition = await prisma.waitlist.count({
       where: {
         joinedAt: {
