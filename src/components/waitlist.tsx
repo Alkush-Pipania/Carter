@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { CheckCircle } from "lucide-react"
+import * as Motion from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -179,151 +180,211 @@ export function Waitlist() {
   }
 
   return (
-    <Card className="border-purple-800 bg-[#1a0f3a]">
-      <CardHeader>
-        <CardTitle className="text-white">
-          {step === WaitlistStep.EMAIL && "Join Waitlist"}
-          {step === WaitlistStep.OTP && "Verify Your Email"}
-          {step === WaitlistStep.SUCCESS && "Welcome to the Queue!"}
-        </CardTitle>
-        <CardDescription className="text-gray-400">
-          {step === WaitlistStep.EMAIL && "Enter your email to get started"}
-          {step === WaitlistStep.OTP && "Enter the verification code sent to your email"}
-          {step === WaitlistStep.SUCCESS && "You're now on the Carter waitlist"}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {step === WaitlistStep.EMAIL && (
-          <form onSubmit={handleEmailSubmit}>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Input
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="border-purple-700 bg-[#120a29] text-white placeholder:text-gray-500"
-                />
-              </div>
-              {error && <p className="text-sm text-red-400">{error}</p>}
-              <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700" disabled={loading}>
-                {loading ? (
-                  <>
-                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                    Sending OTP...
-                  </>
-                ) : (
-                  "Continue"
-                )}
-              </Button>
-            </div>
-          </form>
-        )}
-
-        {step === WaitlistStep.OTP && (
-          <form onSubmit={handleOtpSubmit}>
-            <div className="space-y-4">
-              <div className="flex items-center justify-center space-x-2 rounded-md bg-[#120a29] p-2">
-                <EnvelopeClosedIcon className="h-4 w-4 text-purple-400" />
-                <p className="text-sm text-gray-400">
-                  OTP sent to <span className="text-purple-400">{email}</span>
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Input
-                  type="text"
-                  placeholder="Enter OTP"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="border-purple-700 bg-[#120a29] text-white placeholder:text-gray-500"
-                  maxLength={6}
-                />
-              </div>
-
-              {error && <p className="text-sm text-red-400">{error}</p>}
-
-              <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700" disabled={loading}>
-                {loading ? (
-                  <>
-                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                    Verifying...
-                  </>
-                ) : (
-                  "Verify & Join"
-                )}
-              </Button>
-
-              <div className="space-y-2 text-center">
-                <p className="text-xs text-gray-400">
-                  {timerActive ? `Resend OTP in ${timeRemaining}s` : "Didn't receive the code?"}
-                </p>
-                <Button
-                  type="button"
-                  variant="link"
-                  className="h-auto p-0 text-xs text-purple-400"
-                  onClick={handleResendOtp}
-                  disabled={timerActive || loading}
-                >
-                  Resend OTP
-                </Button>
-              </div>
-
-              <Button
-                type="button"
-                variant="link"
-                className="w-full text-purple-400"
-                onClick={() => setStep(WaitlistStep.EMAIL)}
-                disabled={loading}
+    <Motion.motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="border-purple-800 bg-[#1a0f3a]">
+        <CardHeader>
+          <CardTitle className="text-white">
+            {step === WaitlistStep.EMAIL && "Join Waitlist"}
+            {step === WaitlistStep.OTP && "Verify Your Email"}
+            {step === WaitlistStep.SUCCESS && "Welcome to the Queue!"}
+          </CardTitle>
+          <CardDescription className="text-gray-400">
+            {step === WaitlistStep.EMAIL && "Enter your email to get started"}
+            {step === WaitlistStep.OTP && "Enter the verification code sent to your email"}
+            {step === WaitlistStep.SUCCESS && "You're now on the Carter waitlist"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Motion.AnimatePresence mode="wait">
+            {step === WaitlistStep.EMAIL && (
+              <Motion.motion.div
+                key="email-step"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
               >
-                Back to email
-              </Button>
-
-              {/* Timer progress bar */}
-              {timerActive && (
-                <div className="space-y-1">
-                  <Progress
-                    value={(timeRemaining / 60) * 100}
-                    className="h-1 bg-[#120a29]"
-                  // indicatorClassName="bg-purple-600"
-                  />
-                  <div className="flex justify-between">
-                    <p className="text-xs text-gray-500">Verifying</p>
-                    <p className="text-xs text-gray-500">
-                      {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, "0")}
-                    </p>
+                <form onSubmit={handleEmailSubmit}>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="border-purple-700 bg-[#120a29] text-white placeholder:text-gray-500"
+                      />
+                    </div>
+                    {error && <p className="text-sm text-red-400">{error}</p>}
+                    <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700" disabled={loading}>
+                      {loading ? (
+                        <>
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                          Sending OTP...
+                        </>
+                      ) : (
+                        "Continue"
+                      )}
+                    </Button>
                   </div>
-                </div>
-              )}
-            </div>
-          </form>
-        )}
+                </form>
+              </Motion.motion.div>
+            )}
 
-        {step === WaitlistStep.SUCCESS && (
-          <div className="space-y-4 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-purple-900">
-              <CheckCircle className="h-6 w-6 text-purple-400" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-xl font-medium text-white">You're in!</h3>
-              <p className="text-gray-400">Thanks for joining the Carter waitlist</p>
-              {queuePosition !== null && (
-                <div className="mt-4 rounded-lg bg-[#120a29] p-4">
-                  <p className="text-gray-400">Your position in the queue</p>
-                  <p className="text-3xl font-bold text-purple-400">#{queuePosition}</p>
+            {step === WaitlistStep.OTP && (
+              <Motion.motion.div
+                key="otp-step"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <form onSubmit={handleOtpSubmit}>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-center space-x-2 rounded-md bg-[#120a29] p-2">
+                      <EnvelopeClosedIcon className="h-4 w-4 text-purple-400" />
+                      <p className="text-sm text-gray-400">
+                        OTP sent to <span className="text-purple-400">{email}</span>
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Input
+                        type="text"
+                        placeholder="Enter OTP"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        className="border-purple-700 bg-[#120a29] text-white placeholder:text-gray-500"
+                        maxLength={6}
+                      />
+                    </div>
+
+                    {error && <p className="text-sm text-red-400">{error}</p>}
+
+                    <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700" disabled={loading}>
+                      {loading ? (
+                        <>
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                          Verifying...
+                        </>
+                      ) : (
+                        "Verify & Join"
+                      )}
+                    </Button>
+
+                    <div className="space-y-2 text-center">
+                      <p className="text-xs text-gray-400">
+                        {timerActive ? `Resend OTP in ${timeRemaining}s` : "Didn't receive the code?"}
+                      </p>
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="h-auto p-0 text-xs text-purple-400"
+                        onClick={handleResendOtp}
+                        disabled={timerActive || loading}
+                      >
+                        Resend OTP
+                      </Button>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="w-full text-purple-400"
+                      onClick={() => setStep(WaitlistStep.EMAIL)}
+                      disabled={loading}
+                    >
+                      Back to email
+                    </Button>
+
+                    {/* Timer progress bar */}
+                    {timerActive && (
+                      <div className="space-y-1">
+                        <Progress
+                          value={(timeRemaining / 60) * 100}
+                          className="h-1 bg-[#120a29]"
+                        />
+                        <div className="flex justify-between">
+                          <p className="text-xs text-gray-500">Verifying</p>
+                          <p className="text-xs text-gray-500">
+                            {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, "0")}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </form>
+              </Motion.motion.div>
+            )}
+
+            {step === WaitlistStep.SUCCESS && (
+              <Motion.motion.div
+                key="success-step"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-4 text-center"
+              >
+                <Motion.motion.div 
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-purple-900"
+                >
+                  <CheckCircle className="h-6 w-6 text-purple-400" />
+                </Motion.motion.div>
+                <div className="space-y-2">
+                  <Motion.motion.h3 
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                    className="text-xl font-medium text-white"
+                  >
+                    You're in!
+                  </Motion.motion.h3>
+                  <Motion.motion.p 
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.5 }}
+                    className="text-gray-400"
+                  >
+                    Thanks for joining the Carter waitlist
+                  </Motion.motion.p>
+                  {queuePosition !== null && (
+                    <Motion.motion.div
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.5, duration: 0.5 }}
+                      className="mt-4 rounded-lg bg-[#120a29] p-4"
+                    >
+                      <p className="text-gray-400">Your position in the queue</p>
+                      <Motion.motion.p 
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
+                        className="text-3xl font-bold text-purple-400"
+                      >
+                        #{queuePosition}
+                      </Motion.motion.p>
+                    </Motion.motion.div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
+              </Motion.motion.div>
+            )}
+          </Motion.AnimatePresence>
+        </CardContent>
+        {step === WaitlistStep.SUCCESS && (
+          <CardFooter>
+            <Button className="w-full bg-purple-600 hover:bg-purple-700" onClick={() => setStep(WaitlistStep.EMAIL)} >
+              Thanks for joining
+            </Button>
+          </CardFooter>
         )}
-      </CardContent>
-      {step === WaitlistStep.SUCCESS && (
-        <CardFooter>
-          <Button className="w-full bg-purple-600  hover:bg-purple-700" onClick={() => setStep(0)} >
-            Thanks for joining
-          </Button>
-        </CardFooter>
-      )}
-    </Card>
+      </Card>
+    </Motion.motion.div>
   )
 }

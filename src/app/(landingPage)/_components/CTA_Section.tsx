@@ -87,34 +87,6 @@ export function CTASection() {
           {ctaSection.title}
         </motion.h2>
 
-        <motion.div variants={titleVariants} whileHover="hover" whileTap="tap">
-          <Button className="relative overflow-hidden group">
-            <Link
-              href={ctaSection.buttonHref}
-              className="font-semibold flex items-center gap-2"
-            >
-              <motion.span>{ctaSection.buttonText}</motion.span>
-              <motion.div
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              >
-                <IconSearch className="w-5 h-5" />
-              </motion.div>
-            </Link>
-            <motion.div
-              className="absolute inset-0 bg-white/10"
-              initial={{ x: "-100%" }}
-              whileHover={{ x: "100%" }}
-              transition={{
-                duration: 0.6,
-                ease: "easeInOut",
-              }}
-            />
-          </Button>
-        </motion.div>
       </div>
     </motion.div>
   );

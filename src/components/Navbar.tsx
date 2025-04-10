@@ -3,10 +3,17 @@ import Link from 'next/link';
 import React from 'react';
 import Image from 'next/image';
 import carterlogo from "/public/logo.png"
+import { Button } from '@/components/ui/button';
 
 
 
 function Navbar() {
+  const scrollToWaitlist = () => {
+    const waitlistElement = document.getElementById('waitlist-section')
+    if (waitlistElement) {
+      waitlistElement.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   return (
     <nav className="w-full sticky  top-0 z-50 px-2">
@@ -29,7 +36,14 @@ function Navbar() {
 
 
 
-          <div className=" flex flex-1 items-center justify-end gap-4">
+          <div className="flex flex-1 items-center justify-end gap-4">
+            <Button 
+              onClick={scrollToWaitlist}
+              variant="outline" 
+              className="rounded-full border-purple-500/50 text-washed-purple/washed-purple-200 bg-primary-purple/primary-purple-400 hover:text-white hover:bg-purple-500 transition-all duration-300"
+            >
+              Join Waitlist
+            </Button>
             <a
               href="https://github.com/Alkush-Pipania/Carter"
               className=" dark:text-white"
