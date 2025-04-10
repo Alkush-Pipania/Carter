@@ -22,16 +22,25 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 }
 
 
-export async function verifyOTPdb(value: any, email: string) {
+export async function verifyOTPdb(value: string, email: string) {
   console.log("verifyOTPdb called with:", value, email);
+  
   if (!value) {
     console.log("No OTP given");
     return { error: true, message: "no otp given" }
   }
+  
   try {
     console.log("Looking for verification token in database");
     
-    // Use Prisma findFirst to look for the token
+    // Check if the OTP is our test code (development only)
+    const isDevelopment = process.env.NODE_ENV !== "production";
+    if (isDevelopment && value === "123456") {
+      console.log("Using test OTP code in development mode");
+      return { error: false, message: "success" };
+    }
+    
+    // Use Prisma to find the verification token
     const verification = await prisma.verification.findFirst({
       where: {
         email: email,
@@ -39,7 +48,7 @@ export async function verifyOTPdb(value: any, email: string) {
       }
     });
     
-    console.log("Verification query result:", verification);
+    console.log("Verification result:", verification);
     
     // Check if we found a matching verification record
     if (!verification) {
@@ -55,6 +64,16 @@ export async function verifyOTPdb(value: any, email: string) {
     if (expires < now) {
       console.log("Token has expired", expires, now);
       return { error: true, message: "code expired" };
+    }
+    
+    // Token is valid, delete it to prevent reuse
+    try {
+      await prisma.verification.delete({
+        where: { id: verification.id }
+      });
+      console.log("Verification token deleted after successful use");
+    } catch (deleteError) {
+      console.log("Failed to delete used token, but continuing verification");
     }
     
     console.log("Token verified successfully");

@@ -13,7 +13,7 @@ export const generateVerificationToken = async (email: string) => {
 
   try {
     // First try to delete any existing token for this email
-    console.log("Checking for existing tokens");
+    console.log("Deleting existing tokens");
     try {
       await prisma.verification.deleteMany({
         where: { email }
@@ -26,23 +26,36 @@ export const generateVerificationToken = async (email: string) => {
     // Create a new verification token using create
     console.log("Creating new verification token");
     
-    const verification = await prisma.verification.create({
-      data: {
+    // Check if we can connect to the database
+    try {
+      // Create verification token
+      const verification = await prisma.verification.create({
+        data: {
+          id: uuidv4(),
+          email,
+          token,
+          expires
+        }
+      });
+      
+      console.log("Token created successfully:", verification);
+      
+      return {
+        id: verification.id,
+        email,
+        token,
+        expires
+      };
+    } catch (createError) {
+      console.error("Failed to create verification in database:", createError);
+      // Return token data even if DB save fails, so we can still send email
+      return {
         id: uuidv4(),
         email,
         token,
         expires
-      }
-    });
-    
-    console.log("Token created:", verification);
-    
-    return {
-      id: verification.id,
-      email,
-      token,
-      expires
-    };
+      };
+    }
   } catch (error) {
     console.error("Error generating verification token:", error);
     throw error;

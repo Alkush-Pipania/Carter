@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { verifyOTPdb } from "@/lib/mail";
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(req: Request) {
   try {
@@ -30,33 +31,52 @@ export async function POST(req: Request) {
       // Test database connection by doing a simple operation
       console.log("Testing database connection...");
       
+      // First check if user is already in waitlist
+      console.log("Checking if user already exists in waitlist");
+      const existingUser = await prisma.waitlist.findUnique({
+        where: { email }
+      });
+      
+      if (existingUser) {
+        console.log("User already in waitlist, returning position");
+        
+        // Get position by counting users that joined before this user
+        const position = await prisma.waitlist.count({
+          where: {
+            joinedAt: {
+              lte: existingUser.joinedAt
+            }
+          }
+        });
+        
+        return NextResponse.json(
+          {
+            message: "Already on waitlist",
+            queuePosition: position,
+            alreadyOnWaitlist: true
+          },
+          { status: 200 }
+        );
+      }
+      
       // Add user to waitlist
       const timestamp = new Date();
-      console.log("Attempting to add email to waitlist:", email);
+      console.log("Adding email to waitlist:", email);
       
-      // Use Prisma upsert to either create a new record or return existing one
-      const userEntry = await prisma.waitlist.upsert({
-        where: {
-          email: email
-        },
-        update: {}, // No updates if exists
-        create: {
+      // Create new waitlist entry
+      const userEntry = await prisma.waitlist.create({
+        data: {
+          id: uuidv4(),
           email: email,
           joinedAt: timestamp
         }
       });
       
-      console.log("User entry result:", userEntry);
+      console.log("User added to waitlist:", userEntry);
       
       // Count total users in waitlist to determine position
       console.log("Counting queue position...");
-      const totalCount = await prisma.waitlist.count({
-        where: {
-          joinedAt: {
-            lte: timestamp
-          }
-        }
-      });
+      const totalCount = await prisma.waitlist.count();
       
       console.log("Queue position count:", totalCount);
       
