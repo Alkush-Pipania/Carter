@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // @ts-ignore
+    
     const existingWaitlist = await prisma.waitlist.findUnique({
       where: { email }
     });

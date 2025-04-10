@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // @ts-ignore
+    
     const waitlistEntry = await prisma.waitlist.create({
       data: {
         email,
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       },
     });
 
-    // @ts-ignore
+    
     const queuePosition = await prisma.waitlist.count({
       where: {
         joinedAt: {
