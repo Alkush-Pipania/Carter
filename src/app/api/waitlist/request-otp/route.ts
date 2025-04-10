@@ -43,14 +43,17 @@ export async function POST(req: Request) {
     let userAlreadyExists = false;
     try {
       console.log("Checking if user already exists in waitlist");
-      // Try a direct query to check if the model exists
-      const result = await prisma.$executeRawUnsafe(
-        `SELECT EXISTS(SELECT 1 FROM "Waitlist" WHERE email = $1) as exists`,
-        email
-      );
-      console.log("Raw query result:", result);
       
-      userAlreadyExists = result && Array.isArray(result) && result[0] && result[0].exists;
+      // Use Prisma findUnique to check if email exists
+      const existingUser = await prisma.waitlist.findUnique({
+        where: {
+          email: email
+        }
+      });
+      
+      console.log("Existing user check:", existingUser);
+      
+      userAlreadyExists = !!existingUser;
       
       if (userAlreadyExists) {
         console.log("User already exists in waitlist:", email);
