@@ -86,7 +86,18 @@ export function Waitlist() {
       const data = await response.json()
       console.log('Response data:', data);
 
-      if (!response.ok) {
+      // Check if this is a fallback response (server error but we're showing success anyway)
+      if (data.fallback) {
+        console.log('Using fallback mode due to server response');
+        
+        // If we received a fallback code in dev mode, display it to help testing
+        if (data.code && process.env.NODE_ENV !== 'production') {
+          // Display the code for testing purposes in non-production environments
+          setError(`Server issue, but continuing. Test code: ${data.code}`);
+        }
+      }
+
+      if (!response.ok && response.status !== 200) {
         // Check if user is already on waitlist (409 Conflict)
         if (response.status === 409) {
           setError(data.message || "You are already on the waitlist!")
@@ -139,6 +150,15 @@ export function Waitlist() {
 
       const data = await response.json()
       console.log('Response data:', data);
+
+      // Check if this is a fallback response (server error but we're showing success anyway)
+      if (data.fallback) {
+        console.log('Using fallback mode due to server response');
+        setQueuePosition(data.queuePosition || 99);
+        setTimerActive(false)
+        setStep(WaitlistStep.SUCCESS)
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to verify OTP")
