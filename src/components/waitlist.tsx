@@ -77,6 +77,12 @@ export function Waitlist() {
       const data = await response.json()
 
       if (!response.ok) {
+        // Check if user is already on waitlist (409 Conflict)
+        if (response.status === 409) {
+          setError(data.message || "You are already on the waitlist!")
+          setLoading(false)
+          return
+        }
         throw new Error(data.message || "Failed to send OTP")
       }
 
@@ -96,6 +102,13 @@ export function Waitlist() {
     e.preventDefault()
     if (!otp.trim()) {
       setError("Please enter the OTP")
+      return
+    }
+
+    // Validate OTP format (6 digits)
+    const otpRegex = /^\d{6}$/
+    if (!otpRegex.test(otp)) {
+      setError("Please enter a valid 6-digit OTP")
       return
     }
 
@@ -146,6 +159,12 @@ export function Waitlist() {
       const data = await response.json()
 
       if (!response.ok) {
+        // Check if user is already on waitlist (409 Conflict)
+        if (response.status === 409) {
+          setError(data.message || "You are already on the waitlist!")
+          setLoading(false)
+          return
+        }
         throw new Error(data.message || "Failed to resend OTP")
       }
 

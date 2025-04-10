@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateVerificationToken } from "@/lib/token";
 import { sendVerificationEmail } from "@/lib/mail";
+import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
@@ -10,6 +11,18 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { message: "Email is required" },
         { status: 400 }
+      );
+    }
+
+    // Check if email already exists in waitlist
+    const existingWaitlist = await prisma.waitlist.findUnique({
+      where: { email }
+    });
+
+    if (existingWaitlist) {
+      return NextResponse.json(
+        { message: "You are already on the waitlist!" },
+        { status: 409 }
       );
     }
 

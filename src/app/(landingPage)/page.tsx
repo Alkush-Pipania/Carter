@@ -78,7 +78,7 @@ export default async function Home() {
       </section>
 
       {/* <Extension/> */}
-      <WaitlistPage />
+      
 
       <section
         className='overflow-hidden gap-y-5 px-4 h-[300px] bg-primary-purple/primary-purple-900  flex flex-col items-center justify-center sm:px-6 my-[100px] sm:my-28'
@@ -95,6 +95,7 @@ export default async function Home() {
       <section className="overflow-hidden font-mono gap-y-5 px-4 flex flex-col items-center justify-center sm:px-6 mt-[20px] sm:mt-12">
         <FAQ />
         <CTASection />
+        <WaitlistPage />
 
       </section>
 
