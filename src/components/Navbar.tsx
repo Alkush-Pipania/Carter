@@ -29,7 +29,7 @@ function Navbar() {
               alt="carter Logo"
             />
             <Link href="/" className="text-2xl font-bold">
-              Carter
+              Carter AI
             </Link>
           </div>
 

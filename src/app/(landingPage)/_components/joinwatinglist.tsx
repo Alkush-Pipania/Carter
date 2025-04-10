@@ -17,7 +17,7 @@ export default function WaitlistPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mb-8 text-center text-3xl font-bold text-white md:text-4xl"
         >
-          Join the <span className="text-purple-400">Carter</span> Waitlist
+          Join the <span className="text-purple-400">Carter</span> Waitlist 
         </Motion.motion.h1>
         <Motion.motion.p 
           initial={{ opacity: 0, x: 50 }}

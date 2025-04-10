@@ -1,14 +1,13 @@
 "use client";
 
-
 import Link from "next/link";
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { IconSearch } from "@tabler/icons-react";
 
 const ctaSection = {
-  title: "Ready to deep dive into Carter?",
-  buttonText: "Explore Now",
+  title: "Ready to experience AI-powered link management?",
+  buttonText: "Try Carter AI",
   buttonHref: "/dashboard",
 };
 
@@ -77,15 +76,16 @@ export function CTASection() {
       viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
     >
-      <div className="bg-gradient-to-b relative overflow-hidden  rounded-lg from-brand/brand-dark via-transparent to-primary-purple/primary-purple-400 p-8 text-center">
+      <div className="bg-gradient-to-b relative overflow-hidden rounded-lg from-brand/brand-dark via-transparent to-primary-purple/primary-purple-400 p-8 text-center">
         <motion.div
           className="bottom-[-10rem] md:bottom-[-19rem] left-[30%] opacity-100 z-[-1] absolute blur-[4em] rounded-xl transition-all translate-x-[-50%] w-[10rem] md:w-[10rem] h-[10rem] md:h-[30rem]"
           variants={gradientVariants}
         />
 
-        <motion.h2 className="text-3xl font-bold mb-6" variants={titleVariants}>
+        <motion.h2 className="text-xm sm:text-3xl font-bold mb-6" variants={titleVariants}>
           {ctaSection.title}
         </motion.h2>
+        
 
       </div>
     </motion.div>
