@@ -1,13 +1,13 @@
 "use client"
 import Linkcompo from "@/components/dashboard/linkcompo";
-import { useEffect } from "react";
-import { LinkCardLoading } from "@/components/dashboard/link-card-loading";
 import { useSearchParams } from "next/navigation";
+import { LinkCardLoading } from "@/components/dashboard/link-card-loading";
 import { Nolinks } from "@/components/dashboard/Nolinks";
-import { fetchFolderLinks } from "@/store/thunks/folderLinksThunk";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { GlobalLinks } from "@/@types/globallinks";
+import { useEffect } from "react";
+import { fetchFolderLinks } from "@/store/thunks/folderLinksThunk";
 
 interface ContentProps {
     folderid?: number;
@@ -17,11 +17,12 @@ export default function Content({ folderid }: ContentProps) {
     const searchParams = useSearchParams();
     const searchvalue = searchParams.get('search') || '';
     const dispatch = useDispatch<AppDispatch>();
-    const { links, loading, error } = useSelector((state: RootState) => state.folderLinks);
-    const userId = localStorage.getItem('userId');
+    const { links, loading } = useSelector((state: RootState) => state.folderLinks);
+    const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
 
+    // Only fetch links when search param changes (not on initial load)
     useEffect(() => {
-        if (userId && folderid) {
+        if (userId && folderid && searchvalue) {
             dispatch(fetchFolderLinks({ 
                 userId, 
                 searchQuery: searchvalue,

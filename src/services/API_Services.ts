@@ -40,18 +40,19 @@ axiosInstance.interceptors.response.use(
     },
 )
 
-export const getCarter = async (url : string , requestParams?: { params?: Record<string, any> } | Record<string, any>) =>{
-    try{
-        console.log(' Base_URL:',BASE_URL);
-        console.log(' FULL API URL:', `${BASE_URL}${url}`);
-        const response = await axiosInstance.get(`${BASE_URL}${url}` , { params: 'params' in requestParams ? requestParams.params : requestParams });
-        console.log(response)
+export const getCarter = async (url: string, requestParams?: { params?: Record<string, any> } | Record<string, any>) => {
+    try {
+        console.log('Base_URL:', BASE_URL);
+        console.log('FULL API URL:', `${BASE_URL}${url}`);
+        const params = 'params' in requestParams ? requestParams.params : requestParams;
+        const response = await axiosInstance.get(`${BASE_URL}${url}`, { params });
+        console.log(response);
         return response?.data ?? response;
-    }catch(error : any){
-      console.log(error)
+    } catch (error: any) {
+        console.log(error);
         const errorMessage = error.response?.data?.message || 'Error fetching data';
-        toast('Error' , {
-            description : errorMessage
+        toast('Error', {
+            description: errorMessage
         });
         throw new Error(errorMessage);
     }

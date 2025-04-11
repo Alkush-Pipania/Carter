@@ -23,16 +23,16 @@ import {
 import Link from "next/link"
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "@/components/ui/dialog"
 import { DialogTitle } from "@radix-ui/react-dialog"
-import { CreateLinkCart } from "./createfolder"
+import { CreateLinkCart } from "../../app/(main)/dashboard/_component/createfolder"
 import { deleteFolder, folderdata, getSecretKey, getuserdata, togglefolderCloud } from "@/server/actions/links"
 import { Skeleton } from "@/components/ui/skeleton"
 import { redirect, usePathname, useRouter } from "next/navigation"
-import { SettingsDialog } from "./setting/settings-dialog"
+import { SettingsDialog } from "../../app/(main)/dashboard/_component/setting/settings-dialog"
 import { useSession } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
 import { useFolderNameStore, useNameStore, useRenderStore, useTrashFolderStore } from "@/lib/store/links"
 import { Button } from "@/components/ui/button"
-import { BeautifulDropdownMenu } from "./BeautifullDropdownMenu"
+import { BeautifulDropdownMenu } from "../../app/(main)/dashboard/_component/BeautifullDropdownMenu"
 
 
 

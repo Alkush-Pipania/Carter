@@ -1,9 +1,9 @@
-"use client"
+
 import Dashbar from '@/components/dashboard/dashbar'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import logo from '@/../public/logo.png'
 import React from 'react'
-import { AppSidebar } from './dashboard/_component/Sidebar'
+import { Sidebar } from "@/components/dashboard/sidebar-component/Sidebar"
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,
@@ -21,7 +21,7 @@ const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
       <main className='mt-10 relative'>
         <SidebarProvider className="m-0 p-0">
           <div className="flex">
-            <AppSidebar />
+            <Sidebar/>
             <SidebarTrigger className='md:hidden fixed left-0'/>
           </div>
           {children}

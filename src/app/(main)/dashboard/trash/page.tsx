@@ -2,13 +2,13 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
-import { useFolderNameStore, useTrashFolderStore } from "@/lib/store/links"
-import { deleteAllTrashFolder, deleteTrashFolder, gettrashfolderdata, restoretrashFolder } from "@/server/actions/links"
 import { AlertCircle, Folder, RotateCcw, Trash2 } from "lucide-react"
 import React, { useEffect } from "react"
-import { string } from "zod"
-
-
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { getTrashFolders, deleteFolder, deleteAllFolders } from "@/store/thunks/trashFolderThunks"
+import { restoreFromTrash } from "@/store/thunks/folderThunks"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 interface TrashFolder {
   id: string
@@ -17,116 +17,122 @@ interface TrashFolder {
   deletedAt: Date
 }
 
-
-
 export default function LinkCart() {
-  // const [trashFolders, setTrashFolders] = React.useState<any>([])
-  const [isRestoring, setIsRestoring] = React.useState<string | null>(null)
-  const [isDeleting, setIsDeleting] = React.useState<string | null>(null)
-  const {trashfolder,setTrashfolder,deleteFolder} = useTrashFolderStore();
-  const {addFoldername} = useFolderNameStore();
-  const {toast} = useToast();
+  const dispatch = useAppDispatch()
+  const router = useRouter()
+  const { data: session } = useSession()
+  const { items: trashFolders, loading, restoring, deleting, deletingAll } = useAppSelector(state => state.trashFolder)
+  const { toast } = useToast()
 
   useEffect(() => {
-    async function fetchdata() {
-      const data = await gettrashfolderdata();
-      setTrashfolder(data.data)
+    if (session?.user?.id) {
+      dispatch(getTrashFolders({ userId: session.user.id }))
     }
-    fetchdata()
-  }, [])
+  }, [dispatch, session])
 
-
-
-  const handleRestore = async (id: string , name : string , count : string) => {
-    try{
-      setIsRestoring(id);
-      const res = await restoretrashFolder(id.toString());
-      console.log(res)
-      if(res.error == false){
-        deleteFolder(id);
-        addFoldername({
-          id : parseInt(id),
-          name : name,
-          _count : {links : count}
-        });
-        toast({
-          title : "Folder Restored",
-          description : "Folder has been restored successfully",
-          variant: "default",
+  const handleRestore = async (id: string, name: string, count: number) => {
+    try {
+      if (!session?.user?.id) return;
+      
+      const result = await dispatch(
+        restoreFromTrash({
+          userId: session.user.id,
+          folderId: id,
+          folderName: name,
+          numberOfLinks: count
         })
+      ).unwrap();
+      
+      if (!result.error) {
+        toast({
+          title: "Success",
+          description: "Folder has been restored successfully",
+          variant: "default",
+        });
         
+        // Optionally navigate to the restored folder
+        router.push(`/dashboard/folder/${id}`);
       }
-      setIsRestoring(null);
-    }catch(e){
-      setIsRestoring(null);
+    } catch (error) {
       toast({
-        title : "Error",
-        description : "Something went wrong",
+        title: "Error",
+        description: "Failed to restore folder",
         variant: "destructive",
-      })
+      });
     }
   }
 
   const handleDelete = async (id: string) => {
-    try{
-      setIsDeleting(id)
-       const res = await deleteTrashFolder(id);
-      if(res.error == false){
-        setIsDeleting(null)
-        deleteFolder(id);
-        toast({
-          title : "Folder Deleted",
-          description : "Folder has been deleted successfully",
-          variant: "default",
+    try {
+      if (!session?.user?.id) return;
+      
+      const result = await dispatch(
+        deleteFolder({
+          userId: session.user.id,
+          folderId: id
         })
+      ).unwrap();
+      
+      if (!result.error) {
+        toast({
+          title: "Success",
+          description: "Folder has been permanently deleted",
+          variant: "default",
+        });
       }
-    }catch(e){
-      setIsDeleting(null)
+    } catch (error) {
       toast({
-        title : "Error",
-        description : "Something went wrong",
+        title: "Error",
+        description: "Failed to delete folder",
         variant: "destructive",
-      })
+      });
     }
   }
 
   const handleDeleteAll = async () => {
-    try{
-      const res = await deleteAllTrashFolder();
-      if(res.error == false){
-        setTrashfolder([]);
-        toast({
-          title : "All Folders Deleted",
-          description : "All folders have been deleted successfully",
-          variant: "default",
+    try {
+      if (!session?.user?.id) return;
+      
+      const result = await dispatch(
+        deleteAllFolders({
+          userId: session.user.id
         })
+      ).unwrap();
+      
+      if (!result.error) {
+        toast({
+          title: "Success",
+          description: "All folders have been permanently deleted",
+          variant: "default",
+        });
       }
-    }catch(e){
+    } catch (error) {
       toast({
-        title : "Error",
-        description : "Something went wrong",
+        title: "Error",
+        description: "Failed to delete all folders",
         variant: "destructive",
-      })
+      });
     }
   }
 
   return (
-    <div className=" text-gray-300 w-full">
+    <div className="text-gray-300 w-full">
       <div className="container mx-auto p-6 space-y-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-white">Trash</h1>
             <p className="text-sm text-gray-500 mt-1">Manage your deleted folders</p>
           </div>
-          {trashfolder.length > 0 && (
+          {trashFolders.length > 0 && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
                   variant="destructive"
                   className="w-full sm:w-auto bg-red-900/50 hover:bg-red-900/70 text-red-200"
+                  disabled={deletingAll}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Delete All
+                  {deletingAll ? "Deleting..." : "Delete All"}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="bg-[#0B0A0F] text-gray-300 border border-gray-800">
@@ -152,7 +158,11 @@ export default function LinkCart() {
           )}
         </div>
 
-        {trashfolder.length === 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center p-12 text-center bg-gray-900/30 rounded-lg border border-gray-800/50">
+            <p className="mt-4 text-xl font-semibold text-gray-300">Loading trash folders...</p>
+          </div>
+        ) : trashFolders.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center bg-gray-900/30 rounded-lg border border-gray-800/50">
             <AlertCircle className="h-12 w-12 text-gray-700" />
             <h2 className="mt-4 text-xl font-semibold text-gray-300">No items in trash</h2>
@@ -160,7 +170,7 @@ export default function LinkCart() {
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {trashfolder.map((folder) => (
+            {trashFolders.map((folder) => (
               <div
                 key={folder.folderId}
                 className="group bg-gray-900/30 rounded-lg border border-gray-800/50 transition-all duration-200 hover:border-gray-700"
@@ -179,28 +189,28 @@ export default function LinkCart() {
                     <Button
                       variant="secondary"
                       className="flex-1 bg-gray-800/50 hover:bg-gray-800 text-gray-300 border border-gray-700"
-                      disabled={isRestoring === folder.folderId}
-                      onClick={() => handleRestore(folder.folderId , folder.folderName , folder.numberofLinks)}
+                      disabled={restoring === folder.folderId}
+                      onClick={() => handleRestore(folder.folderId, folder.folderName, folder.numberOfLinks)}
                     >
                       <RotateCcw className="mr-2 h-4 w-4" />
-                      {isRestoring === folder.folderId ? "Restoring..." : "Restore"}
+                      {restoring === folder.folderId ? "Restoring..." : "Restore"}
                     </Button>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
                           variant="destructive"
                           className="flex-1 bg-red-900/50 hover:bg-red-900/70 text-red-200"
-                          disabled={isDeleting === folder.folderId}
+                          disabled={deleting === folder.folderId}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          {isDeleting === folder.folderId ? "Deleting..." : "Delete"}
+                          {deleting === folder.folderId ? "Deleting..." : "Delete"}
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent className="bg-[#0B0A0F] text-gray-300 border border-gray-800">
                         <AlertDialogHeader>
                           <AlertDialogTitle className="text-white">Delete folder?</AlertDialogTitle>
                           <AlertDialogDescription className="text-gray-400">
-                            This action cannot be undone. This will permanently delete the folder "{folder.name}".
+                            This action cannot be undone. This will permanently delete the folder "{folder.folderName}".
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

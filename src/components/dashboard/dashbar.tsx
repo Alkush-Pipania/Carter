@@ -3,34 +3,22 @@ import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import search from '../../../public/Search.png';
-import { motion } from 'framer-motion';
 import { SubmitHandler, useForm, FormProvider } from 'react-hook-form';
 import { AddLinkSchema } from '@/lib/types/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from "zod";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { Input } from '../ui/input';
-import Loader from '../global/Loader';
 import carterlogo from "../../../public/logo.png"
-import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import Rightmenu from './rightmenu';
-import { Loader2Icon, Plus } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store/store';
 import { addGlobalLink } from '@/store/thunks/userLinksGlobalThunk';
 import { addFolderLink } from '@/store/thunks/folderLinksThunk';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import { toast } from "sonner"
 import dotenv from 'dotenv';
 import { AddLinkDialog } from './AddLinkDialog';
+import InteractivePacManLogo from './extras/dynamiclogo';
+import { useIsMobile } from '@/hooks/use-mobile';
 dotenv.config();
 
 const Dashbar = (
@@ -115,13 +103,23 @@ const Dashbar = (
       console.log(error);
     }
   };
+  const isMobile = useIsMobile();
 
   return (
     <div className='w-full border-b border-gray-500/30 backdrop-blur-md z-10 h-16 sm:h-20 bg-brand/brand-dark/60 flex items-center justify-between px-3 sm:px-6 sticky top-0'>
-      <Link href="/dashboard" className="flex items-center">
+      {isMobile ? (
+<Link href="/dashboard" className="flex items-center">
         <Image src={carterlogo} alt='logo' className='w-10 sm:w-[50px] transition-all duration-200' />
+        
       </Link>
-
+      ):(
+<Link href="/dashboard" className="flex items-center">
+        <div className="w-10 sm:w-[50px] h-10 sm:h-[50px] flex items-center justify-center transition-all duration-200">
+          <InteractivePacManLogo />
+        </div>
+      </Link>
+      )}
+      
       <div className='flex items-center gap-3 sm:gap-6'>
         {!hideFeature && (
           <AddLinkDialog activeRoute={activeRoute} />

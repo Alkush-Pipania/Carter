@@ -2,13 +2,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GlobalLinks } from '@/@types/globallinks';
 import { fetchFolderLinks, deleteFolderLink, addFolderLink } from '../thunks/folderLinksThunk';
 
+interface FolderInfo {
+    id: number;
+    name: string;
+}
+
 interface FolderLinksState {
+    folder: FolderInfo | null;
     links: GlobalLinks[];
     loading: boolean;
     error: string | null;
 }
 
 const initialState: FolderLinksState = {
+    folder: null,
     links: [],
     loading: true,
     error: null,
@@ -20,6 +27,9 @@ const folderLinksSlice = createSlice({
     reducers: {
         setFolderLinks: (state, action: PayloadAction<GlobalLinks[]>) => {
             state.links = action.payload;
+        },
+        setFolder: (state, action: PayloadAction<FolderInfo>) => {
+            state.folder = action.payload;
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
@@ -36,7 +46,8 @@ const folderLinksSlice = createSlice({
             })
             .addCase(fetchFolderLinks.fulfilled, (state, action) => {
                 state.loading = false;
-                state.links = action.payload;
+                state.folder = action.payload.folder;
+                state.links = action.payload.links;
             })
             .addCase(fetchFolderLinks.rejected, (state, action) => {
                 state.loading = false;
@@ -51,5 +62,5 @@ const folderLinksSlice = createSlice({
     },
 });
 
-export const { setFolderLinks, setLoading, setError } = folderLinksSlice.actions;
+export const { setFolderLinks, setFolder, setLoading, setError } = folderLinksSlice.actions;
 export default folderLinksSlice.reducer; 

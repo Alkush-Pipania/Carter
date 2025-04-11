@@ -112,7 +112,7 @@ const handleCloudToggle = async () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className='bg-darkBg font-mono text-white border-gray-800'>
                   <DropdownMenuItem asChild className='hover:bg-gray-800/50 cursor-pointer'>
-                    <Link href={`/dashboard/links/${secretId}/edit`}>Edit/open</Link>
+                    <Link href={`/dashboard/links/${secretId}/edit`}>open</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className='hover:bg-gray-800/50 cursor-pointer'>
                     <h3 onClick={() => startcloudtransition(handleCloudToggle)}>

@@ -4,74 +4,160 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { CreateLinkCartSchema } from "@/lib/types/zod";
-import { createlinkcarter } from "@/server/actions/links";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from 'next/navigation';
-import { DialogClose, DialogTrigger } from "@/components/ui/dialog";
-import { link } from "fs";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createFolder } from "@/store/thunks/folderdataThunks";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-export  function CreateLinkCart({ onfoldercreate }) {
+export function CreateLinkCart({ onfoldercreate }) {
   const router = useRouter();
-  const {toast} = useToast();
+  const { toast } = useToast();
+  const dispatch = useAppDispatch();
+  const { data: session } = useSession();
+  const { creating, createError } = useAppSelector((state) => state.folderdata);
+  const folderList = useAppSelector((state) => state.folderdata.data);
+  const [nameExists, setNameExists] = useState(false);
+  
   const form = useForm<z.infer<typeof CreateLinkCartSchema>>({
-    resolver : zodResolver(CreateLinkCartSchema),
+    resolver: zodResolver(CreateLinkCartSchema),
     defaultValues: {
-      name : ""
+      name: ""
     },
-  })
-
-  async function onSubmit(values : z.infer<typeof CreateLinkCartSchema>){ //@ts-ignore
-    const data = await createlinkcarter(values);
-    onfoldercreate({
-      id : data.data.id,
-      name : data.data.name,
-      _count : {links : 0}
-    })
-    if(data?.message){
+  });
+  
+  // Check for duplicate folder names as user types
+  const folderName = form.watch("name");
+  
+  useEffect(() => {
+    // Check if a folder with this name already exists (case insensitive)
+    if (folderName.trim()) {
+      const folderExists = folderList.some(
+        folder => folder.name.toLowerCase() === folderName.trim().toLowerCase()
+      );
+      setNameExists(folderExists);
+      
+      if (folderExists) {
+        form.setError("name", {
+          type: "manual",
+          message: "A folder with this name already exists"
+        });
+      } else {
+        form.clearErrors("name");
+      }
+    }
+  }, [folderName, folderList, form]);
+  
+  // Reset form when createError changes
+  useEffect(() => {
+    if (createError) {
       toast({
-        title : data.error ? "Error" : "Success",
-        description : `${data.message} ${values.name}`,
-        variant : data.error? "destructive" : "great",
-      })
-      router.push(`/dashboard/cart/${data.data.id}`)
+        title: "Error",
+        description: createError,
+        variant: "destructive",
+      });
+    }
+  }, [createError, toast]);
+
+  async function onSubmit(values: z.infer<typeof CreateLinkCartSchema>) {
+    if (!session?.user?.id) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to create a folder",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Double check for duplicate name
+    const folderExists = folderList.some(
+      folder => folder.name.toLowerCase() === values.name.trim().toLowerCase()
+    );
+    
+    if (folderExists) {
+      form.setError("name", {
+        type: "manual",
+        message: "A folder with this name already exists"
+      });
+      return;
+    }
+    
+    try {
+      const resultAction = await dispatch(
+        createFolder({
+          userId: session.user.id,
+          folderName: values.name.trim()
+        })
+      );
+      
+      if (createFolder.fulfilled.match(resultAction)) {
+        const data = resultAction.payload;
+        
+        // Add folder to local state via callback
+        if (data?.data) {
+          onfoldercreate({
+            id: data.data.id,
+            name: data.data.name,
+            _count: { links: 0 }
+          });
+          
+          toast({
+            title: "Success",
+            description: `Folder ${values.name} created successfully`,
+            variant: "great",
+          });
+          
+          // Navigate to the new folder
+          router.push(`/dashboard/folder/${data.data.id}`);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to create folder:", error);
     }
   }
 
   return (
-    
     <>
-    <Form {...form}>
-    <form className="flex flex-col gap-y-3" onSubmit={form.handleSubmit(onSubmit)}>
-     <FormField
-     control={form.control}
-     name="name"
-     render={({field}) =>(
-      <FormItem>
-      <FormLabel>Name :</FormLabel>
-      <FormControl>
-        <Input placeholder="folder name" {...field}/>
-      </FormControl>
-      <FormMessage/>
-      </FormItem>
-     )}
-     />
-     <div>
-     
-      <Button className="flex justify-between gap-x-2" disabled={form.formState.isSubmitting} type="submit">
-        <Plus/>
-        Create
-      </Button>
-    
-      
-      
-     </div>
-    </form>
-
-    </Form>
+      <Form {...form}>
+        <form className="flex flex-col gap-y-3" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name:</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="folder name" 
+                    {...field} 
+                    className={nameExists ? "border-red-500 focus-visible:ring-red-500" : ""}
+                  />
+                </FormControl>
+                <FormMessage />
+                {nameExists && (
+                  <p className="text-xs text-red-500 mt-1">
+                    Try using a different name or adding a number to make it unique
+                  </p>
+                )}
+              </FormItem>
+            )}
+          />
+          <div>
+            <Button 
+              className="flex justify-between gap-x-2" 
+              disabled={creating || form.formState.isSubmitting || nameExists} 
+              type="submit"
+            >
+              <Plus />
+              {creating ? "Creating..." : "Create"}
+            </Button>
+          </div>
+        </form>
+      </Form>
     </>
-    
-  )
+  );
 }

@@ -3,9 +3,21 @@ import { getCarter, delCarter, postCarter } from "@/services/API_Services";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { GlobalLinks } from "@/@types/globallinks";
 
-export const fetchFolderLinks = createAsyncThunk(
+interface FolderLinksResponse {
+    folder: {
+        id: number;
+        name: string;
+    };
+    links: GlobalLinks[];
+}
+
+export const fetchFolderLinks = createAsyncThunk<
+    FolderLinksResponse,
+    { userId: string | null; searchQuery: string; folderId: number },
+    { rejectValue: string }
+>(
     'folderLinks/fetchFolderLinks',
-    async({ userId, searchQuery, folderId }: { userId: string | null, searchQuery: string, folderId: number }, thunkApi) => {
+    async({ userId, searchQuery, folderId }, thunkApi) => {
         try {
             const endpoint = `${API_ENDPOINTS.FolderLinks}`;
             console.log("Sending request with params:", { userId, searchQuery, folderId });
@@ -13,7 +25,7 @@ export const fetchFolderLinks = createAsyncThunk(
             if (!response) {
                 throw new Error('No response received from API');
             }
-            return response;
+            return response as FolderLinksResponse;
         } catch(error : any) {
             return thunkApi.rejectWithValue(
                 error?.response?.data?.detail || error?.response?.data?.message || error?.message || 'Failed to fetch folder links',
