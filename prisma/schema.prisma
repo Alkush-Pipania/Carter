@@ -8,18 +8,16 @@ datasource db {
 }
 
 model User {
-  email         String          @unique
-  username      String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  password      String
-  secretkey     String          @unique @default(uuid())
-  id            Int             @id @default(autoincrement())
-  varified      Boolean         @default(false)
-  folders       Folder[]
-  linkform      Linkform[]
-  LinkformTrash LinkformTrash[]
-  trashFolders  TrashFolder[]
+  email     String     @unique
+  username  String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  password  String
+  secretkey String     @unique @default(uuid())
+  id        Int        @id @default(autoincrement())
+  varified  Boolean    @default(false)
+  folders   Folder[]
+  linkform  Linkform[]
 }
 
 model Folder {
@@ -29,6 +27,8 @@ model Folder {
   userID    Int
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+  isDeleted Boolean    @default(false)
   user      User       @relation(fields: [userID], references: [id])
   links     Linkform[]
 
@@ -36,50 +36,20 @@ model Folder {
 }
 
 model Linkform {
-  secret_Id   String   @id @default(uuid())
+  secret_Id   String    @id @default(uuid())
   title       String
   description String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   links       String
-  imgurl      String?
-  tags        String[]
-  tobefind    Boolean  @default(false)
+  tobefind    Boolean   @default(false)
   userID      Int
   folderID    Int?
-  folder      Folder?  @relation(fields: [folderID], references: [id])
-  user        User     @relation(fields: [userID], references: [id])
-
-  @@index([userID])
-}
-
-model TrashFolder {
-  id         Int             @id @unique @default(autoincrement())
-  name       String
-  secretKey  String
-  userID     Int
-  createdAt  DateTime
-  deletedAt  DateTime        @default(now())
-  restoredAt DateTime?
-  links      LinkformTrash[]
-  user       User            @relation(fields: [userID], references: [id])
-
-  @@index([userID])
-}
-
-model LinkformTrash {
-  trash_Id      Int          @id @default(autoincrement())
-  secret_Id     String
-  links         String
-  title         String?
-  description   String?
-  createdAt     DateTime
-  deletedAt     DateTime     @default(now())
-  restoredAt    DateTime?
-  imgurl        String?
-  userID        Int
-  trashFolderID Int?
-  trashFolder   TrashFolder? @relation(fields: [trashFolderID], references: [id])
-  user          User         @relation(fields: [userID], references: [id])
+  deletedAt   DateTime?
+  isDeleted   Boolean   @default(false)
+  body        String?
+  imgurl      String?
+  folder      Folder?   @relation(fields: [folderID], references: [id])
+  user        User      @relation(fields: [userID], references: [id])
 
   @@index([userID])
 }

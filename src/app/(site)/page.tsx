@@ -1,12 +1,9 @@
 import { getServerSession } from "next-auth/next";
-import heroimg from "../../../public/Section 1.png";
 import Image from "next/image";
-import TitleSection from "@/components/landing-page/title-section";
-import ShinyButton from "@/components/ui/shiny-button";
 import Link from "next/link";
-import documlogo from "../../../public/Document.png";
+import DocumentImage from "../../../public/Document.png";
 import Usecases from "@/components/global/landingcom";
-import screenlogo from "../../../public/Screen.png";
+import ScreenLogo from "../../../public/Screen.png";
 import cart from "../../../public/Cart.png";
 import music from "../../../public/Music.png";
 import link from "../../../public/Link 2.png";
@@ -53,14 +50,14 @@ export default async function Home() {
           <div className="flex lg:gap-24 lg:mx-32 items-start justify-start gap-6 sm:mx-8 mr-5 flex-col sm:flex-row">
             <ScrollComponent>
               <Usecases
-              logo={documlogo}
+              logo={DocumentImage}
               label="Long useful articles"
               para="You found a long, useful, and important article but can't read it right now? Not a problem. Just save it to Carter to read later."
             />
             </ScrollComponent>
             <ScrollComponent>
               <Usecases
-              logo={screenlogo}
+              logo={ScreenLogo}
               label="Interesting websites"
               para="You found a ridiculously cool and interesting website you want to check out later? Not a problem. Just save it to carter to visit later."
             />
