@@ -1,7 +1,6 @@
 "use client"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
 import { AlertCircle, Folder, RotateCcw, Trash2 } from "lucide-react"
 import React, { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
@@ -9,6 +8,7 @@ import { getTrashFolders, deleteFolder, deleteAllFolders } from "@/store/thunks/
 import { restoreFromTrash } from "@/store/thunks/folderThunks"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 interface TrashFolder {
   id: string
@@ -22,7 +22,6 @@ export default function LinkCart() {
   const router = useRouter()
   const { data: session } = useSession()
   const { items: trashFolders, loading, restoring, deleting, deletingAll } = useAppSelector(state => state.trashFolder)
-  const { toast } = useToast()
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -31,6 +30,8 @@ export default function LinkCart() {
   }, [dispatch, session])
 
   const handleRestore = async (id: string, name: string, count: number) => {
+    const toastId = toast.loading(`Restoring ${name}...`);
+    
     try {
       if (!session?.user?.id) return;
       
@@ -44,25 +45,25 @@ export default function LinkCart() {
       ).unwrap();
       
       if (!result.error) {
-        toast({
-          title: "Success",
-          description: "Folder has been restored successfully",
-          variant: "default",
+        toast.success("Success", {
+          id: toastId,
+          description: "Folder has been restored successfully"
         });
         
         // Optionally navigate to the restored folder
         router.push(`/dashboard/folder/${id}`);
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to restore folder",
-        variant: "destructive",
+      toast.error("Error", {
+        id: toastId,
+        description: "Failed to restore folder"
       });
     }
   }
 
   const handleDelete = async (id: string) => {
+    const toastId = toast.loading("Deleting folder...");
+    
     try {
       if (!session?.user?.id) return;
       
@@ -74,22 +75,22 @@ export default function LinkCart() {
       ).unwrap();
       
       if (!result.error) {
-        toast({
-          title: "Success",
-          description: "Folder has been permanently deleted",
-          variant: "default",
+        toast.success("Success", {
+          id: toastId,
+          description: "Folder has been permanently deleted"
         });
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete folder",
-        variant: "destructive",
+      toast.error("Error", {
+        id: toastId,
+        description: "Failed to delete folder"
       });
     }
   }
 
   const handleDeleteAll = async () => {
+    const toastId = toast.loading("Deleting all folders...");
+    
     try {
       if (!session?.user?.id) return;
       
@@ -100,17 +101,15 @@ export default function LinkCart() {
       ).unwrap();
       
       if (!result.error) {
-        toast({
-          title: "Success",
-          description: "All folders have been permanently deleted",
-          variant: "default",
+        toast.success("Success", {
+          id: toastId,
+          description: "All folders have been permanently deleted"
         });
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete all folders",
-        variant: "destructive",
+      toast.error("Error", {
+        id: toastId,
+        description: "Failed to delete all folders"
       });
     }
   }

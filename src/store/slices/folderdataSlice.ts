@@ -37,7 +37,7 @@ export const folderdataSlice = createSlice({
       state.data.push(action.payload);
     },
     removeFolder: (state, action: PayloadAction<string>) => {
-      state.data = state.data.filter(folder => folder.id !== action.payload);
+      state.data = state.data.filter(folder => folder.id.toString() !== action.payload.toString());
     }
   },
   extraReducers: (builder) => {

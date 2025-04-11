@@ -23,14 +23,19 @@ export const moveToTrash = createAsyncThunk(
   'folder/moveToTrash',
   async ({ userId, folderId, folderName, numberOfLinks }: MoveToTrashParams, { dispatch, rejectWithValue }) => {
     try {
+      console.log('moveToTrash thunk called with:', { userId, folderId, folderName, numberOfLinks });
+      
       // Call the move-to-trash endpoint
       const response = await postCarter(API_ENDPOINTS.MoveToTrash, { 
         userId, 
         folderId 
       });
       
+      console.log('moveToTrash API response:', response);
+      
       // If successful, remove the folder from the folderdata slice
       if (!response.error) {
+        console.log('Dispatching removeFolder with ID:', folderId);
         dispatch(removeFolder(folderId));
       }
       
@@ -44,6 +49,7 @@ export const moveToTrash = createAsyncThunk(
         }
       };
     } catch (error: any) {
+      console.error('moveToTrash error:', error);
       return rejectWithValue(error.message);
     }
   }

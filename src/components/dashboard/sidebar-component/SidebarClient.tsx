@@ -93,7 +93,8 @@ export function SidebarClient() {
   }, [search, dispatch, status, sessionData]);
 
   const handleFolderCreate = (newfolder: any) => {
-    dispatch(addFolder(newfolder));
+    // Don't add the folder again - it's already added by the createFolder thunk
+    // Just close the dialog
     setIsCreateFolderOpen(false);
   }
 

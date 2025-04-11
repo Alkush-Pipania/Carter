@@ -9,6 +9,8 @@ import { RootState } from "@/store/store";
 import { fetchFolderLinks } from "@/store/thunks/folderLinksThunk";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
+import { toast } from "sonner";
+
 export default function LinkCart() {
   const router = useRouter();
   const [isloading, setisLoading] = useState<boolean>(true);
@@ -16,7 +18,7 @@ export default function LinkCart() {
   const pathId = pathname.split('/').pop();
   
   const dispatch = useDispatch<AppDispatch>();
-  const { folder } = useSelector((state: RootState) => state.folderLinks);
+  const { folder, error } = useSelector((state: RootState) => state.folderLinks);
   const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
 
   useEffect(() => {
@@ -29,11 +31,19 @@ export default function LinkCart() {
         .then(() => {
           setisLoading(false);
         })
-        .catch(() => {
+        .catch((err) => {
+          toast.error(err || "Failed to load folder");
           router.replace('/dashboard');
         });
     }
   }, [pathname, dispatch, pathId, userId, router]);
+
+  // Show error toast if there's an error in the state
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   return (
     <section className="w-full flex flex-col h-screen">

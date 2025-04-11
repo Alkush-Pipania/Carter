@@ -6,8 +6,9 @@ import { Nolinks } from "@/components/dashboard/Nolinks";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { GlobalLinks } from "@/@types/globallinks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchFolderLinks } from "@/store/thunks/folderLinksThunk";
+import { toast } from "sonner";
 
 interface ContentProps {
     folderid?: number;
@@ -17,19 +18,39 @@ export default function Content({ folderid }: ContentProps) {
     const searchParams = useSearchParams();
     const searchvalue = searchParams.get('search') || '';
     const dispatch = useDispatch<AppDispatch>();
-    const { links, loading } = useSelector((state: RootState) => state.folderLinks);
+    const { links, loading, error, folder } = useSelector((state: RootState) => state.folderLinks);
     const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
+    const [prevSearchValue, setPrevSearchValue] = useState('');
 
     // Only fetch links when search param changes (not on initial load)
     useEffect(() => {
-        if (userId && folderid && searchvalue) {
+        if (userId && folderid && searchvalue && searchvalue !== prevSearchValue) {
             dispatch(fetchFolderLinks({ 
                 userId, 
                 searchQuery: searchvalue,
                 folderId: folderid 
-            }));
+            }))
+            .unwrap()
+            .then((result) => {
+                setPrevSearchValue(searchvalue);
+                if (result.links.length === 0) {
+                    toast.info(`No results found for "${searchvalue}"`);
+                } else {
+                    toast.success(`Found ${result.links.length} links for "${searchvalue}"`);
+                }
+            })
+            .catch((err) => {
+                toast.error(err || "Failed to search links");
+            });
         }
-    }, [dispatch, userId, searchvalue, folderid]);
+    }, [dispatch, userId, searchvalue, folderid, prevSearchValue]);
+
+    // Show error toast when error changes
+    useEffect(() => {
+        if (error) {
+            toast.error(error);
+        }
+    }, [error]);
 
     return (
         <section>

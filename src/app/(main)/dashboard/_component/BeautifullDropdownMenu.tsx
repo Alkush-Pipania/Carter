@@ -5,7 +5,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { moveToTrash } from "@/store/thunks/folderThunks"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
+import { removeFolder } from "@/store/slices/folderdataSlice"
 
 import {
   DropdownMenu,
@@ -34,7 +35,6 @@ export function BeautifulDropdownMenu({
   const dispatch = useAppDispatch()
   const { data: session } = useSession()
   const router = useRouter()
-  const { toast } = useToast()
   const { movingToTrash } = useAppSelector(state => state.trashFolder)
   
   const handleMoveToTrash = async (e: React.MouseEvent) => {
@@ -46,7 +46,12 @@ export function BeautifulDropdownMenu({
       return
     }
     
+    console.log('Moving folder to trash:', { folderId, folderName, numberOfLinks })
+    
     try {
+      // Immediately remove from UI for better UX
+      dispatch(removeFolder(folderId))
+      
       const result = await dispatch(
         moveToTrash({
           userId: session.user.id,
@@ -56,11 +61,11 @@ export function BeautifulDropdownMenu({
         })
       ).unwrap()
       
+      console.log('Move to trash result:', result)
+      
       if (!result.error) {
-        toast({
-          title: "Success",
-          description: "Folder moved to trash",
-          variant: "default",
+        toast.success("Success", {
+          description: "Folder moved to trash"
         })
         
         // Navigate to dashboard if we're on the folder that was deleted
@@ -68,13 +73,17 @@ export function BeautifulDropdownMenu({
         if (currentPath.includes(`/dashboard/folder/${folderId}`)) {
           router.push('/dashboard')
         }
+      } else {
+        // If there was an error, we need to refresh the sidebar to restore the folder
+        router.refresh()
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to move folder to trash",
-        variant: "destructive",
+      console.error('Move to trash error:', error)
+      toast.error("Error", {
+        description: "Failed to move folder to trash"
       })
+      // If there was an error, we need to refresh the sidebar to restore the folder
+      router.refresh()
     }
   }
 
