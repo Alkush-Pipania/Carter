@@ -1,30 +1,26 @@
+"use client"
+
+import { useEffect, useState } from "react";
 import Chatcomponent from "@/components/chatbot/Chatcomponent";
 
-export default async function ChatPage() {
-  const getGreeting = (users: string) => {
-    const hour = new Date().getHours();
-    let greetingText = "";
+export default function ChatPage() {
+  const [greeting, setGreeting] = useState<string>("");
 
-    if (hour >= 5 && hour < 12) {
-      greetingText = "Good morning";
-    } else if (hour >= 12 && hour < 17) {
-      greetingText = "Good afternoon";
-    } else if (hour >= 17 && hour < 22) {
-      greetingText = "Good evening";
-    } else {
-        greetingText = "Good night";
-      }
+  useEffect(() => {
+    const getGreeting = () => {
+      // We'll just use "How was your day, Anant?" to match the design
+      const secretKey = localStorage.getItem('secretKey');
+      return secretKey ? `How was your day, ${secretKey}? ` : "How was your day, Anant?";
+    };
 
-    if (users) {
-      greetingText += `, ${users || 'there'}`;
-    } else {
-      greetingText = "Welcome to GOOG";
-    }
+    setGreeting(getGreeting());
+  }, []);
 
-    return greetingText;
-  };
-    // right now the name is harcoded ...
   return (
-    <Chatcomponent greetings={getGreeting("alkush")} />
+    <div className="flex justify-center items-center">
+      <div className="max-w-[800px] w-full">
+        <Chatcomponent greetings={greeting} />
+      </div>
+    </div>
   );
 }

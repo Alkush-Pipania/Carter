@@ -160,69 +160,71 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
   }
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden  text-white">
-      <div
-        ref={chatContainerRef}
-        className="flex-1 overflow-y-auto hide-scrollbar my-4 px-6 py-8 sm:mb-0 mb-32 max-w-4xl mx-auto w-full relative"
-      >
-        {messages.length === 0 && (
-          <div className="flex items-center justify-center h-full">
-            <h1 className="text-3xl font-semibold text-white/90">{greetings}</h1>
-          </div>
-        )}
-
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`mb-4 ${message.role === "user" ? "ml-auto max-w-[80%]" : "mr-auto max-w-[90%]"}`}
-          >
-            <Card
-              className={`${
-                message.role === "user"
-                  ? "bg-primary-purple/primary-purple-500/20 border-primary-purple/primary-purple-400/30"
-                  : "bg-primary-blue/primary-blue-500/20 border-primary-blue/primary-blue-400/30"
-              } backdrop-blur-sm`}
+    <div className="flex flex-col h-screen overflow-hidden text-white">
+      {messages.length > 0 && (
+        <div
+          ref={chatContainerRef}
+          className="flex-1 overflow-y-auto hide-scrollbar pt-16 pb-8 px-6 max-w-[800px] mx-auto w-full relative"
+        >
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className="mb-4 w-full"
             >
-              <CardContent className="p-4">
-                {message.isStructured && typeof message.content !== "string" ? (
-                  <StructuredResponse content={message.content} />
-                ) : (
-                  <p className="text-white/90">{message.content as string}</p>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        ))}
+              <Card
+                className={`${
+                  message.role === "user"
+                    ? "bg-[#1E1A2D] border-gray-700"
+                    : "bg-primary-blue/primary-blue-500/20 border-primary-blue/primary-blue-400/30"
+                } backdrop-blur-sm`}
+              >
+                <CardContent className="p-4">
+                  {message.isStructured && typeof message.content !== "string" ? (
+                    <StructuredResponse content={message.content} />
+                  ) : (
+                    <p className="text-white/90">{message.content as string}</p>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          ))}
 
-        {isLoading && (
-          <div className="mb-4 mr-auto w-2/3">
-            <Card className="bg-primary-blue/primary-blue-500/20 border-primary-blue/primary-blue-400/30 backdrop-blur-sm">
-              <CardContent className="p-4 space-y-3">
-                <Skeleton className="h-4 w-3/4 bg-primary-blue/primary-blue-400/30" />
-                <Skeleton className="h-4 w-full bg-primary-blue/primary-blue-400/30" />
-                <Skeleton className="h-4 w-1/2 bg-primary-blue/primary-blue-400/30" />
-                <div className="space-y-2 mt-4">
-                  <Skeleton className="h-3 w-1/3 bg-primary-blue/primary-blue-400/30" />
-                  <Skeleton className="h-3 w-1/4 bg-primary-blue/primary-blue-400/30" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+          {isLoading && (
+            <div className="mb-4 w-full">
+              <Card className="bg-primary-blue/primary-blue-500/20 border-primary-blue/primary-blue-400/30 backdrop-blur-sm">
+                <CardContent className="p-4 space-y-3">
+                  <Skeleton className="h-4 w-3/4 bg-primary-blue/primary-blue-400/30" />
+                  <Skeleton className="h-4 w-full bg-primary-blue/primary-blue-400/30" />
+                  <Skeleton className="h-4 w-1/2 bg-primary-blue/primary-blue-400/30" />
+                  <div className="space-y-2 mt-4">
+                    <Skeleton className="h-3 w-1/3 bg-primary-blue/primary-blue-400/30" />
+                    <Skeleton className="h-3 w-1/4 bg-primary-blue/primary-blue-400/30" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-        <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} />
 
-        {showScrollButton && (
-          <Button
-            onClick={scrollToBottom}
-            className="fixed sm:bottom-36 lg:right-2/4 bottom-40 right-8 sm:right-24 rounded-full p-3 bg-primary-purple/primary-purple-500 hover:bg-primary-purple/primary-purple-600 shadow-lg shadow-primary-purple/primary-purple-500/20 z-10"
-            aria-label="Scroll to bottom"
-          >
-            <ArrowDown className="w-5 h-5" />
-          </Button>
-        )}
-      </div>
-      <InputBox id={chatId} isMobile={isMobile} onSendMessage={handleNewMessage} />
+          {showScrollButton && (
+            <Button
+              onClick={scrollToBottom}
+              className="fixed sm:bottom-36 lg:right-2/4 bottom-32 right-8 sm:right-24 rounded-full p-3 bg-primary-purple/primary-purple-500 hover:bg-primary-purple/primary-purple-600 shadow-lg shadow-primary-purple/primary-purple-500/20 z-10"
+              aria-label="Scroll to bottom"
+            >
+              <ArrowDown className="w-5 h-5" />
+            </Button>
+          )}
+        </div>
+      )}
+      <InputBox 
+        id={chatId} 
+        isMobile={isMobile} 
+        onSendMessage={handleNewMessage}
+        greeting={messages.length === 0 ? greetings : undefined}
+        hasMessages={messages.length > 0}
+      />
     </div>
   )
 }
