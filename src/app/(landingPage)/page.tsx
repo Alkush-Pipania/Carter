@@ -20,6 +20,7 @@ import WaitlistPage from "./_components/joinwatinglist";
 
 
 
+
 export default async function Home() {
 
 
