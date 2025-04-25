@@ -21,4 +21,4 @@ export default function ChatLayout({
         <div className="absolute -top-5 sm:-top-10 left-[10%] w-[300px] sm:w-[500px] h-[25vh] sm:h-[40vh] bg-primary-purple/primary-purple-500/30 sm:bg-primary-purple/primary-purple-500/40 rounded-full blur-[80px] sm:blur-[120px] animate-pulse" />
       </div>
     {children}</div>
-} a 
+} 
