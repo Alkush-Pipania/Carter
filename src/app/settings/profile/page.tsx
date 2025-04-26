@@ -16,16 +16,16 @@ export default function Profile() {
   };
 
   return (
-    <div className="p-6 w-full mx-auto">
+    <div className="p-6 w-full h-full ml-10 mt-10">
       <h1 className="text-3xl font-bold text-white mb-6">Profile Settings</h1>
-
-      <div className="bg-[#1f1e2e] rounded-2xl w-full p-6 space-y-8 border border-[#2c2b3d] shadow-xl shadow-purpleShadow">
+        
+      <div className="mt-10 bg-[#1f1e2e] rounded-2xl w-[50%] h-[50%] p-6 space-y-8 border border-[#2c2b3d] shadow-xl shadow-purpleShadow">
 
         {/* Profile Image Section */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img
-              src={profileImage}
+              src={profileImage}  
               alt="Profile"
               className="w-20 h-20 rounded-full object-cover border-2 border-white"
             />
@@ -59,9 +59,8 @@ export default function Profile() {
             <p className="text-gray-400 text-sm">Name</p>
             <input
               type="text"
-              value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Ayush Sotiya"
+              placeholder={name}
               className="mt-1 w-full bg-[#2c2b3d] text-white font-medium px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 transition"
             />
           </div>
@@ -77,9 +76,8 @@ export default function Profile() {
             <input
               type="text"
               disabled={true}
-              value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="ayushsotiya56@gmail.com"
+              placeholder={email}
               className={`mt-1 w-full bg-[#2c2b3d] text-white hover:cursor-not-allowed font-medium px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 transition`}
             />
           </div>

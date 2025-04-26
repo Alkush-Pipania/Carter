@@ -60,57 +60,86 @@ export default function AppSidebar() {
     const pathname = usePathname();
 
     return (
-            <Sidebar >
-                <SidebarContent className='bg-brand/brand-dark  '>
-                    <SidebarGroup>
-                        <SidebarGroupLabel className='text-white text-sm pb-4'>Settings</SidebarGroupLabel>
-                        <SidebarGroupContent className=' mt-4 border-t-[1px]  border-[#eaeaea3d]  gap-y-3'>
-                            <SidebarMenu>
-                                {items.map((item) => (
-                                    <SidebarMenuItem key={item.title} className='pt-1  '>
+        <Sidebar >
+            <SidebarContent className='bg-brand/brand-dark  '>
+                <SidebarGroup>
+                    <SidebarGroupLabel className='text-white text-2xl pb-4'>Settings</SidebarGroupLabel>
+                    
+                    <SidebarGroupContent className=' mt-4 border-t-[1px]  border-[#eaeaea3d]  gap-y-3'>
+                        <SidebarMenu>
+                            {items.map((item) => (
+                                <SidebarMenuItem key={item.title} className='pt-1  '>
 
-                                        <SidebarMenuButton asChild className={`hover:bg-[#15141F] hover:shadow-lg transition duration-300  hover:shadow-purpleShadow ${pathname === item.url ? ("text-white bg-[#15141F]") : ("text-[#eaeaea8e]")} hover:text-white  `} >
-                                            <a href={item.url} className='hover:text-white' >
-                                                <item.icon />
-                                                <span className=' '>{item.title}</span>
-                                            </a>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                ))}
-                            </SidebarMenu>
-                        </SidebarGroupContent>
-                    </SidebarGroup>
-                </SidebarContent>
+                                    <SidebarMenuButton asChild className={`hover:bg-[#15141F] hover:shadow-lg transition duration-300  hover:shadow-purpleShadow ${pathname === item.url ? ("text-white bg-[#15141F]") : ("text-[#eaeaea8e]")} hover:text-white  `} >
+                                        <a href={item.url} className='hover:text-white' >
+                                            <item.icon />
+                                            <span className=' '>{item.title}</span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+            </SidebarContent>
 
-                <SidebarFooter className='bg-brand/brand-dark text-white flex flex-col justify-between items-center border-t-[1px]  border-[#eaeaea3d] gap-y-4 pt-8'>
+            <SidebarFooter className='bg-brand/brand-dark text-white flex flex-col justify-between items-center border-t-[1px]  border-[#eaeaea3d] gap-y-4 pt-8'>
 
-                    <Dialog >
-                        <DialogTrigger asChild>
-                            <Button className='bg-[#1F1E2E] border-none hover:Neutrals/neutrals-12 max-w-[170px]' > <Trash2 className='w-4 h-4 mr-2'/>  Delete Account</Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[500px] bg-[#1F1E2E] shadow-2xl shadow-purpleShadow">
-                            <DialogDescription className='text-lg  text-white text-center '>
-                                Are you sure About deleting the Account ?
-                            </DialogDescription>
-                            <Button onSubmit={() => { deleteAccount }} className='bg-red-700 max-w-[200px] mx-auto hover:bg-red-900'>Delete</Button>
-                        </DialogContent>
-                    </Dialog>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button className="bg-[#1F1E2E] border-none hover:bg-neutral-800 max-w-[170px]">
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete Account
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[550px] border-[1px] border-[#ffffff6b] bg-[#1F1E2E] p-6 shadow-2xl shadow-purpleShadow rounded-md">
+                        <div className="space-y-4">
+                            <div className="text-white text-left">
+                                <h2 className="text-lg font-semibold mb-2">Delete account</h2>
+                                <p className="text-sm text-neutral-400">
+                                    This will permanently delete your Personal Account.
+                                    Please note that this action is irreversible, so proceed with caution.
+                                </p>
+                            </div>
+                            <Button
+                                onClick={() => { deleteAccount() }}
+                                className="bg-red-700 hover:bg-red-900 max-w-[200px] mx-auto block"
+                            >
+                                Delete Account
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
 
 
-                    <Dialog >
-                        <DialogTrigger asChild>
-                            <Button className='bg-[#1F1E2E] border-none hover:Neutrals/neutrals-12 max-w-[125px] ' > <LogOut className='w-4 h-4 mr-2'/> Sign Out</Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[500px] bg-[#1F1E2E] shadow-2xl shadow-purpleShadow">
-                            <DialogDescription className='text-lg   text-white text-center'>
-                                Are sure about signout ?
-                            </DialogDescription>
-                            <Button onSubmit={() => { deleteAccount }} className='bg-red-700 max-w-[200px] mx-auto hover:bg-red-900'>Sign Out</Button>
-                        </DialogContent>
-                    </Dialog>
-                </SidebarFooter>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button className="bg-[#1F1E2E] border-none hover:bg-neutral-800 max-w-[125px]">
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Sign Out
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px] border-2 border-red-600 bg-[#1F1E2E] p-6 shadow-2xl shadow-purpleShadow rounded-md">
+                        <div className="space-y-4">
+                            <div className="text-white text-center">
+                                <h2 className="text-lg font-semibold mb-2">Sign Out</h2>
+                                <p className="text-sm text-neutral-400">
+                                    Are you sure you want to sign out?
+                                </p>
+                            </div>
 
-            </Sidebar>
+                            <Button
+                                onClick={() => { signOut() }}
+                                className="bg-red-700 hover:bg-red-900 max-w-[200px] mx-auto block"
+                            >
+                                Sign Out
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            </SidebarFooter>
+
+        </Sidebar>
 
     )
 }
