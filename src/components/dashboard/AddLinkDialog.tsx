@@ -83,13 +83,12 @@ export function AddLinkDialog({ activeRoute, trigger }: AddLinkDialogProps) {
         {trigger || (
           <button 
             disabled={isLoading}
-            className='flex text-slate-200 hover:text-white font-medium text-sm sm:text-base 
-                     relative group px-3 py-1.5 sm:px-4 sm:py-2 bg-purple-500 
-                     hover:bg-purple-600 active:bg-purple-700 rounded-full 
+            className='flex text-white bg-slate-700 hover:text-black hover:bg-white font-medium text-sm sm:text-base 
+                     relative group px-3 py-1.5 sm:px-4 sm:py-2 rounded-full 
                      transition-all duration-200'
           >
-            <div className='absolute inset-0 bg-purple-500/30 blur-lg rounded-full 
-                          transition-all duration-200 group-hover:bg-purple-500/40'></div>
+            <div className='absolute inset-0 bg-white/30 blur-lg rounded-full 
+                          transition-all duration-200 group-hover:bg-slate-700/30'></div>
             <div className='relative flex items-center gap-1.5'>
               <Plus className="w-5 h-5" />
               <span className="hidden sm:inline">Add</span>
@@ -97,7 +96,7 @@ export function AddLinkDialog({ activeRoute, trigger }: AddLinkDialogProps) {
           </button>
         )}
       </DialogTrigger>
-      <DialogContent className="bg-brand/brand-dark border-brand/brand-primaryblue">
+      <DialogContent className="bg-brand-bg border-text-primary">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-white">Add New Link</DialogTitle>
           <DialogDescription className="text-gray-400">
@@ -132,7 +131,7 @@ export function AddLinkDialog({ activeRoute, trigger }: AddLinkDialogProps) {
             <div className='flex justify-between items-center mt-4'>
               <button
                 type="submit"
-                className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                className="text-gray-800 hover:bg-white bg-text-primary hover:text-black font-medium px-3 py-1 rounded-md transition-colors duration-200"
                 disabled={isLoading}
               >
                 {!isLoading ? 'Submit' : <Loader />}

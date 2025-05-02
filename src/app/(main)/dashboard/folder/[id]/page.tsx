@@ -46,8 +46,8 @@ export default function LinkCart() {
   }, [error]);
 
   return (
-    <section className="w-full flex flex-col h-screen">
-      <div className="fixed right-0 flex mx-3 justify-center gap-x-1 items-center">
+    <section className="relative w-full flex flex-col h-screen">
+      {/* <div className="fixed left-0 flex mx-3 justify-center gap-x-1 items-center">
         {isloading ? (
           <Skeleton className="h-6 w-24 bg-zinc-800" />
         ) : (
@@ -57,7 +57,7 @@ export default function LinkCart() {
             <DownCircle className="text-purple-400" />
           </div>
         )}
-      </div>
+      </div> */}
       <section className="w-full px-5 h-full my-9">
         <Content folderid={folder?.id} />
       </section>

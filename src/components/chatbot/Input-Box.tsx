@@ -79,7 +79,7 @@ export default function InputBox({ isMobile, onSendMessage, greeting, hasMessage
           </h1>
         )}
         <div className="w-full">
-          <div className="border border-gray-700 bg-[#1E1A2D] rounded-xl p-3 shadow-lg focus-within:border-primary-purple/primary-purple-500 transition-all w-full">
+          <div className="border border-gray-700 bg-zinc-800 rounded-xl p-3 shadow-lg focus-within:border-zinc-400 transition-all w-full">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="relative">
@@ -148,13 +148,13 @@ export default function InputBox({ isMobile, onSendMessage, greeting, hasMessage
                     <div className="flex items-center">
                 <button
                   type="submit"
-                        className="h-8 w-8 bg-primary-purple/primary-purple-500 hover:bg-primary-purple/primary-purple-600 cursor-pointer rounded-md transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="h-8 w-8 bg-white/90 hover:bg-white cursor-pointer rounded-md transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!form.formState.isValid || isSubmitting}
                 >
                   {isSubmitting ? (
-                          <Loader2 className="w-4 h-4 text-white animate-spin" />
+                          <Loader2 className="w-4 h-4 text-black animate-spin" />
                   ) : (
-                          <ArrowUp className="w-4 h-4 text-white" />
+                          <ArrowUp className="w-4 h-4 text-black" />
                   )}
                 </button>
                     </div>

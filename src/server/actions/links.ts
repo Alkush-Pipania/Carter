@@ -360,75 +360,6 @@ export async function getfoldername(folderId : string){
 }
 
 
-export async function deleteFolder(folderId: number) {
-  try {
-    const auth = await getServerSession(authOption);
-    if (!auth || !auth.user) {
-      return { error: true, message: "Unauthorized" };
-    }
-
-    const userId = parseInt(auth.user.id, 10);
-
-    // Start a transaction
-    const result = await prisma.$transaction(async (tx) => {
-      // Step 1: Find the folder and verify ownership
-      const folder = await tx.folder.findUnique({
-        where: { id: folderId },
-        include: { links: true },
-      });
-
-      if (!folder || folder.userID !== userId) {
-        throw new Error("Folder not found or unauthorized");
-      }
-
-      // Step 2: Move folder and links to trash
-      const trashedFolder = await tx.trashFolder.create({
-        data: {
-          id : folder.id,
-          name: folder.name,
-          secretKey: folder.secretKey,
-          userID: userId,
-          createdAt: folder.createdAt,
-          links: {
-            create: folder.links.map((link) => ({
-              secret_Id: link.secret_Id,
-              links: link.links,
-              title: link.title,
-              imgurl: link.imgurl,
-              description: link.description,
-              createdAt: link.createdAt,
-              userID: userId,
-            })),
-          },
-        },
-      });
-
-      // Step 3: Delete folder and links from active tables
-      await tx.linkform.deleteMany({ where: { folderID: folderId } });
-      await tx.folder.delete({ where: { id: folderId } });
-
-      return { error: false, message: "Folder deleted and moved to trash" };
-    });
-
-    return result;
-  } catch (err) {
-    console.error(err);
-    return { error: true, message: "Error deleting folder" };
-  }
-}
-
-export async function gettrashfolderdata(){
-  const session = await getServerSession(authOption);
-  if(!session){
-    return{redirect : '/signin'}
-  }
-  const userid  = session.user.id;
-
-  const data = await gettrashFolderDatadb(userid);
-
-  return { error : data.error , data : data.data}
-  
-}
 
 
 export async function restoretrashFolder(folderId : string){
@@ -542,6 +473,7 @@ export async function retriveAnnonmousData(secretkey : string , isFolder : boole
     return {error : false , data : userWithLinkforms.linkform}
   }
  }catch(e){
+  console.log(e);
   return{error : true , message : "Internal server error"}
  }
 }

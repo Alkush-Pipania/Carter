@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 import { SecretinputSchema } from '@/lib/types/zod';
 import { retriveAnnonmousData } from '@/server/actions/links';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Folder, Link2, Loader2, User } from 'lucide-react';
+import { Folder, Loader2, Link2, User } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from "zod";
@@ -41,6 +41,7 @@ const Find = () => {
     try {
       setIsLoading(true)
       const res = await retriveAnnonmousData(values.secretKey, values.isFolder);
+      console.log(res)
       if (res.error == false) {
         setResponse(res.data)
         setIsLoading(false);

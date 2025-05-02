@@ -11,7 +11,7 @@ export default function GoogleAuthButton({ onClick, isLoading = false }: GoogleA
   return (
     <Button
       variant="default"
-      className="w-full relative duration-100 ease-in-out focus:bg-primary-purple/primary-purple-900 bg-primary-purple/primary-purple-800 hover:bg-primary-purple/primary-purple-700  transition-colors"
+      className="w-full relative duration-100 ease-in-out focus:bg-text-primary bg-text-primary hover:bg-text-primary/80  transition-colors"
       onClick={onClick}
       disabled={isLoading}
     >

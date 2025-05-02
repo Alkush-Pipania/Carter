@@ -61,31 +61,10 @@ const Signin = () => {
   };
 
   return (
-    <main className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
-
-      <section className='border-b'>
-        <div className=' w-[80%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 left-20 sm:top-52 top-40' />
-        <Link href='/' className='w-full flex justify-start items-center'>
-          <span
-            className='font-semibold text-gray-400 hover:text-gray-300 flex items-center justify-center text-xl  first-letter:ml-1 '>
-            <Image src={carterlogo} alt='logo' className='w-[50px]' />
-            Carter
-          </span>
-        </Link>
-        <span className='text-gray-400 text-xs'>
-          Organize, Share, and Manage Your Links with Ease
-        </span>
-        <div className='flex my-5 flex-col items-center justify-center gap-3 w-full'>
-          <GoogleAuthButton
-            onClick={() => {
-              setAuthLoading(true)
-              signIn("google")
-              setAuthLoading(false)
-            }}
-            isLoading={authloading}
-          />
-        </div>
-      </section>
+    <main className="w-full flex flex-col gap-6">
+      <span className='text-gray-400 text-center text-2xl font-medium '>
+      Log in to your Account
+      </span>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col' >
 
@@ -135,24 +114,34 @@ const Signin = () => {
           />
 
           {submitError && <FormMessage>{submitError}</FormMessage>}
-          <Link href="/auth-action" className='text-primary mx-2 text-primary-purple/primary-purple-400 hover:text-primary-purple/primary-purple-300'>
-            Forgot Password
-          </Link>
 
           <Button className='w-full p-6' type='submit' size='lg' disabled={isLoading}>
             {!isLoading || !loading ? 'Sign in' : <Loader />}
           </Button>
           
         </form>
-        <section className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
+      </Form>
+      <Link href="/auth-action" className='text-center mx-2 text-sm text-text-primary hover:text-white'>
+            Forgot Password?
+          </Link>
+      <div className='flex flex-col gap-3 w-full'>
+        <GoogleAuthButton
+          onClick={() => {
+            setAuthLoading(true)
+            signIn("google")
+            setAuthLoading(false)
+          }}
+          isLoading={authloading}
+        />
+      </div>
+      <section className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col'>
           <span className='self-center '>
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className='text-primary mx-2 text-primary-purple/primary-purple-400 hover:text-primary-purple/primary-purple-300'>
+            <Link href="/signup" className='text-primary mx-2 text-text-primary hover:text-white underline'>
               Sign up
             </Link>
           </span>
         </section>
-      </Form>
     </main>
   )
 }

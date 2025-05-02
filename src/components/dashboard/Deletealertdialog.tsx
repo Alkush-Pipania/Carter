@@ -49,7 +49,7 @@ export function DeleteProductAlertDialogContent({ id }: { id: string }) {
   };
 
   return (
-    <AlertDialogContent className="bg-brand/brand-dark">
+    <AlertDialogContent className="bg-brand-bg border-gray-300">
       <AlertDialogHeader>
         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
         <AlertDialogDescription>
@@ -60,6 +60,7 @@ export function DeleteProductAlertDialogContent({ id }: { id: string }) {
       <AlertDialogFooter>
         <AlertDialogCancel className="text-black hover:bg-gray-300">Cancel</AlertDialogCancel>
         <AlertDialogAction
+         className="text-red-700 bg-white hover:bg-gray-300"
           onClick={() => startDeleteTransition(handleDelete)}
           disabled={isDeletePending}
         >

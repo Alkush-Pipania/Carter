@@ -49,20 +49,75 @@ type Message = {
   content: string | ResponseType;
   role: 'user' | 'assistant';
   isStructured?: boolean;
+  isStreaming?: boolean;
 }
 
 type ChatStore = {
   messages: Message[];
   isLoading: boolean;
+  isStreaming: boolean;
+  currentStreamedContent: string;
   addMessage: (message: Message) => void;
+  updateLastMessage: (content: string) => void;
+  appendToLastMessage: (chunk: string) => void;
   setLoading: (loading: boolean) => void;
+  setStreaming: (streaming: boolean) => void;
   clearMessages: () => void;
+  finalizeStreamedMessage: () => void;
 }
 
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
   isLoading: false,
+  isStreaming: false,
+  currentStreamedContent: '',
   addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
+  updateLastMessage: (content) => set((state) => {
+    const messages = [...state.messages];
+    if (messages.length > 0) {
+      messages[messages.length - 1].content = content;
+    }
+    return { messages };
+  }),
+  appendToLastMessage: (chunk) => set((state) => {
+    // If there are no messages yet, we need to create one first
+    if (state.messages.length === 0) {
+      return {
+        messages: [{ role: 'assistant', content: chunk, isStreaming: true }],
+        currentStreamedContent: chunk
+      };
+    }
+    
+    const updatedContent = state.currentStreamedContent + chunk;
+    const messages = [...state.messages];
+    const lastMessage = messages[messages.length - 1];
+    
+    // Only update if the last message is from the assistant and is streaming
+    if (lastMessage.role === 'assistant' && lastMessage.isStreaming) {
+      lastMessage.content = updatedContent;
+      return { messages, currentStreamedContent: updatedContent };
+    }
+    
+    // If last message is not from assistant or not streaming, add a new message
+    return {
+      messages: [...messages, { role: 'assistant', content: chunk, isStreaming: true }],
+      currentStreamedContent: chunk
+    };
+  }),
   setLoading: (loading) => set({ isLoading: loading }),
-  clearMessages: () => set({ messages: [] })
+  setStreaming: (streaming) => set({ 
+    isStreaming: streaming,
+    currentStreamedContent: streaming ? get().currentStreamedContent : ''
+  }),
+  clearMessages: () => set({ messages: [], currentStreamedContent: '' }),
+  finalizeStreamedMessage: () => set((state) => {
+    const messages = [...state.messages];
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.isStreaming) {
+        lastMessage.isStreaming = false;
+      }
+    }
+    return { messages, isStreaming: false, currentStreamedContent: '' };
+  })
 }))

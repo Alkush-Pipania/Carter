@@ -11,8 +11,6 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Loader from '@/components/global/Loader'
 import { signIn, useSession } from 'next-auth/react'
-import Image from 'next/image'
-import carterlogo from "../../../../public/logo.png"
 
 const Signin = () => {
   const router = useRouter();
@@ -84,20 +82,10 @@ const Signin = () => {
   return (
 
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='w-full md:justify-center sm:justify-center sm:w-[400px] space-y-5 flex flex-col
-    '>
-      <div className='w-[70%] blur-[120px] rounded-full h-32 absolute bg-brand/brand-primaryblue/50 -z-10 sm:top-52 left-40 top-40'
-      />
-        <Link href='/' className='w-full flex justify-start items-center'>
-        <span
-            className='font-semibold text-gray-400 hover:text-gray-300 flex items-center justify-center text-xl  first-letter:ml-1 '>
-             <Image src={carterlogo} alt='logo' className='w-[50px]' />
-            Carter
-          </span>
-        </Link>
-        <FormDescription className=''>
-          Organize, Share, and Manage Your Links with Ease
-        </FormDescription>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex flex-col gap-6 max-w-md mx-auto">
+        <span className='text-gray-400 text-center text-2xl font-medium '>
+          Create a Carter Account
+        </span>
 
         <FormField disabled={isLoading} control={form.control}
           name='username'
@@ -141,14 +129,12 @@ const Signin = () => {
           disabled={isLoading}>
           {!isLoading || !loading ? 'Sign up' : <Loader />}
         </Button>
-        <span className='self-center '>
-           Already have an account?{' '}
-          <Link href="/signin" className='text-primary mx-2 text-primary-purple/primary-purple-400 hover:text-primary-purple/primary-purple-300'>
+        <span className='self-center text-sm'>
+          Already have an account?{' '}
+          <Link href="/signin" className='text-primary mx-2 text-text-primary hover:text-white underline '>
             Sign in
           </Link>
         </span>
-
-
       </form>
     </Form>
   )

@@ -2,75 +2,12 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useParams } from "next/navigation"
-import { ArrowDown, ExternalLink } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import InputBox from "./Input-Box"
-import { Skeleton } from "@/components/ui/skeleton"
 import { useChatStore } from "@/lib/store/chat"
-import { ResponseSchema, type ResponseType } from "@/lib/store/chat"
-import { config } from "dotenv"
-
-config()
-
-function StructuredResponse({ content }: { content: ResponseType }) {
-  return (
-    <div className="text-white space-y-4 sm:space-y-6 max-w-full">
-      {/* Intro paragraph with subtle highlight */}
-      <div className="bg-primary-purple/primary-purple-500/5 p-3 sm:p-4 rounded-lg">
-        <p className="text-sm sm:text-base text-white/90 leading-relaxed">{content.intro}</p>
-      </div>
-
-      {/* Content sections */}
-      {content.contentSections.length > 0 && (
-        <div className="space-y-4 sm:space-y-6">
-          {content.contentSections.map((section, index) => (
-            <div 
-              key={index} 
-              className="bg-primary-blue/primary-blue-500/5 p-3 sm:p-4 rounded-lg space-y-2 sm:space-y-3"
-            >
-              <h3 className="text-base sm:text-lg font-medium text-white flex items-start sm:items-center gap-2">
-                <span className="flex-shrink-0 flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary-purple/primary-purple-500/20 text-xs sm:text-sm">
-                  {index + 1}
-                </span>
-                <span className="flex-1">{section.title}</span>
-              </h3>
-
-              <p className="text-sm sm:text-base text-white/80 leading-relaxed pl-7 sm:pl-8">
-                {section.content}
-              </p>
-
-              {section.links.length > 0 && (
-                <div className="pl-7 sm:pl-8 space-y-1.5 sm:space-y-2 mt-2">
-                  {section.links.map((link, linkIndex) => (
-                    <a
-                      key={linkIndex}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 sm:gap-2 text-primary-purple/primary-purple-400 hover:text-primary-purple/primary-purple-300 transition-colors group text-sm sm:text-base"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-70 group-hover:opacity-100 flex-shrink-0" />
-                      <span className="underline underline-offset-2 break-all">
-                        {link.title}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Outro with different styling */}
-      <div className="bg-primary-purple/primary-purple-500/5 p-3 sm:p-4 rounded-lg">
-        <p className="text-sm sm:text-base text-white/90 leading-relaxed">{content.outro}</p>
-      </div>
-    </div>
-  )
-}
+import InputBox from "./Input-Box"
+import MessageItem from "./MessageItem"
+import { ThinkingLoader } from "./LoadingMessage"
+import ScrollButton from "./ScrollButton"
 
 type ChatComponentProps = {
   greetings: string
@@ -78,7 +15,7 @@ type ChatComponentProps = {
 
 export default function Chatcomponent({ greetings }: ChatComponentProps) {
   const { id: chatId } = useParams<{ id: string }>()
-  const { messages, isLoading, addMessage, setLoading } = useChatStore()
+  const { messages, isLoading, isStreaming, addMessage, setLoading } = useChatStore()
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
@@ -115,17 +52,23 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
   }, [])
 
   const handleNewMessage = async (message: string) => {
-    setLoading(true)
     addMessage({ role: "user", content: message })
-     const token = localStorage.getItem('token')
-     const userId = localStorage.getItem('userId')
+    const token = localStorage.getItem('token')
+    const userId = localStorage.getItem('userId')
+    
+    // Set loading state, but don't set streaming yet
+    // We'll set streaming to true only when we start receiving content
+    setLoading(true)
+    useChatStore.getState().setStreaming(false)
+    
     try {
+      // Use the fetch API with streams for the POST endpoint
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: token,
+          Accept: "text/event-stream",
+          ...(token ? { Authorization: token } : {}),
         },
         body: JSON.stringify({
           userId: userId,   
@@ -133,29 +76,92 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
         }),
       })
 
-      const data = await response.json()
-
       if (!response.ok) {
-        throw new Error(data.error || data.details || "Something went wrong")
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.details || "Something went wrong")
       }
 
-      const result = ResponseSchema.safeParse(data)
-      if (!result.success) {
-        console.error("Schema validation errors:", result.error)
-        throw new Error("Invalid response format from server")
+      // Process the streaming response
+      const reader = response.body?.getReader()
+      if (!reader) {
+        throw new Error("Stream not available")
       }
 
-      addMessage({
-        role: "assistant",
-        content: result.data,
-        isStructured: true,
-      })
+      // Function to read from the stream
+      const processStream = async () => {
+        let buffer = '';
+        
+        try {
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) {
+              // Process any remaining data in the buffer
+              if (buffer.trim()) {
+                processEventData(buffer);
+              }
+              break;
+            }
+            
+            // Convert the chunk to a string and add to buffer
+            const chunk = new TextDecoder().decode(value)
+            buffer += chunk;
+            
+            // Process complete SSE messages
+            const messages = buffer.split('\n\n');
+            buffer = messages.pop() || ''; // Keep the last incomplete message in the buffer
+            
+            for (const message of messages) {
+              if (message.trim()) {
+                processEventData(message);
+              }
+            }
+          }
+        } finally {
+          // Finalize the message when stream is complete
+          useChatStore.getState().finalizeStreamedMessage();
+          setLoading(false);
+        }
+      };
+      
+      // Helper function to process SSE event data
+      const processEventData = (message: string) => {
+        if (message.startsWith('data: ')) {
+          const dataRaw = message.replace(/^data: /, '');
+          if (!dataRaw) return;
+          
+          // Set streaming to true when we receive the first data chunk
+          // This will hide the ThinkingLoader and show the streaming content
+          if (!useChatStore.getState().isStreaming) {
+            useChatStore.getState().setStreaming(true);
+          }
+          
+          try {
+            // First try to parse as JSON (backward compatibility)
+            const jsonData = JSON.parse(dataRaw);
+            useChatStore.getState().appendToLastMessage(jsonData);
+          } catch (jsonError) {
+            // If not JSON, treat as raw text (for word-by-word streaming)
+            useChatStore.getState().appendToLastMessage(dataRaw);
+          }
+          
+          scrollToBottom();
+        } else if (message.startsWith('event: complete')) {
+          console.log('Stream completed');
+        } else if (message.startsWith('event: error')) {
+          // Handle error event
+          const errorMatch = message.match(/data: (.+)/);
+          const errorMessage = errorMatch ? errorMatch[1] : 'Unknown error';
+          toast.error(`Error: ${errorMessage}`);
+        }
+      };
+      
+      // Start processing the stream
+      processStream();
+      
     } catch (error) {
-      console.error("Error:", error)
-      toast.error(error instanceof Error ? error.message : "Failed to communicate with the server")
-    } finally {
-      setLoading(false)
-      scrollToBottom()
+      toast.error(error instanceof Error ? error.message : "Failed to communicate with the server");
+      useChatStore.getState().finalizeStreamedMessage();
+      setLoading(false);
     }
   }
 
@@ -164,58 +170,24 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
       {messages.length > 0 && (
         <div
           ref={chatContainerRef}
-          className="flex-1 overflow-y-auto hide-scrollbar pt-16 pb-8 px-6 max-w-[800px] mx-auto w-full relative"
+          className="flex-1 overflow-y-auto mb-24 hide-scrollbar pt-16 pb-8 px-6 max-w-[800px] mx-auto w-full relative"
         >
           {messages.map((message, index) => (
-            <div
+            <MessageItem 
               key={index}
-              className="mb-4 w-full"
-            >
-              <Card
-                className={`${
-                  message.role === "user"
-                    ? "bg-[#1E1A2D] border-gray-700"
-                    : "bg-primary-blue/primary-blue-500/20 border-primary-blue/primary-blue-400/30"
-                } backdrop-blur-sm`}
-              >
-                <CardContent className="p-4">
-                  {message.isStructured && typeof message.content !== "string" ? (
-                    <StructuredResponse content={message.content} />
-                  ) : (
-                    <p className="text-white/90">{message.content as string}</p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+              role={message.role}
+              content={message.content}
+              isStructured={message.isStructured}
+            />
           ))}
 
-          {isLoading && (
-            <div className="mb-4 w-full">
-              <Card className="bg-primary-blue/primary-blue-500/20 border-primary-blue/primary-blue-400/30 backdrop-blur-sm">
-                <CardContent className="p-4 space-y-3">
-                  <Skeleton className="h-4 w-3/4 bg-primary-blue/primary-blue-400/30" />
-                  <Skeleton className="h-4 w-full bg-primary-blue/primary-blue-400/30" />
-                  <Skeleton className="h-4 w-1/2 bg-primary-blue/primary-blue-400/30" />
-                  <div className="space-y-2 mt-4">
-                    <Skeleton className="h-3 w-1/3 bg-primary-blue/primary-blue-400/30" />
-                    <Skeleton className="h-3 w-1/4 bg-primary-blue/primary-blue-400/30" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
+          {isLoading && !isStreaming && <ThinkingLoader isLoading={true} />}
           <div ref={messagesEndRef} />
 
-          {showScrollButton && (
-            <Button
-              onClick={scrollToBottom}
-              className="fixed sm:bottom-36 lg:right-2/4 bottom-32 right-8 sm:right-24 rounded-full p-3 bg-primary-purple/primary-purple-500 hover:bg-primary-purple/primary-purple-600 shadow-lg shadow-primary-purple/primary-purple-500/20 z-10"
-              aria-label="Scroll to bottom"
-            >
-              <ArrowDown className="w-5 h-5" />
-            </Button>
-          )}
+          <ScrollButton
+            onClick={scrollToBottom}
+            show={showScrollButton}
+          />
         </div>
       )}
       <InputBox 
@@ -228,4 +200,3 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
     </div>
   )
 }
-

@@ -1,68 +1,66 @@
 "use client"
-import Image from 'next/image'
-import Link from 'next/link'
+import Image from 'next/image';
+import Link from 'next/link';
 import { IoMdCloudOutline } from "react-icons/io";
 import { AiFillCloud } from "react-icons/ai";
 import { Button } from '../ui/button';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useState, useTransition } from 'react';
-import { toast } from "sonner"
+import { toast } from "sonner";
 import { togglecloud } from '@/server/actions/links';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Dialog, DialogTrigger } from "@/components/ui/dialog"
+} from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogTrigger } from '../ui/alert-dialog';
 import { DeleteProductAlertDialogContent } from './Deletealertdialog';
-
+import { Dialog } from '../ui/dialog';
 
 const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boolean, secretId: string, url: string, title: string, imgurl: string }) => {
-  const [ iscloudPending , startcloudtransition ] = useTransition()
-  const [local_tobefind , setLocal_tobefind ] = useState(tobefind);;
+  const [iscloudPending, startcloudtransition] = useTransition();
+  const [local_tobefind, setLocal_tobefind] = useState(tobefind);
 
- const handleCopy = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    toast.success("Success", {
-      description: "Copied to clipboard"
-    });
-  } catch (e) {
-    toast.error("Error", {
-      description: "Failed to copy to clipboard"
-    });
-  }
-};
-
-const handleCloudToggle = async () => {
-  try {
-    setLocal_tobefind(!local_tobefind);
-    const data = await togglecloud(secretId);
-    if (data.message) {
-      if (data.changeto) {
-        toast.success("Added", {
-          description: "Successfully added to cloud"
-        });
-      } else {
-        toast.error("Removed", {
-          description: "Successfully removed from cloud"
-        });
-      }
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Success", {
+        description: "Copied to clipboard"
+      });
+    } catch (e) {
+      toast.error("Error", {
+        description: "Failed to copy to clipboard"
+      });
     }
-  } catch (e) {
-    toast.error("Unexpected error", {
-      description: "Something went wrong with the server"
-    });
-    setLocal_tobefind(prev => !prev); // Revert state on error
-  }
-};
+  };
+
+  const handleCloudToggle = async () => {
+    try {
+      setLocal_tobefind(!local_tobefind);
+      const data = await togglecloud(secretId);
+      if (data.message) {
+        if (data.changeto) {
+          toast.success("Added", {
+            description: "Successfully added to cloud"
+          });
+        } else {
+          toast.error("Removed", {
+            description: "Successfully removed from cloud"
+          });
+        }
+      }
+    } catch (e) {
+      toast.error("Unexpected error", {
+        description: "Something went wrong with the server"
+      });
+      setLocal_tobefind(prev => !prev); // Revert state on error
+    }
+  };
 
   return (
-    <div className='w-full bg-darkBg shadow-2xl hover:shadow-sm shadow-purpleShadow sm:max-w-[321px] h-full max-h-[350px] flex flex-col p-2 sm:p-3 rounded-lg transition-all duration-200 hover:shadow-purple-500/20'>
+    <div className='w-full shadow-2xl hover:shadow-sm shadow-gray-800 sm:max-w-[321px] h-full max-h-[350px] flex flex-col p-2 sm:p-3 rounded-lg transition-all duration-200 hover:shadow-gray-400/20'>
       <Link href={url} target="_blank" rel="noopener noreferrer" className='w-full flex items-center justify-center'>
         <div className="w-full h-[120px] sm:h-[150px] overflow-hidden flex items-center justify-center rounded-md">
           {imgurl === "no image" ? (
@@ -91,9 +89,9 @@ const handleCloudToggle = async () => {
             onClick={() => startcloudtransition(handleCloudToggle)}
           >
             {local_tobefind ? (
-              <AiFillCloud className='size-5 sm:size-6 text-purple-400' />
+              <AiFillCloud className='size-5 sm:size-6 text-text-primary' />
             ) : (
-              <IoMdCloudOutline className='size-5 sm:size-6 text-gray-400 hover:text-purple-400' />
+              <IoMdCloudOutline className='size-5 sm:size-6 text-gray-400 hover:text-text-primary' />
             )}
           </button>
         </div>
@@ -105,12 +103,12 @@ const handleCloudToggle = async () => {
             <AlertDialog>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="size-8 sm:size-9 px-0 hover:bg-gray-700/50 active:bg-gray-600/50 bg-gray-800/50 rounded-full transition-colors duration-200">
+                  <Button className="size-8 sm:size-9 px-0 hover:bg-gray-700/50 active:bg-gray-600/50 bg-zinc-700 rounded-full transition-colors duration-200">
                     <div className="sr-only">Action Menu</div>
-                    <DotsHorizontalIcon className="size-4 sm:size-5" />
+                    <DotsHorizontalIcon className="size-4 sm:size-5 text-white" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className='bg-darkBg font-mono text-white border-gray-800'>
+                <DropdownMenuContent className='bg-brand-bg/95 font-mono text-white border-gray-800'>
                   <DropdownMenuItem asChild className='hover:bg-gray-800/50 cursor-pointer'>
                     <Link href={`/dashboard/links/${secretId}/edit`}>open</Link>
                   </DropdownMenuItem>

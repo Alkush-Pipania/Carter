@@ -80,10 +80,13 @@ const config: Config = {
   			'brand/brand-primaryblue': '#7000ff',
   			'brand/brand-asliblue': '#0469FF',
   			'brand/brand-dark': '#030014',
+			'brand-bg': '#111111',
+			'text-primary': '#B9B9B9',
   			darkBg: '#1F1B2E',
   			lightGray: '#EAEAEA',
   			pureWhite: '#FFFFFF',
   			purpleShadow: '#3A275C',
+			
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
