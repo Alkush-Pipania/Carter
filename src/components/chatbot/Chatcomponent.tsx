@@ -170,7 +170,7 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
       {messages.length > 0 && (
         <div
           ref={chatContainerRef}
-          className="flex-1 overflow-y-auto mb-24 hide-scrollbar pt-16 pb-8 px-6 max-w-[800px] mx-auto w-full relative"
+          className="flex-1 overflow-y-auto mb-44 hide-scrollbar pt-16 pb-8 px-6 max-w-[800px] mx-auto w-full relative"
         >
           {messages.map((message, index) => (
             <MessageItem 
@@ -182,7 +182,7 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
           ))}
 
           {isLoading && !isStreaming && <ThinkingLoader isLoading={true} />}
-          <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} className="h-[15vh]" />
 
           <ScrollButton
             onClick={scrollToBottom}

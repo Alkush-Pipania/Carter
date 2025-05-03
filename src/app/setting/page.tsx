@@ -1,11 +1,9 @@
-import React from 'react'
+"use client"
 
-type Props = {}
+import { ProfileSettings } from './components/ProfileSettings'
 
-const page = (props: Props) => {
+export default function SettingsPage() {
   return (
-    <div>page</div>
+    <ProfileSettings />
   )
 }
-
-export default page

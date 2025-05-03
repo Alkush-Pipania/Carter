@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import img from '/public/auth/hero.png'
-import carterlogo from '/public/logo.png'
+import carterlogo from '/public/auth/cartlogo.png'
 import Link from 'next/link'
 
 interface TemplateProps{

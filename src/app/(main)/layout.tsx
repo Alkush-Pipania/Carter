@@ -1,7 +1,7 @@
 
 import Dashbar from '@/components/dashboard/dashbar'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import logo from '@/../public/logo.png'
+import logo from '/public/auth/chatbot-logo.png'
 import React from 'react'
 import { Sidebar } from "@/components/dashboard/sidebar-component/Sidebar"
 import { Button } from '@/components/ui/button'
@@ -39,8 +39,6 @@ const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
                   <Image
                     src={logo}
                     alt="Carter AI"
-                    width={25}
-                    height={30}
                     className="rounded-full"
                   />
                 </Button>

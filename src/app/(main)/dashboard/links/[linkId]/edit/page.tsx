@@ -22,7 +22,7 @@ export default async function EditLinkPage( {
     <main className="w-full px-4 py-4 sm:py-6">
       <div className="max-w-7xl mx-auto">
         <PageHeader title="Link Details" description="View your link information" backHref="/dashboard" />
-        <Card className="mt-4 sm:mt-6 bg-brand/brand-dark/60 backdrop-blur-md border-brand/brand-primaryblue/30 shadow-lg">
+        <Card className="mt-4 sm:mt-6 bg-zinc-900 border-gray-500 shadow-lg">
           
           <CardContent>
             <Suspense fallback={<LinkDetailsSkeleton />}>

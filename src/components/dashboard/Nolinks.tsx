@@ -1,14 +1,11 @@
 "use client"
 
-import { Link, Link2Off, ClipboardList } from "lucide-react";
+import { Link } from "lucide-react";
 import { AddLinkDialog } from "./AddLinkDialog";
-import { ImportLinksDialog } from "./ImportLinksDialog";
-import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 export function Nolinks(){
-  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [activeRoute, setActiveRoute] = useState<string>();
   const pathname = usePathname();
 
@@ -39,22 +36,11 @@ export function Nolinks(){
                     </p>
                     <div className="mt-4 flex gap-2">
                       <AddLinkDialog activeRoute={activeRoute} />
-                      <Button
-                        onClick={() => setIsImportDialogOpen(true)}
-                        className="flex rounded-2xl items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-purple-500/25 transition-all duration-200"
-                      >
-                        <ClipboardList className="h-4 w-4" />
-                        Quick Import
-                      </Button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <ImportLinksDialog 
-              open={isImportDialogOpen} 
-              onOpenChange={setIsImportDialogOpen}
-            />
             </section>
   )
 }

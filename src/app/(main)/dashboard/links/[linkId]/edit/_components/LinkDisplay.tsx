@@ -93,7 +93,7 @@ export function LinkDisplay({ linkId, userId }: LinkDisplayProps) {
   const bodyText = data.body || ''
   const descriptionText = data.description || ''
   
-  const truncatedBody = truncateText(bodyText, 300)
+  const truncatedBody = truncateText(bodyText, 80)
   const truncatedDescription = truncateText(descriptionText, 150)
   
   const showBodyViewMore = bodyText.length > 300
@@ -115,7 +115,7 @@ export function LinkDisplay({ linkId, userId }: LinkDisplayProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-[180px] bg-brand/brand-dark/95 border border-zinc-800 rounded-lg shadow-lg backdrop-blur-sm"
+            className="w-[180px]  rounded-lg shadow-lg backdrop-blur-sm"
           >
             <DropdownMenuItem
               onClick={handleMoveTo}
@@ -157,7 +157,7 @@ export function LinkDisplay({ linkId, userId }: LinkDisplayProps) {
       </div>
 
       {data.body && (
-        <Card className="bg-gray-800/40 border-gray-700/30">
+        <Card className="bg-zinc-900 border-zinc-500">
           <CardContent className="p-4">
             <div className="text-gray-300">
               <h3 className="text-lg font-medium mb-2">
@@ -191,7 +191,7 @@ export function LinkDisplay({ linkId, userId }: LinkDisplayProps) {
       )}
 
       {data.description && (
-        <Card className="bg-gray-800/40 border-gray-700/30">
+        <Card className="bg-zinc-900 border-zinc-500">
           <CardContent className="p-4">
             <div className="text-gray-300">
               <h3 className="text-lg font-medium mb-2">Description</h3>

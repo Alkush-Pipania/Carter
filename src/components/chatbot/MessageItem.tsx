@@ -7,7 +7,7 @@ import remarkGfm from 'remark-gfm'
 import { ClassAttributes, HTMLAttributes } from 'react'
 import { ExternalLink } from 'lucide-react'
 
-// Define code component props including the inline property
+
 interface CodeProps extends ClassAttributes<HTMLElement>, HTMLAttributes<HTMLElement> {
   inline?: boolean;
   node?: any;
@@ -21,13 +21,13 @@ type MessageItemProps = {
 
 export default function MessageItem({ role, content, isStructured }: MessageItemProps) {
   return (
-    <div className="mb-5 w-full">
+    <div className="mb-5">
       <Card
         className={`${
           role === "user"
-            ? "bg-[#1E1A2D] border-gray-700"
-            : "bg-primary-blue/primary-blue-500/20 border-primary-blue/primary-blue-400/30"
-        } backdrop-blur-sm`}
+            ? "bg-zinc-800 border-gray-700"
+            : "bg-transparent border-none"
+        } backdrop-blur-sm `}
       >
         <CardContent className="p-5">
           {isStructured && typeof content !== "string" ? (
@@ -45,13 +45,14 @@ export default function MessageItem({ role, content, isStructured }: MessageItem
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 hover:underline transition-colors duration-200 font-medium break-all"
                     >
-                      {props.children}
+                      Click here
                       <ExternalLink className="h-3.5 w-3.5 flex-shrink-0" />
+                      {"  "}
                     </a>
                   ),
                   // Improved paragraph spacing and line wrapping
                   p: ({ node, ...props }) => (
-                    <p {...props} className="mb-6 leading-7 break-words" />
+                    <p {...props} className="leading-7 text-gray-300 break-words" />
                   ),
                   // Adjusted list spacing for better separation
                   ul: ({ node, ...props }) => (

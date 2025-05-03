@@ -1,5 +1,4 @@
 "use client";
-import Loader from '@/components/global/Loader';
 import Retrive from '@/components/global/retrivecom';
 import TitleSection from '@/components/landing-page/title-section';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from "@/hooks/use-toast"
-import { SecretinputSchema } from '@/lib/types/zod';
 import { retriveAnnonmousData } from '@/server/actions/links';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Folder, Loader2, Link2, User } from 'lucide-react';

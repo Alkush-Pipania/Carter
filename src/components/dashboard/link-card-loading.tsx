@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card"
 
 export function LinkCardLoading() {
   return (
-    <Card className="w-full bg-[#121212] shadow-2xl hover:shadow-sm shadow-purpleShadow sm:max-w-[321px] h-[227px] flex flex-col p-2 rounded-lg border-0">
+    <Card className="w-full bg-[#121212] shadow-2xl hover:shadow-sm shadow-zinc-700 sm:max-w-[321px] h-[227px] flex flex-col p-2 rounded-lg border-0">
       {/* Image skeleton with darker background */}
       <div className="w-full h-[150px] overflow-hidden">
         <Skeleton className="w-full h-full bg-gray-800/50" />
