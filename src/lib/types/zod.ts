@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 
 export const FormSchema = z.object({
@@ -12,7 +11,7 @@ export const SignupSchema = z.object({
   username: z.string().describe('Username').min(4, { message: 'Username must be at least 4 characters long' }),
   email: z.string().describe('Email').email({ message: 'Invalid email' }),
   password: z.string().describe("Password").min(8, { message: 'Password must be at least 8 characters long' })
-
+  // Image is handled separately and not included in the schema validation
 })
 
 export const AddLinkSchema = z.object({

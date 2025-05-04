@@ -49,7 +49,7 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
                     {...field}
                     type="email"
                     placeholder="Email"
-                    className="rounded-lg border border-gray-600 bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-400 focus:border-[#8d33ff] focus:outline-none w-full text-sm sm:text-base"
+                    className="rounded-lg border border-zinc-600 bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-400 focus:outline-none w-full text-sm sm:text-base"
                     disabled={isLoading}
                   />
                 </FormControl>
@@ -59,7 +59,7 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
           />
           <Button
             type="submit"
-            className="w-full rounded-lg bg-[#8d33ff] px-4 py-2 sm:py-3 font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-[#8d33ff] focus:ring-offset-2 focus:ring-offset-[#030014] disabled:opacity-50 text-sm sm:text-base"
+            className="w-full rounded-lg bg-white/80 text-xs hover:bg-pureWhite hover:bg-opacity-90 focus:outline-none focus:ring-2 text-black focus:ring-offset-2 focus:ring-offset-[#030014] disabled:opacity-50 sm:text-base"
             disabled={isLoading}
           >
             {isLoading ? 'Sending...' : 'Send Verification Code'}

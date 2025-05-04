@@ -119,3 +119,33 @@ export const postUnilane = async (url: string, requestParams: object) => {
     throw new Error(errorMessage);
   }
 };
+
+export const postCarterFormData = async (url: string, formData: FormData) => {
+    try {
+        console.log('🔹 FormData BASE_URL:', BASE_URL);
+        console.log('🔹 FormData Full API URL:', `${BASE_URL}${url}`);
+        
+        // Log FormData contents for debugging (without actually reading the file data)
+        const formDataEntries = Array.from(formData.entries()).map(([key, value]) => {
+            if (value instanceof File) {
+                return `${key}: File[${value.name}, ${value.type}, ${value.size} bytes]`;
+            }
+            return `${key}: ${value}`;
+        });
+        console.log('🔹 FormData contents:', formDataEntries);
+        
+        const response = await axiosInstance.post(`${BASE_URL}${url}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        console.error('🔹 FormData upload error:', error.response?.data || error.message);
+        const errorMessage = error.response?.data?.error || 'Something went wrong uploading the file';
+        toast('Error', {
+            description: errorMessage
+        });
+        throw new Error(errorMessage);
+    }
+};

@@ -7,7 +7,6 @@ import { Button } from '../ui/button';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useState, useTransition } from 'react';
 import { toast } from "sonner";
-import { togglecloud } from '@/server/actions/links';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +17,13 @@ import {
 import { AlertDialog, AlertDialogTrigger } from '../ui/alert-dialog';
 import { DeleteProductAlertDialogContent } from './Deletealertdialog';
 import { Dialog } from '../ui/dialog';
+import { toggleCloudStatus } from '@/store/thunks/linkContentThunks';
+import { useAppDispatch } from '@/store/hooks';
 
 const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boolean, secretId: string, url: string, title: string, imgurl: string }) => {
   const [iscloudPending, startcloudtransition] = useTransition();
   const [local_tobefind, setLocal_tobefind] = useState(tobefind);
+  const dispatch = useAppDispatch();
 
   const handleCopy = async (text: string) => {
     try {
@@ -38,18 +40,29 @@ const Linkcompo = ({ tobefind, secretId, url, title, imgurl }: { tobefind: boole
 
   const handleCloudToggle = async () => {
     try {
+      // Optimistically update local state
       setLocal_tobefind(!local_tobefind);
-      const data = await togglecloud(secretId);
-      if (data.message) {
-        if (data.changeto) {
-          toast.success("Added", {
-            description: "Successfully added to cloud"
-          });
-        } else {
-          toast.error("Removed", {
-            description: "Successfully removed from cloud"
-          });
-        }
+      
+      // Get userId from localStorage
+      const userId = localStorage.getItem('userId');
+      
+      if (!userId) {
+        toast.error("Authentication error", {
+          description: "Please sign in again"
+        });
+        setLocal_tobefind(prev => !prev); // Revert state on error
+        return;
+      }
+      
+      const result = await dispatch(toggleCloudStatus({
+        linkId: secretId,
+        userId: userId
+      })).unwrap();
+      
+      if (result.message) {
+        toast.success(!local_tobefind ? "Added" : "Removed", {
+          description: !local_tobefind ? "Successfully added to cloud" : "Successfully removed from cloud"
+        });
       }
     } catch (e) {
       toast.error("Unexpected error", {

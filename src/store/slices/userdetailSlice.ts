@@ -5,6 +5,7 @@ interface UserDetailsState {
   data: {
     email?: string;
     username?: string;
+    image?: string | null;
   } | null;
   loading: boolean;
   error: string | null;

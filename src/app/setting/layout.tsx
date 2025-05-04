@@ -5,10 +5,17 @@ import { MenuIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { SettingsSidebar } from './components/SettingsSidebar'
+import AuthRedirect from '@/components/common/auth-redirect'
+import { useSession } from 'next-auth/react'
 
-const SettingsLayout = ({children} : {children : React.ReactNode}) => {
+const SettingsLayout =  ({children} : {children : React.ReactNode}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const {data : session } =  useSession();
+  if(!session){
+    return <AuthRedirect redirectTo="/signin" />
+  }
   
+
   return (
     <main className="bg-zinc-950 min-h-screen">
       {/* Mobile sidebar toggle */}

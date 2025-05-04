@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 
 interface SettingsSidebarProps {
   isSidebarOpen: boolean
@@ -36,7 +37,6 @@ export const SettingsSidebar = ({ isSidebarOpen, setIsSidebarOpen }: SettingsSid
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           <NavLink href="/setting" icon={<User size={16} />}>User Profile</NavLink>
           <NavLink href="/setting/secret-keys" icon={<Key size={16} />}>Manage Secret Keys</NavLink>
-          <NavLink href="/setting/ai-feature" icon={<Sparkles size={16} />}>AI Feature</NavLink>
         </nav>
         
         {/* Sidebar footer */}
@@ -45,7 +45,10 @@ export const SettingsSidebar = ({ isSidebarOpen, setIsSidebarOpen }: SettingsSid
             Delete Account
           </NavLink>
           <button 
-            onClick={() => alert('Sign out clicked')}
+           onClick={() => {
+            signOut({callbackUrl : '/signin'});
+  
+          }} 
             className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md text-gray-300 hover:bg-zinc-800"
           >
             <LogOut size={16} className="h-4 w-4" />

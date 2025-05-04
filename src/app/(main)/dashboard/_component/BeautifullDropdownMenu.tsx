@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation"
 import { moveToTrash } from "@/store/thunks/folderThunks"
 import { toast } from "sonner"
 import { removeFolder } from "@/store/slices/folderdataSlice"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -101,19 +100,19 @@ export function BeautifulDropdownMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-[180px] bg-brand/brand-dark/95 border border-zinc-800 rounded-lg shadow-lg backdrop-blur-sm"
+        className="w-[180px] bg-zinc-800 border-zinc-800 rounded-lg shadow-lg backdrop-blur-sm"
       >
         <DropdownMenuItem
-          // onClick={(e) => {
-          //   e.stopPropagation()
-          //   onCloud();
-          // }}
+          onClick={(e) => {
+            e.stopPropagation()
+            router.push('/setting/secret-keys')
+          }}
           className="flex items-center px-3 py-2 text-sm cursor-pointer text-zinc-300 hover:bg-zinc-800/50 hover:text-zinc-100 focus:bg-zinc-800/50 focus:text-zinc-100"
         >
           <Cloud className="mr-2 h-4 w-4 text-zinc-400" />
           <span>manage</span>
         </DropdownMenuItem>
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           onClick={(e) => {
             e.stopPropagation()
             onShare();
@@ -122,7 +121,7 @@ export function BeautifulDropdownMenu({
         >
           <Share className="mr-2 h-4 w-4 text-zinc-400" />
           <span>Share</span>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuSeparator className="my-1 bg-zinc-800/50" />
         <DropdownMenuItem
           onClick={handleMoveToTrash}

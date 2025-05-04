@@ -18,5 +18,20 @@ export const API_ENDPOINTS ={
     // Delete Trash Folder
     DeleteTrashFolder : '/delete-trash-folder',
     // Move To Trash
-    MoveToTrash : '/move-to-trash'
+    MoveToTrash : '/move-to-trash',
+
+    // Profile Settings
+    Profile : '/profile', // Base endpoint for profile GET
+    UpdateUsername : '/profile/username', // PUT endpoint for username
+    UpdateProfileImage : '/profile/image', // POST endpoint for image upload
+    // Secret Keys Settings
+    SecretKeys : '/setting/secretKeys',
+
+    // Forgot Password
+    OtpSent : '/forgot-password', // otp sent to email
+    Verification : '/otp-verification', // otp verification and password update
+
+
+    // Cloud Toggle
+    CloudToggle : '/cloud-toggle'
 }

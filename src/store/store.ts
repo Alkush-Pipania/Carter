@@ -6,6 +6,7 @@ import userdetailReducer from './slices/userdetailSlice';
 import folderdataReducer from './slices/folderdataSlice';
 import linkContentReducer from './slices/linkContentSlice';
 import trashFolderReducer from './slices/trashFolderSlice';
+import profileSettingsReducer from './slices/profile-settingSlice'; 
 
 export const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
         folderdata: folderdataReducer,
         linkContent: linkContentReducer,
         trashFolder: trashFolderReducer,
+        profileSettings : profileSettingsReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

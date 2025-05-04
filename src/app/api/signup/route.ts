@@ -1,12 +1,31 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma"; // Adjust this import if needed
-import { error } from "console";
+import { v2 as cloudinary } from 'cloudinary';
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+async function uploadImageToCloudinary(base64Image: string) {
+  try {
+    const result = await cloudinary.uploader.upload(base64Image, {
+      folder: 'carter_profiles',
+    });
+    return result.secure_url;
+  } catch (error) {
+    console.error('Error uploading to Cloudinary:', error);
+    return null;
+  }
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json(); 
-    const { email, password, username } = body;
+    const { email, password, username, image } = body;
 
     
     if (!email || !password || !username) {
@@ -25,12 +44,19 @@ export async function POST(request: Request) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Upload image to Cloudinary if provided
+    let imageUrl = null;
+    if (image) {
+      imageUrl = await uploadImageToCloudinary(image);
+    }
+
     // Create the user
     const newUser = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         username,
+        image: imageUrl, // Add the image URL to the user record
       },
     });
 

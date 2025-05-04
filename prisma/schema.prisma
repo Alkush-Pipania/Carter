@@ -16,6 +16,7 @@ model User {
   secretkey String     @unique @default(uuid())
   id        Int        @id @default(autoincrement())
   varified  Boolean    @default(false)
+  image     String?
   folders   Folder[]
   linkform  Linkform[]
 }

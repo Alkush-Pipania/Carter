@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from "react"
-import { Globe, Trash2, Plus } from 'lucide-react'
+import { Globe, Trash2, Plus, Settings } from 'lucide-react'
 import { useSession } from "next-auth/react"
 import { redirect, useRouter, usePathname } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
@@ -9,38 +9,27 @@ import Link from "next/link"
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "@/components/ui/dialog"
 import { DialogTitle } from "@radix-ui/react-dialog"
 import { CreateLinkCart } from "../../../app/(main)/dashboard/_component/createfolder"
-import { BeautifulDropdownMenu } from "../../../app/(main)/dashboard/_component/BeautifullDropdownMenu"
-import { useRenderStore } from "@/lib/store/links"
-import { getSecretKey, togglefolderCloud } from "@/server/actions/links"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { getUserDetails } from "@/store/thunks/userdetailThunks"
 import { getFolderData } from "@/store/thunks/folderdataThunks"
-import { addFolder } from "@/store/slices/folderdataSlice"
 import { moveToTrash } from "@/store/thunks/folderThunks"
 import SidebarUserInfo from './SidebarUserInfo';
 import SidebarSearch from './SidebarSearch';
 import SidebarFolders from './SidebarFolders';
-import SidebarSettings from './SidebarSettings';
 import SidebarInviteMembers from './SidebarInviteMembers';
-import SidebarNoFolder from './SidebarNoFolder';
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 
 export function SidebarClient() {
   const { status, data: sessionData } = useSession();
-  const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
   
@@ -56,8 +45,6 @@ export function SidebarClient() {
   const [search, setSearch] = React.useState('');
   const [isCreateFolderOpen, setIsCreateFolderOpen] = React.useState(false);
 
-  // Store hooks
-  const triggerRerender = useRenderStore((state) => state.triggerRerender);
 
   // Authentication check
   React.useEffect(() => {
@@ -99,50 +86,6 @@ export function SidebarClient() {
     setIsCreateFolderOpen(false);
   }
 
-  const handleShare = React.useCallback(async (id: string) => {
-    try {
-      const response = await getSecretKey(id);
-      if (!response.error && response.data) {
-        const shareMessage = `Hey! I've shared a folder with you on Carter. 🚀  
-        
-🔑 Secret Key: ${response.data}  
-🔗 Access it here: https://carter.fun/find  
-
-Enter the secret key to view the saved links. 🔐`;
-
-        await navigator.clipboard.writeText(shareMessage);
-        toast({
-          title: "Share",
-          description: "Secret key and instructions have been copied to clipboard.",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to share folder",
-        variant: "destructive",
-      });
-    }
-  }, [toast]);
-
-  const handleCloud = React.useCallback(async (id: string) => {
-    try {
-      const response = await togglefolderCloud(id);
-      if (!response.error) {
-        triggerRerender();
-        toast({
-          title: "Cloud",
-          description: "All links are now in cloud state",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update cloud state",
-        variant: "destructive",
-      });
-    }
-  }, [triggerRerender, toast]);
 
   // New handleDelete function using Redux
   const handleDelete = React.useCallback(async (folderId: string, folderName: string, numberOfLinks: number) => {
@@ -215,7 +158,7 @@ Enter the secret key to view the saved links. 🔐`;
                 <DialogTrigger onChange={() => setIsCreateFolderOpen(true)}>
                   <SidebarMenuItem key="#3">
                     <SidebarMenuButton asChild>
-                      <h3 className="flex items-center gap-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
+                      <h3 className="flex items-center gap-2 text-zinc-400 active:bg-zinc-900 hover:bg-zinc-800/50 hover:text-zinc-100">
                         <Plus className="h-4 w-4" />
                         <span >Create Folder</span>
                       </h3>
@@ -242,13 +185,15 @@ Enter the secret key to view the saved links. 🔐`;
             folderData={folderData}
             activeRoute={activeRoute}
             setActiveRoute={setActiveRoute}
-            handleShare={handleShare}
-            handleDelete={handleDelete}
             setIsCreateFolderOpen={setIsCreateFolderOpen}
           />
         </SidebarGroup>
-
-        <SidebarSettings loading={userLoading} />
+        <SidebarMenuButton asChild>
+        <Link href="/setting" className="flex items-center px-4 gap-2 active:bg-zinc-900 text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100">
+        <Settings className="w-4 h-4" />
+          <span >Settings</span>
+          </Link>
+        </SidebarMenuButton>
 
         <SidebarGroup className=" z-20 border-t border-zinc-800">
           <SidebarGroupContent>

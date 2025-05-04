@@ -1,4 +1,3 @@
-
 import Dashbar from '@/components/dashboard/dashbar'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import logo from '/public/auth/chatbot-logo.png'
@@ -13,8 +12,15 @@ import {
 } from "@/components/ui/tooltip"
 import Image from 'next/image'
 import Link from 'next/link'
+import { getServerSession } from 'next-auth'
+import { authOption } from '@/lib/auth'
+import AuthRedirect from '@/components/common/auth-redirect'
 
-const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
+const HomePageLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await getServerSession(authOption);
+  if(!session){
+    return <AuthRedirect redirectTo="/signin" />
+  }
   return (
     <>
       <Dashbar />

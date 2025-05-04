@@ -18,8 +18,6 @@ interface SidebarFoldersProps {
   folderData: FolderData[];
   activeRoute?: string;
   setActiveRoute: (id: string) => void;
-  handleShare: (id: string) => void;
-  handleDelete: (id: string, name: string, links: number) => void;
   setIsCreateFolderOpen: (open: boolean) => void;
 }
 
@@ -29,8 +27,6 @@ const SidebarFolders: React.FC<SidebarFoldersProps> = ({
   folderData,
   activeRoute,
   setActiveRoute,
-  handleShare,
-  handleDelete,
   setIsCreateFolderOpen,
 }) => (
   <>
@@ -61,8 +57,8 @@ const SidebarFolders: React.FC<SidebarFoldersProps> = ({
                 >
                   <span className="truncate">{data.name}</span>
                   <BeautifulDropdownMenu
-                    onShare={() => handleShare(data.id)}
-                    onDelete={() => handleDelete(data.id, data.name, data._count.links)}
+                    onShare={() => console.log("hello") }
+                    onDelete={() =>  console.log("hello")}
                     folderId={data.id.toString()}
                     folderName={data.name}
                     numberOfLinks={data._count.links}

@@ -17,7 +17,7 @@ const SidebarNoFolder: React.FC<SidebarNoFolderProps> = ({ createfolder }) => (
       onClick={() => createfolder(true)}
       variant="outline"
       size="sm"
-      className="mt-4 border-zinc-800 text-white hover:bg-primary-purple/primary-purple-600 active:bg-primary-purple/primary-purple-700 bg-primary-purple/primary-purple-500 hover:text-zinc-300"
+      className="mt-4 border-zinc-800 hover:bg-pureWhite text-black bg-white/80  hover:text-zinc-300"
     >
       <Plus className="mr-2 h-4 w-4" />
       Create Folder
