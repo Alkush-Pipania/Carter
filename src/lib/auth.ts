@@ -80,6 +80,7 @@ export const authOption = {
               data: {
                 username: dbUser.username || user.name,
                 updatedAt: new Date(),
+                image: user.image,
               },
             });
           }

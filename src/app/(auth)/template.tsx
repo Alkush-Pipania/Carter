@@ -3,12 +3,19 @@ import Image from 'next/image'
 import img from '/public/auth/hero.png'
 import carterlogo from '/public/auth/cartlogo.png'
 import Link from 'next/link'
+import { getServerSession } from 'next-auth'
+import { authOption } from '@/lib/auth'
+import AuthRedirect from '@/components/common/auth-redirect'
 
-interface TemplateProps{
+interface TemplateProps {
   children: React.ReactNode;
 }
 
-const Template : React.FC<TemplateProps> = ({children}) => {
+const Template: React.FC<TemplateProps> = async({ children }) => {
+  const session = await getServerSession(authOption);
+  if (!session) {
+    return <AuthRedirect redirectTo="/signin" />
+  }
   return (
     <main className="flex h-screen w-full relative">
       {/* Carter Logo Top Left */}
