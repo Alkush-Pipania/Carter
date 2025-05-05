@@ -1,20 +1,24 @@
+"use client"
 import React from 'react'
 import Image from 'next/image'
 import img from '/public/auth/hero.png'
 import carterlogo from '/public/auth/cartlogo.png'
 import Link from 'next/link'
-import { getServerSession } from 'next-auth'
-import { authOption } from '@/lib/auth'
 import AuthRedirect from '@/components/common/auth-redirect'
+import { useSession } from 'next-auth/react'
+import Loading from '@/components/common/loading'
 
 interface TemplateProps {
   children: React.ReactNode;
 }
 
-const Template: React.FC<TemplateProps> = async({ children }) => {
-  const session = await getServerSession(authOption);
-  if (!session) {
-    return <AuthRedirect redirectTo="/signin" />
+const Template: React.FC<TemplateProps> = ({ children }) => {
+  const { status } = useSession();
+  if (status === "loading") {
+    return <Loading />
+  }
+  if (status === "authenticated") {
+    return <AuthRedirect redirectTo="/dashboard" />
   }
   return (
     <main className="flex h-screen w-full relative">

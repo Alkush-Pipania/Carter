@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import logo from '/public/auth/chatbot-logo.png'
+import Loader from '../global/Loader'
 
 export const Loading = () => {
   return (
@@ -11,9 +12,7 @@ export const Loading = () => {
           className="w-24 h-24 rounded-full shadow-md"
           priority
         /> */}
-        <h2 className="text-xl font-medium text-muted-foreground mt-2">
-          loading<span className="animate-[ellipsis_1.5s_infinite]">...</span>
-        </h2>
+        <Loader />
       </div>
     </div>
   )
