@@ -24,9 +24,9 @@ interface BeautifulDropdownMenuProps {
   numberOfLinks?: number
 }
 
-export function BeautifulDropdownMenu({ 
-  onShare, 
-  onDelete, 
+export function BeautifulDropdownMenu({
+  onShare,
+  onDelete,
   folderId,
   folderName,
   numberOfLinks = 0
@@ -35,22 +35,22 @@ export function BeautifulDropdownMenu({
   const { data: session } = useSession()
   const router = useRouter()
   const { movingToTrash } = useAppSelector(state => state.trashFolder)
-  
+
   const handleMoveToTrash = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    
+
     // Use the onDelete prop if no folder info is provided (backward compatibility)
     if (!folderId || !folderName || !session?.user?.id) {
       onDelete()
       return
     }
-    
-    console.log('Moving folder to trash:', { folderId, folderName, numberOfLinks })
-    
+
+    // console.log('Moving folder to trash:', { folderId, folderName, numberOfLinks })
+
     try {
       // Immediately remove from UI for better UX
       dispatch(removeFolder(folderId))
-      
+
       const result = await dispatch(
         moveToTrash({
           userId: session.user.id,
@@ -59,14 +59,14 @@ export function BeautifulDropdownMenu({
           numberOfLinks
         })
       ).unwrap()
-      
-      console.log('Move to trash result:', result)
-      
+
+      // console.log('Move to trash result:', result)
+
       if (!result.error) {
         toast.success("Success", {
           description: "Folder moved to trash"
         })
-        
+
         // Navigate to dashboard if we're on the folder that was deleted
         const currentPath = window.location.pathname
         if (currentPath.includes(`/dashboard/folder/${folderId}`)) {
@@ -89,8 +89,8 @@ export function BeautifulDropdownMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className="h-8 w-8 p-0 hover:bg-zinc-800/50 rounded-md"
           onClick={(e) => e.stopPropagation()}
         >

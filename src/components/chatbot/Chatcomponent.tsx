@@ -146,7 +146,7 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
           
           scrollToBottom();
         } else if (message.startsWith('event: complete')) {
-          console.log('Stream completed');
+          // console.log('Stream completed');
         } else if (message.startsWith('event: error')) {
           // Handle error event
           const errorMatch = message.match(/data: (.+)/);

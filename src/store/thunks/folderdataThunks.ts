@@ -35,7 +35,7 @@ export const createFolder = createAsyncThunk(
         userId, 
         folderName 
       });
-      console.log(response);
+      // console.log(response);
       return response;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || error.message);

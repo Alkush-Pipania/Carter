@@ -8,7 +8,7 @@ export const fetchGlobalLinks = createAsyncThunk(
     async({ userId, searchQuery }: { userId: string | null, searchQuery: string }, thunkApi) => {
         try {
             const endpoint = `${API_ENDPOINTS.GlobalLinks}`;
-            console.log("Sending request with params:", { userId, searchQuery });
+            // console.log("Sending request with params:", { userId, searchQuery });
             const response = await getCarter(endpoint, { userId, searchQuery });
             if (!response) {
                 throw new Error('No response received from API');

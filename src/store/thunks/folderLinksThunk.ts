@@ -20,7 +20,7 @@ export const fetchFolderLinks = createAsyncThunk<
     async({ userId, searchQuery, folderId }, thunkApi) => {
         try {
             const endpoint = `${API_ENDPOINTS.FolderLinks}`;
-            console.log("Sending request with params:", { userId, searchQuery, folderId });
+            // console.log("Sending request with params:", { userId, searchQuery, folderId });
             const response = await getCarter(endpoint, { userId, searchQuery, folderId: folderId.toString() });
             if (!response) {
                 throw new Error('No response received from API');

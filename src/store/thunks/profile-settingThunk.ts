@@ -26,10 +26,10 @@ export const fetchProfile = createAsyncThunk<
       console.error("fetchProfile: userId not found in localStorage");
       return rejectWithValue('User ID not found in localStorage');
     }
-    console.log("fetchProfile: Got userId", userId);
+    // console.log("fetchProfile: Got userId", userId);
     try {
       const response = await getCarter(API_ENDPOINTS.Profile, { userId });
-      console.log("fetchProfile: API response", response);
+      // console.log("fetchProfile: API response", response);
       return response as UserProfile;
     } catch (error: any) {
       console.error("fetchProfile: Error", error);
@@ -52,59 +52,59 @@ export const updateProfile = createAsyncThunk<
 >(
   'profileSettings/updateProfile',
   async ({ username }, { getState, rejectWithValue }) => {
-    console.log("updateProfile: Thunk started");
+    // console.log("updateProfile: Thunk started");
     const userId = localStorage.getItem('userId');
     if (!userId) {
       console.error("updateProfile: userId not found in localStorage");
       return rejectWithValue('User ID not found in localStorage for update');
     }
-    console.log("updateProfile: Got userId", userId);
+    // console.log("updateProfile: Got userId", userId);
 
     const state = getState();
     // @ts-ignore - Temporarily ignore error until store is fixed
     const { pendingImageFile } = state.profileSettings;
-    console.log("updateProfile: Pending image file?", pendingImageFile);
+    // console.log("updateProfile: Pending image file?", pendingImageFile);
 
     let updatedUserData: UserProfile;
 
     try {
       // 1. Update username
-      console.log(`updateProfile: Updating username to '${username}' for userId '${userId}'`);
+      // console.log(`updateProfile: Updating username to '${username}' for userId '${userId}'`);
       const usernameUpdatePayload = { userId, username };
       updatedUserData = await putCarter(API_ENDPOINTS.UpdateUsername, usernameUpdatePayload);
-      console.log("updateProfile: Username update response", updatedUserData);
+      // console.log("updateProfile: Username update response", updatedUserData);
 
       // 2. Upload image if pending
       if (pendingImageFile) {
-        console.log("updateProfile: Pending image file exists, preparing upload.");
-        console.log("updateProfile: File type:", pendingImageFile.type);
-        console.log("updateProfile: File size:", pendingImageFile.size);
+        // console.log("updateProfile: Pending image file exists, preparing upload.");
+        // console.log("updateProfile: File type:", pendingImageFile.type);
+        // console.log("updateProfile: File size:", pendingImageFile.size);
         
         const formData = new FormData();
         formData.append('userId', userId);
         formData.append('profileImage', pendingImageFile);
         
-        console.log("updateProfile: Calling postCarterFormData...");
+        // console.log("updateProfile: Calling postCarterFormData...");
         const imageUpdateResponse = await postCarterFormData(API_ENDPOINTS.UpdateProfileImage, formData);
-        console.log("updateProfile: Image update response", imageUpdateResponse);
+        // console.log("updateProfile: Image update response", imageUpdateResponse);
         
         if (imageUpdateResponse && typeof imageUpdateResponse === 'object' && 'image' in imageUpdateResponse) {
           updatedUserData = imageUpdateResponse as UserProfile;
-          console.log("updateProfile: Using full response from image upload.");
+          // console.log("updateProfile: Using full response from image upload.");
         } else {
           const imagePath = (imageUpdateResponse as any)?.path;
           if(imagePath) {
             updatedUserData.image = imagePath;
-            console.log("updateProfile: Manually updated image path to", imagePath);
+            // console.log("updateProfile: Manually updated image path to", imagePath);
           } else {
-             console.log("updateProfile: Image upload response did not contain path/image.");
+            //  console.log("updateProfile: Image upload response did not contain path/image.");
           }
         }
       } else {
-        console.log("updateProfile: No pending image file to upload.");
+        // console.log("updateProfile: No pending image file to upload.");
       }
 
-      console.log("updateProfile: Thunk succeeded, returning", updatedUserData);
+      // console.log("updateProfile: Thunk succeeded, returning", updatedUserData);
       return updatedUserData;
     } catch (error: any) {
       console.error("updateProfile: Error during update", error);
