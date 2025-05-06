@@ -1,8 +1,5 @@
 "use client"
 import type React from "react"
-import Header from "@/components/chatbot/Headers"
-import { useEffect } from "react"
-import axios from "axios"
 
 export default function ChatLayout({
   children,

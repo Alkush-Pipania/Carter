@@ -24,7 +24,7 @@ const formSchema = z.object({
 
 interface OtpFormProps {
   email: string
-  onSubmit: (otp: string, password: string, form: any) => void
+  onSubmit: (otp: string, password: string, form: ReturnType<typeof useForm<z.infer<typeof formSchema>>>) => void
   onBack: () => void
   isLoading: boolean
   showCooldownFromStart?: boolean
@@ -84,8 +84,12 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
       } else {
         toast.error(response.message || 'Failed to resend verification code')
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Something went wrong')
+    } catch (error: unknown) {
+      let message = 'Something went wrong';
+      if (typeof error === 'object' && error !== null && 'message' in error && typeof (error as { message?: string }).message === 'string') {
+        message = (error as { message?: string }).message || message;
+      }
+      toast.error(message)
     } finally {
       setIsResending(false)
     }
@@ -230,4 +234,3 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
     </div>
   )
 }
-

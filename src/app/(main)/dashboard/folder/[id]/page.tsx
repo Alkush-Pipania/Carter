@@ -1,7 +1,6 @@
 "use client"
-import DownCircle from "@/app/favicon/downcirlce";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Content from "./_components/content";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSelector } from "react-redux";

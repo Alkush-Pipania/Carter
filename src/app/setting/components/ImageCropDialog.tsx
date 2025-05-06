@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useToast } from "@/components/ui/use-toast"
+import Image from "next/image"
 
 // Function to get center crop with 1:1 aspect ratio
 function centerAspectCrop(
@@ -159,12 +160,14 @@ export function ImageCropDialog({
               className="max-w-full"
               circularCrop
             >
-              <img 
+              <Image 
                 ref={imgRef}
                 src={imageSrc} 
                 alt="Crop preview" 
                 onLoad={onImageLoad}
                 className="max-w-full"
+                width={400}
+                height={400}
               />
             </ReactCrop>
           )}

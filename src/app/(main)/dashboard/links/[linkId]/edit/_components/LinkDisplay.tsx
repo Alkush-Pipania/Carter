@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { getLinkContent } from '@/store/thunks/linkContentThunks'
 import { Card, CardContent } from '@/components/ui/card'
@@ -22,7 +21,6 @@ interface LinkDisplayProps {
 }
 
 export function LinkDisplay({ linkId, userId }: LinkDisplayProps) {
-  const router = useRouter()
   const dispatch = useAppDispatch()
   const { toast } = useToast()
   const { data, loading, error } = useAppSelector((state) => state.linkContent)

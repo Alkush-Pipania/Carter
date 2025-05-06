@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createFolder } from "@/store/thunks/folderdataThunks";
 import { useSession } from "next-auth/react";
+import type { Session } from "next-auth";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 

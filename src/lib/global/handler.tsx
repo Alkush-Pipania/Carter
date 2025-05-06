@@ -1,5 +1,5 @@
 import prisma from "../prisma";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { authOption } from "../auth";
 
 

@@ -12,8 +12,13 @@ export default function Content() {
   const searchParams = useSearchParams();
   const searchvalue = searchParams.get('search') || '';
   const dispatch = useDispatch<AppDispatch>();
-  const { links, loading, error } = useSelector((state: RootState) => state.userLinkGlobal);
-  const userId = localStorage.getItem('userId');
+  const { links, loading } = useSelector((state: RootState) => state.userLinkGlobal);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Access localStorage only on the client side after component mounts
+    setUserId(localStorage.getItem('userId'));
+  }, []);
 
   useEffect(() => {
     if (userId) {

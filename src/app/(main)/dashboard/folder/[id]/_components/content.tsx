@@ -18,7 +18,7 @@ export default function Content({ folderid }: ContentProps) {
     const searchParams = useSearchParams();
     const searchvalue = searchParams.get('search') || '';
     const dispatch = useDispatch<AppDispatch>();
-    const { links, loading, error, folder } = useSelector((state: RootState) => state.folderLinks);
+    const { links, loading, error } = useSelector((state: RootState) => state.folderLinks);
     const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
     const [prevSearchValue, setPrevSearchValue] = useState('');
 

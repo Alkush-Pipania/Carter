@@ -3,7 +3,8 @@
 import * as React from "react"
 import { Globe, Trash2, Plus, Settings } from 'lucide-react'
 import { useSession } from "next-auth/react"
-import { redirect, useRouter, usePathname } from "next/navigation"
+import type { Session } from "next-auth"
+import { redirect, usePathname } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "@/components/ui/dialog"
@@ -29,7 +30,7 @@ import {
 } from "@/components/ui/sidebar"
 
 export function SidebarClient() {
-  const { status, data: sessionData } = useSession();
+  const { status, data: sessionData } = useSession() as { status: string, data: Session | null };
   const pathname = usePathname();
   const { toast } = useToast();
   
@@ -80,36 +81,12 @@ export function SidebarClient() {
     }
   }, [search, dispatch, status, sessionData]);
 
-  const handleFolderCreate = (newfolder: any) => {
-    // Don't add the folder again - it's already added by the createFolder thunk
-    // Just close the dialog
+  const handleFolderCreate = () => {
     setIsCreateFolderOpen(false);
   }
 
 
-  // New handleDelete function using Redux
-  const handleDelete = React.useCallback(async (folderId: string, folderName: string, numberOfLinks: number) => {
-    try {
-      if (!sessionData?.user?.id) return;
-      
-      await dispatch(
-        moveToTrash({
-          userId: sessionData.user.id,
-          folderId,
-          folderName,
-          numberOfLinks
-        })
-      ).unwrap();
-      
-      // Navigation is now handled in the BeautifulDropdownMenu component
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to move folder to trash",
-        variant: "destructive",
-      });
-    }
-  }, [dispatch, sessionData, toast]);
+
 
   return (
     <Sidebar

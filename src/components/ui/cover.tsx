@@ -31,7 +31,7 @@ export const Cover = ({
       );
       setBeamPositions(positions);
     }
-  }, [ref.current]);
+  }, []); // Empty dependency array since we only need this on mount
 
   return (
     <div

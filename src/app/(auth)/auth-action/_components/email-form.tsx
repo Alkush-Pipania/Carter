@@ -1,19 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { useForm } from 'react-hook-form'
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
 })
 
 interface EmailFormProps {
-  onSubmit: (email: string, form: any) => void
+  onSubmit: (email: string, form: ReturnType<typeof useForm<z.infer<typeof formSchema>>>) => void
   isLoading: boolean
 }
 
@@ -34,7 +33,7 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
       <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-bold">Reset Password</h2>
         <p className="text-sm sm:text-base text-gray-400">
-          Enter your email address and we'll send you a verification code.
+          Enter your email address and we&apos;ll send you a verification code.
         </p>
       </div>
       <Form {...form}>
@@ -69,4 +68,3 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
     </div>
   )
 }
-

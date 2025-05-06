@@ -68,12 +68,12 @@ export function AddLinkDialog({ activeRoute, trigger }: AddLinkDialogProps) {
       form.reset();
       setIsOpen(false);
 
-    } catch (error: any) {
+    } catch (e) {
       toast.error("Error", {
         id: toastId,
-        description: error.message || "Failed to add link. Please try again.",
+        description: "Failed to add link. Please try again.",
       });
-      // console.log(error);
+      
     }
   };
 

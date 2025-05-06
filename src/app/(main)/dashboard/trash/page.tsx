@@ -7,20 +7,14 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { getTrashFolders, deleteFolder, deleteAllFolders } from "@/store/thunks/trashFolderThunks"
 import { restoreFromTrash } from "@/store/thunks/folderThunks"
 import { useSession } from "next-auth/react"
+import { Session } from "next-auth"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-
-interface TrashFolder {
-  id: string
-  name: string
-  linkCount: number
-  deletedAt: Date
-}
 
 export default function LinkCart() {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const { data: session } = useSession()
+  const { data: session } = useSession() as { data: Session | null }
   const { items: trashFolders, loading, restoring, deleting, deletingAll } = useAppSelector(state => state.trashFolder)
 
   useEffect(() => {
@@ -53,7 +47,8 @@ export default function LinkCart() {
         // Optionally navigate to the restored folder
         router.push(`/dashboard/folder/${id}`);
       }
-    } catch (error) {
+    } catch (e) {
+      console.error(e)
       toast.error("Error", {
         id: toastId,
         description: "Failed to restore folder"
@@ -61,8 +56,8 @@ export default function LinkCart() {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    const toastId = toast.loading("Deleting folder...");
+  const handleDelete = async (id: string, name: string) => {
+    const toastId = toast.loading(`Deleting ${name}...`);
     
     try {
       if (!session?.user?.id) return;
@@ -80,7 +75,7 @@ export default function LinkCart() {
           description: "Folder has been permanently deleted"
         });
       }
-    } catch (error) {
+    } catch (e) {
       toast.error("Error", {
         id: toastId,
         description: "Failed to delete folder"
@@ -106,7 +101,7 @@ export default function LinkCart() {
           description: "All folders have been permanently deleted"
         });
       }
-    } catch (error) {
+    } catch (e) {
       toast.error("Error", {
         id: toastId,
         description: "Failed to delete all folders"
@@ -209,7 +204,7 @@ export default function LinkCart() {
                         <AlertDialogHeader>
                           <AlertDialogTitle className="text-white">Delete folder?</AlertDialogTitle>
                           <AlertDialogDescription className="text-gray-400">
-                            This action cannot be undone. This will permanently delete the folder "{folder.folderName}".
+                            This action cannot be undone. This will permanently delete the folder &quot;{folder.folderName}&quot;.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -217,7 +212,7 @@ export default function LinkCart() {
                             Cancel
                           </AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => handleDelete(folder.folderId)}
+                            onClick={() => handleDelete(folder.folderId, folder.folderName)}
                             className="bg-red-900/50 text-red-200 hover:bg-red-900/70"
                           >
                             Delete

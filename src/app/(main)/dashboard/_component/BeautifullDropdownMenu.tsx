@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { MoreHorizontal, Share, Cloud, Trash2 } from "lucide-react"
+import { MoreHorizontal, Cloud, Trash2 } from "lucide-react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
@@ -17,7 +17,6 @@ import {
 import { Button } from "@/components/ui/button"
 
 interface BeautifulDropdownMenuProps {
-  onShare: () => void
   onDelete: () => void
   folderId?: string
   folderName?: string
@@ -25,7 +24,6 @@ interface BeautifulDropdownMenuProps {
 }
 
 export function BeautifulDropdownMenu({
-  onShare,
   onDelete,
   folderId,
   folderName,
@@ -40,7 +38,7 @@ export function BeautifulDropdownMenu({
     e.stopPropagation()
 
     // Use the onDelete prop if no folder info is provided (backward compatibility)
-    if (!folderId || !folderName || !session?.user?.id) {
+    if (!folderId || !folderName || !(session?.user as any)?.id) {
       onDelete()
       return
     }
@@ -53,7 +51,7 @@ export function BeautifulDropdownMenu({
 
       const result = await dispatch(
         moveToTrash({
-          userId: session.user.id,
+          userId: (session.user as any).id,
           folderId,
           folderName,
           numberOfLinks

@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { redirect } from "next/navigation"
-import { getServerSession } from "next-auth"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getServerSession } from "next-auth/next"
+import { Card, CardContent} from "@/components/ui/card"
 import { authOption } from "@/lib/auth"
 import { LinkDetailsSkeleton } from "./_components/LinkDetailsSkeleton"
 import { PageHeader } from "./_components/PageHeader"
@@ -21,7 +21,7 @@ export default async function EditLinkPage( {
   return (
     <main className="w-full px-4 py-4 sm:py-6">
       <div className="max-w-7xl mx-auto">
-        <PageHeader title="Link Details" description="View your link information" backHref="/dashboard" />
+        <PageHeader title="Link Details" description="View your link information" />
         <Card className="mt-4 sm:mt-6 bg-zinc-900 border-gray-500 shadow-lg">
           
           <CardContent>

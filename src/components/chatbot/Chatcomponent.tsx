@@ -139,7 +139,7 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
             // First try to parse as JSON (backward compatibility)
             const jsonData = JSON.parse(dataRaw);
             useChatStore.getState().appendToLastMessage(jsonData);
-          } catch (jsonError) {
+          } catch (e) {
             // If not JSON, treat as raw text (for word-by-word streaming)
             useChatStore.getState().appendToLastMessage(dataRaw);
           }
@@ -192,7 +192,6 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
       )}
       <InputBox 
         id={chatId} 
-        isMobile={isMobile} 
         onSendMessage={handleNewMessage}
         greeting={messages.length === 0 ? greetings : undefined}
         hasMessages={messages.length > 0}

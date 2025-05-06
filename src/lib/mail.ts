@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendVerificationEmail = async (email : string, token : string) => {
   try{
-    const res = await resend.emails.send({
+    await resend.emails.send({
       from : "Carter <noreply@carter.fun>" ,
       to : email,
       subject : 'Carter - Forgot Password OTP',
@@ -22,7 +22,7 @@ export const sendVerificationEmail = async (email : string, token : string) => {
 }
 
 
-export const sendFogotpasswordmail = async (email : string, token : string , username : string ) => {
+export const sendFogotpasswordmail = async (email : string, token : string ) => {
     try{
       const res = await resend.emails.send({
         from : "Carter <noreply@carter.fun>" ,

@@ -16,14 +16,13 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 type InputBoxProps = {
-  isMobile: boolean;
   id: string;
   onSendMessage: (message: string) => Promise<void>;
   greeting?: string;
   hasMessages: boolean;
 }
 
-export default function InputBox({ isMobile, onSendMessage, greeting, hasMessages }: InputBoxProps) {
+export default function InputBox({  onSendMessage, greeting, hasMessages }: InputBoxProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSecretKeyInput, setShowSecretKeyInput] = useState(false);
   const [secretKey, setSecretKey] = useState('');

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import EmailForm from './_components/email-form'
 import OtpForm from './_components/otp-form'
@@ -16,59 +16,52 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   
-  const handleEmailSubmit = async (email: string, emailForm: any) => {
+  const handleEmailSubmit = async (email: string, emailForm: { setError: (field: string, error: { message: string }) => void }) => {
     setIsLoading(true)
     try {
-      const response = await postCarter(API_ENDPOINTS.OtpSent, { email });
-      if (response.success) {
-        // Set cooldown when OTP is sent
-        const expiryTime = Date.now() + COOLDOWN_PERIOD_MS
-        localStorage.setItem('otpCooldownExpiry', expiryTime.toString())
-        localStorage.setItem('otpCooldownEmail', email)
-        
-        setEmail(email)
-        setIsLoading(false)
-        setCurrentStep('verification')
-        toast.success('Verification code sent to your email')
-      } else {
-        // Handle specific error messages from the backend
-        const errorMessage = response.message || 'Failed to send verification code'
-        emailForm.setError('email', { message: errorMessage })
-        setIsLoading(false)
+      await postCarter(API_ENDPOINTS.OtpSent, { email });
+      const expiryTime = Date.now() + COOLDOWN_PERIOD_MS
+      localStorage.setItem('otpCooldownExpiry', expiryTime.toString())
+      localStorage.setItem('otpCooldownEmail', email)
+      setEmail(email)
+      setIsLoading(false)
+      setCurrentStep('verification')
+      toast.success('Verification code sent to your email')
+    } catch (error: unknown) {
+      let errorMessage = 'Something went wrong'
+      if (typeof error === 'object' && error !== null) {
+        if ('response' in error && typeof error.response === 'object' && error.response !== null && 'data' in error.response && typeof error.response.data === 'object' && error.response.data !== null && 'message' in error.response.data) {
+          errorMessage = (error.response.data as { message?: string }).message || errorMessage
+        } else if ('message' in error && typeof error.message === 'string') {
+          errorMessage = error.message
+        }
       }
-    } catch (error: any) {
-      // Extract error message from the API response if available
-      const errorMessage = error.response?.data?.message || error.message || 'Something went wrong'
-      
       // Check if it's a "User not found" error
       if (errorMessage.includes('User not found')) {
         emailForm.setError('email', { message: 'No account exists with this email address' })
       } else {
         emailForm.setError('email', { message: errorMessage })
       }
-      
       setIsLoading(false)
     }
   }
 
-  const handleOtpAndPasswordSubmit = async (otp: string, password: string, form: any) => {
+  const handleOtpAndPasswordSubmit = async (otp: string, password: string, form: { setError: (field: string, error: { message: string }) => void }) => {
     setIsLoading(true)
     try {
       // Send OTP verification and password update in one request
-      const response = await postCarter(API_ENDPOINTS.Verification, {
+      await postCarter(API_ENDPOINTS.Verification, {
         email,
         otp,
         password
       });
-      
       setIsLoading(false)
       setCurrentStep('success')
       toast.success('Password updated successfully')
-      
       // Clear the cooldown when password is reset successfully
       localStorage.removeItem('otpCooldownExpiry')
       localStorage.removeItem('otpCooldownEmail')
-    } catch (error: any) {
+    } catch (error: unknown) {
       form.setError('otp', { message: 'Invalid OTP or server error' })
       setIsLoading(false)
     }
@@ -126,4 +119,3 @@ export default function ForgotPassword() {
     </div>
   )
 }
-

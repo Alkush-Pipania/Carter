@@ -27,7 +27,7 @@ const Dashbar = () => {
   const router = useRouter();
   const [activeRoute, setActiveRoute] = useState<string>();
   const pathname = usePathname();
-  const pathsToHide = ['/trash','links'];
+  const pathsToHide = ['/trash', 'links'];
   const hideFeature = pathsToHide.some(path => pathname?.includes(path));
   const userData = useAppSelector((state) => state.userdetail.data);
   const userLoading = useAppSelector((state) => state.userdetail.loading);
@@ -44,15 +44,10 @@ const Dashbar = () => {
     handleRouteChange();
   }, [pathname]);
 
-  const handleLogout = () => {
-    // Implement logout functionality here
-    console.log('Logging out...');
-    // Redirect to login page or perform other logout actions
-  };
 
   return (
     <div className='w-full border-b border-gray-500/30 backdrop-blur-md z-10 h-16 sm:h-20 bg-brand-bg flex items-center justify-between px-3 sm:px-6 sticky top-0'>
-      
+
       <Link href="/dashboard" className="flex items-center">
         <Image src={carterlogo} alt='logo' className='w-10 sm:w-[50px] transition-all duration-200' />
       </Link>
@@ -68,18 +63,18 @@ const Dashbar = () => {
               <div className='absolute inset-0 bg-zinc-800 blur-md rounded-full transition-all duration-200 group-hover:bg-zinc-700/30'></div>
               <div className='relative bg-zinc-800 flex items-center h-9 sm:h-10 sm:w-[200px] w-[140px] justify-start px-3 rounded-full transition-all duration-200 group-hover:bg-opacity-90'>
                 <Search className='text-gray-400' />
-                <input 
-                  placeholder='Search' 
+                <input
+                  placeholder='Search'
                   onChange={(event) => {
                     event.preventDefault();
                     router.push(`${pathname}?search=${event.target.value}`);
-                  }} 
+                  }}
                   className='bg-transparent ml-2 outline-none focus:outline-none w-full text-sm sm:text-base placeholder-gray-400'
                 />
               </div>
             </div>
           )}
-          
+
           {/* User Profile Dropdown (Shadcn) */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -87,9 +82,9 @@ const Dashbar = () => {
                 {userLoading ? (
                   <div className='animate-pulse bg-zinc-700 w-full h-full rounded-full'></div>
                 ) : userData?.image ? (
-                  <Image 
-                    src={userData.image} 
-                    alt='Profile' 
+                  <Image
+                    src={userData.image}
+                    alt='Profile'
                     fill
                     className='object-cover'
                   />
@@ -107,38 +102,39 @@ const Dashbar = () => {
                   color: white !important;
                 }
               `}</style>
-              
+
               <DropdownMenuItem asChild className={`dropdown-item ${dropdownItemStyles.item}`}>
                 <Link href="/setting" className={dropdownItemStyles.link}>
                   <User className={dropdownItemStyles.icon} />
                   Profile
                 </Link>
               </DropdownMenuItem>
-              
+
               <DropdownMenuItem asChild className={`dropdown-item ${dropdownItemStyles.item}`}>
                 <Link href="/setting" className={dropdownItemStyles.link}>
                   <Settings className={dropdownItemStyles.icon} />
                   Settings
                 </Link>
               </DropdownMenuItem>
-              
+
               <DropdownMenuItem asChild className={`dropdown-item ${dropdownItemStyles.item}`}>
                 <a href="https://github.com/Alkush-Pipania/Carter" target="_blank" rel="noopener noreferrer" className={dropdownItemStyles.link}>
                   <Github className={dropdownItemStyles.icon} />
                   GitHub
                 </a>
               </DropdownMenuItem>
-              
+
               <DropdownMenuSeparator className="bg-zinc-700" />
-              
-              <DropdownMenuItem 
-              onClick={() => {
-                signOut({callbackUrl : '/signin'});
-      
-              }} 
+
+              <DropdownMenuItem
+                onClick={() => {
+                  localStorage.clear()
+                  signOut({ callbackUrl: '/signin' });
+
+                }}
                 className={`dropdown-item ${dropdownItemStyles.item}`}
               >
-                <LogOut className={dropdownItemStyles.icon} style={{marginRight: '0.5rem'}} />
+                <LogOut className={dropdownItemStyles.icon} style={{ marginRight: '0.5rem' }} />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>

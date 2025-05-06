@@ -51,12 +51,12 @@ export async function POST(request: Request) {
     }
 
     // Create the user
-    const newUser = await prisma.user.create({
+    await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         username,
-        image: imageUrl, // Add the image URL to the user record
+        image: imageUrl, 
       },
     });
 

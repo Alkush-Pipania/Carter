@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button"
 interface PageHeaderProps {
   title: string
   description?: string
-  backHref: string
 }
 
-export function PageHeader({ title, description, backHref }: PageHeaderProps) {
+export function PageHeader({ title, description }: PageHeaderProps) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>

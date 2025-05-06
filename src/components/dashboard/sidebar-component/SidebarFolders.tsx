@@ -1,5 +1,5 @@
 import React from 'react';
-import { SidebarMenuSubItem, SidebarMenuSubButton } from '@/components/ui/sidebar';
+import {  SidebarMenuSubButton } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 import { Star } from 'lucide-react';
@@ -57,7 +57,6 @@ const SidebarFolders: React.FC<SidebarFoldersProps> = ({
                 >
                   <span className="truncate">{data.name}</span>
                   <BeautifulDropdownMenu
-                    onShare={() => console.log("hello") }
                     onDelete={() =>  console.log("hello")}
                     folderId={data.id.toString()}
                     folderName={data.name}

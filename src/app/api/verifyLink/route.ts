@@ -91,24 +91,10 @@ export async function POST(req: Request) {
       }
     );
   } catch (error: any) {
-    console.error('Error saving link:', error);
-    
-    // Extract error message from axios response if possible
-    const errorMessage = 
-      error.response?.data?.error || 
-      error.response?.data?.message || 
-      error.message || 
-      "An unexpected error occurred";
-    
     return NextResponse.json(
       {
         error: "Failed to save link",
-        message: errorMessage,
       },
-      {
-        status: error.response?.status || 500,
-        headers: setCORSHeaders(origin),
-      }
     );
   }
 }

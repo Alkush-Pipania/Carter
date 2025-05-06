@@ -8,7 +8,7 @@ import heroimg from '../../../../public/Section 1.png';
 import { useInView } from 'react-intersection-observer';
 
 export const ScrollComponent = ({ children , x=0 , y=-50 }) => {
-  const { ref, inView } = useInView({
+  const { ref } = useInView({
     triggerOnce: true, // Trigger animation only once
     threshold: 0.1, // Trigger when 10% of the element is visible
   });

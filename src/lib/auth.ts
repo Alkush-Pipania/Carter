@@ -1,6 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import GitHubProvider from "next-auth/providers/github";
 import prisma from "./prisma";
 import GoogleProvider from "next-auth/providers/google";
 import { v4 as uuidv4 } from "uuid";
@@ -55,7 +54,7 @@ export const authOption = {
   secret: process.env.JWT_SECRET,
   callbacks: {
     // Handle Google sign-in and customize user creation/updating
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account.provider === "google") {
         try {
           // Check if user already exists by email
@@ -70,17 +69,11 @@ export const authOption = {
                 email: user.email,
                 username: user.name || `user_${uuidv4().slice(0, 8)}`,
                 password: bcrypt.hashSync(uuidv4(), 10),
+                image: user.image,
+                createdAt: new Date(),
+                updatedAt: new Date(),
                 secretkey: uuidv4(),
                 varified: true,
-              },
-            });
-          } else {
-            await prisma.user.update({
-              where: { id: dbUser.id },
-              data: {
-                username: dbUser.username || user.name,
-                updatedAt: new Date(),
-                image: user.image,
               },
             });
           }

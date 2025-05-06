@@ -83,7 +83,7 @@ export function ProfileSettings() {
          setAvatarPreview(user.image);
       }
     }
-  }, [user, loading, form.reset, form.formState.isDirty, avatarPreview]);
+  }, [user, loading, form, form.reset, form.formState.isDirty, avatarPreview]);
 
   // --- Show toast on error ---
   useEffect(() => {

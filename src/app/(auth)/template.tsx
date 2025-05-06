@@ -45,7 +45,7 @@ const Template: React.FC<TemplateProps> = ({ children }) => {
           style={{ objectFit: 'cover', zIndex: 0 }}
         />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
-          <span className="text-white text-3xl md:text-5xl font-bold tracking-widest select-none">GO BEYOND</span>
+          <span className="text-white text-3xl md:text-5xl font-bold tracking-widest select-none">Your Second Brain</span>
         </div>
       </div>
     </main>

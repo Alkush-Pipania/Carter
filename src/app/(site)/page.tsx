@@ -18,7 +18,6 @@ import FAQ from "./_components/FAQ";
 import { CTASection } from "./_components/CTA_Section";
 import HeroSection, { ScrollComponent } from "./_components/HeroSection";
 import Extension from "./_components/extension";
-import LandingPage from "@/components/landing/login-landing.page";
 
 
 

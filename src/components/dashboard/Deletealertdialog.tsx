@@ -41,7 +41,7 @@ export function DeleteProductAlertDialogContent({ id }: { id: string }) {
       toast.success('Link deleted successfully', {
         id: toastId
       });
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error.message || 'Something went wrong while deleting the link', {
         id: toastId
       });

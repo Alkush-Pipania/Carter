@@ -1,9 +1,7 @@
 "use client"
-import Image from 'next/image'
-import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { CheckCircle, Zap, Lock, Globe, Sparkles, Server, Shield, MessageSquare, Chrome, Folder, Search, Brain } from 'lucide-react'
+import { CheckCircle, Zap, Lock, Server, Shield, MessageSquare, Chrome, Folder,  Brain } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function AboutPage() {
@@ -27,8 +25,8 @@ export default function AboutPage() {
             Our mission is to empower individuals and businesses to manage their web resources effortlessly. In today's fast-paced world, where access to information is crucial, Carter delivers a smarter, faster, and more intuitive link management experience. We envision a future where AI-driven personalization transforms how you interact with your saved content.
           </p>
           <div className="space-y-4 text-[#b5b2ee] italic">
-            <p>"Organizing links shouldn't feel like a chore. Carter makes it seamless, intelligent, and secure."</p>
-            <p>"Your digital resources are just a click away – and they're exactly where you need them, when you need them."</p>
+            <p>Organizing links shouldn&apos;t feel like a chore. Carter makes it seamless, intelligent, and secure.</p>
+            <p>Your digital resources are just a click away – and they&apos;re exactly where you need them, when you need them.</p>
           </div>
         </div>
       </section>
@@ -97,8 +95,8 @@ export default function AboutPage() {
             />
           </div>
           <div className="mt-8 text-center space-y-4 text-[#b5b2ee] italic">
-            <p>"See something interesting? Save it to Carter – right from your browser."</p>
-            <p>"With Carter Extension, your organized digital world is always a click away."</p>
+            <p>See something interesting? Save it to Carter – right from your browser.</p>
+            <p>With Carter Extension, your organized digital world is always a click away.</p>
           </div>
         </div>
       </section>
@@ -115,9 +113,9 @@ export default function AboutPage() {
             <li>• Hiro Stacks.js and Gaia Storage for Web3 decentralized storage options</li>
           </ul>
           <div className="space-y-4 text-[#b5b2ee] italic text-center">
-            <p>"We don't just store links. We store possibilities."</p>
-            <p>"Why waste time searching? Let Carter do the thinking for you."</p>
-            <p>"Security isn't an afterthought; it's our foundation."</p>
+            <p>We don't just store links. We store possibilities.</p>
+            <p>Why waste time searching? Let Carter do the thinking for you.</p>
+            <p>Security isn't an afterthought; it's our foundation.</p>
           </div>
         </div>
       </section>
@@ -128,7 +126,7 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold mb-6 text-[#f5f5f6]">What Our Users Say</h2>
           <div className="bg-[#211f30] p-6 rounded-lg shadow-lg">
             <p className="text-lg text-[#c0bfc4] italic mb-4">
-              "Since using Carter, managing my resources has never been this easy. I love how fast it is!"
+              Since using Carter, managing my resources has never been this easy. I love how fast it is!
             </p>
             <p className="text-[#b5b2ee]">– A satisfied beta user</p>
           </div>

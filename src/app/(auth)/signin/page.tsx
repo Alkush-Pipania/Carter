@@ -11,8 +11,6 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Loader from '@/components/global/Loader'
 import { signIn, useSession } from 'next-auth/react'
-import carterlogo from "../../../../public/logo.png"
-import Image from 'next/image'
 import GoogleAuthButton from '../_components/google-auth-button'
 import { Eye, EyeOff } from "lucide-react"
 

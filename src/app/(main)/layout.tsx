@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/tooltip"
 import Image from 'next/image'
 import Link from 'next/link'
-import { getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth/next'
 import { authOption } from '@/lib/auth'
 import AuthRedirect from '@/components/common/auth-redirect'
 
@@ -52,7 +52,7 @@ const HomePageLayout = async ({ children }: { children: React.ReactNode }) => {
             </TooltipTrigger>
             <TooltipContent side="left" className="max-w-[250px] p-3">
               <p className="text-sm">
-                Need to find something? Just ask me in natural language and I'll help you search through your content.
+                Need to find something? Just ask me in natural language and I&apos;ll help you search through your content.
               </p>
             </TooltipContent>
           </Tooltip>
