@@ -147,7 +147,7 @@ const Signin = () => {
         />
 
         <div className="grid gap-2">
-          <Label htmlFor="image" className='text-gray-400'>Profile Image (optional)</Label>
+          <Label  htmlFor="image" className='text-gray-400'>Profile Image (optional)</Label>
           <div className="flex items-end gap-4">
             {imagePreview && (
               <div className="relative w-16 h-16 rounded-sm overflow-hidden">

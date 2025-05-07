@@ -15,33 +15,36 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Loading from '@/components/common/loading'
+import { useSession } from 'next-auth/react'
 
-const HomePageLayout = async ({ children }: { children: React.ReactNode }) => {
+const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(true);
-  
-    useEffect(() => {
-      // Check if userId exists in localStorage
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        // Redirect to dashboard if userId exists
-        router.push('/signin');
-      } else {
-        setIsLoading(false);
-      }
-    }, [router]);
-  
-    if (isLoading) {
-      return <Loading />
+  const data = useSession();
+  console.log(data);
+
+  useEffect(() => {
+    // Check if userId exists in localStorage
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      // Redirect to dashboard if userId exists
+      router.push('/signin');
+    } else {
+      setIsLoading(false);
     }
+  }, [router]);
+
+  if (isLoading) {
+    return <Loading />
+  }
   return (
     <>
       <Dashbar />
       <main className='mt-10 relative'>
         <SidebarProvider className="m-0 p-0">
           <div className="flex">
-            <Sidebar/>
-            <SidebarTrigger className='md:hidden fixed left-0'/>
+            <Sidebar />
+            <SidebarTrigger className='md:hidden fixed left-0' />
           </div>
           {children}
         </SidebarProvider>
