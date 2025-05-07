@@ -17,21 +17,12 @@ import { Label } from '@/components/ui/label'
 
 const Signin = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
  
-  useEffect(()=>{
-    if (status === 'loading') return;
-    if (session) {
-      router.push('/');
-    } else {
-      setLoading(false); 
-    }
-  },[session, status, router]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

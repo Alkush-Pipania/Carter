@@ -18,20 +18,9 @@ import Loading from '@/components/common/loading'
 
 const Signin = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   const [authloading, setAuthLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    // Don't do anything during loading
-    if (status === 'loading') return;
-    
-    // Redirect if authenticated
-    if (session) {
-      router.push('/dashboard');
-    }
-  }, [session, status, router]);
 
   const [submitError, setSubmitError] = useState('');
 
