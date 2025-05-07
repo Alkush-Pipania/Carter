@@ -61,7 +61,7 @@ export const updateProfile = createAsyncThunk<
     // console.log("updateProfile: Got userId", userId);
 
     const state = getState();
-    // @ts-ignore - Temporarily ignore error until store is fixed
+    
     const { pendingImageFile } = state.profileSettings;
     // console.log("updateProfile: Pending image file?", pendingImageFile);
 

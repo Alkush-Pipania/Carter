@@ -13,6 +13,7 @@ import Loader from '@/components/global/Loader'
 import { signIn, useSession } from 'next-auth/react'
 import GoogleAuthButton from '../_components/google-auth-button'
 import { Eye, EyeOff } from "lucide-react"
+import Loading from '@/components/common/loading'
 
 
 const Signin = () => {
@@ -23,7 +24,10 @@ const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
+    // Don't do anything during loading
     if (status === 'loading') return;
+    
+    // Redirect if authenticated
     if (session) {
       router.push('/dashboard');
     }
@@ -57,6 +61,11 @@ const Signin = () => {
       router.push("/dashboard");
     }
   };
+
+  // Display loading component while checking authentication status
+  if (status === 'loading') {
+    return <Loading />
+  }
 
   return (
     <main className="w-full flex flex-col gap-6">
