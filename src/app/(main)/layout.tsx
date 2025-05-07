@@ -1,7 +1,8 @@
+"use client"
 import Dashbar from '@/components/dashboard/dashbar'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import logo from '/public/auth/chatbot-logo.png'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Sidebar } from "@/components/dashboard/sidebar-component/Sidebar"
 import { Button } from '@/components/ui/button'
 import {
@@ -12,15 +13,27 @@ import {
 } from "@/components/ui/tooltip"
 import Image from 'next/image'
 import Link from 'next/link'
-import { getServerSession } from 'next-auth/next'
-import { authOption } from '@/lib/auth'
-import AuthRedirect from '@/components/common/auth-redirect'
+import { useRouter } from 'next/navigation'
+import Loading from '@/components/common/loading'
 
 const HomePageLayout = async ({ children }: { children: React.ReactNode }) => {
-  const session = await getServerSession(authOption);
-  if(!session){
-    return <AuthRedirect redirectTo="/signin" />
-  }
+  const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState(true);
+  
+    useEffect(() => {
+      // Check if userId exists in localStorage
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        // Redirect to dashboard if userId exists
+        router.push('/signin');
+      } else {
+        setIsLoading(false);
+      }
+    }, [router]);
+  
+    if (isLoading) {
+      return <Loading />
+    }
   return (
     <>
       <Dashbar />
