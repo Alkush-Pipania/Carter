@@ -1,25 +1,35 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import Image from 'next/image'
 import img from '/public/auth/hero.png'
 import carterlogo from '/public/auth/cartlogo.png'
 import Link from 'next/link'
-import AuthRedirect from '@/components/common/auth-redirect'
-import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import Loading from '@/components/common/loading'
 
-interface TemplateProps {
+interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-const Template: React.FC<TemplateProps> = ({ children }) => {
-  const { status } = useSession();
-  if (status === "loading") {
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  useEffect(() => {
+    // Check if userId exists in localStorage
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      // Redirect to dashboard if userId exists
+      router.push('/dashboard');
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  if (isLoading) {
     return <Loading />
   }
-  if (status === "authenticated") {
-    return <AuthRedirect redirectTo="/dashboard" />
-  }
+
   return (
     <main className="flex h-screen w-full relative">
       {/* Carter Logo Top Left */}
@@ -52,4 +62,4 @@ const Template: React.FC<TemplateProps> = ({ children }) => {
   )
 }
 
-export default Template
+export default RootLayout
