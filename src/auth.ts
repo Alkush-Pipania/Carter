@@ -37,11 +37,11 @@ export const {auth , handlers , signIn , signOut} = NextAuth({
           });
           
           // Log to debug (remove in production)
-          console.log("Found user:", user ? "Yes" : "No");
+          // console.log("Found user:", user ? "Yes" : "No");
           
           // If no user found or no password stored, authentication fails
           if (!user || !user.password) {
-            console.log("User not found or no password");
+            // console.log("User not found or no password");
             return null;
           }
           
@@ -51,7 +51,7 @@ export const {auth , handlers , signIn , signOut} = NextAuth({
             user.password
           );
           
-          console.log("Password valid:", isPasswordValid);
+          // console.log("Password valid:", isPasswordValid);
           
           // Only return the user if password is valid
           if (!isPasswordValid) {

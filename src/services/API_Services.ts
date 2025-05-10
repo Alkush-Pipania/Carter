@@ -17,7 +17,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors?.request.use(
     (config) => {
-        console.log(`Base url : ${BASE_URL}`)
+        // console.log(`Base url : ${BASE_URL}`)
         const token = localStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `${token}`;

@@ -58,7 +58,7 @@ export function BeautifulDropdownMenu({
         })
       ).unwrap()
 
-      console.log('Move to trash result:', result)
+      // console.log('Move to trash result:', result)
 
       if (!result.error) {
         toast.success("Success", {

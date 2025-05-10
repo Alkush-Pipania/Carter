@@ -30,7 +30,7 @@ const Dashbar = () => {
   const pathname = usePathname();
   const pathsToHide = ['/trash', 'links'];
   const {setTheme , theme} =  useTheme();
-  console.log(theme)
+  // console.log(theme)
   
   const hideFeature = pathsToHide.some(path => pathname?.includes(path));
   const userData = useAppSelector((state) => state.userdetail.data);

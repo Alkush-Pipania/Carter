@@ -25,7 +25,7 @@ export function SecretKeysSettings() {
         // Get userId from localStorage or another source
         const userId = localStorage.getItem('userId') || '1' // Default to '1' if not available
         const response = await getCarter(API_ENDPOINTS.SecretKeys, { userId })
-        console.log(response.data)
+        // console.log(response.data)
         if (response.data) {
           setSecretKeys(Array.isArray(response.data) ? response.data : [response.data])
         }

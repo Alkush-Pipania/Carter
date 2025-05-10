@@ -58,7 +58,7 @@ const SidebarFolders: React.FC<SidebarFoldersProps> = ({
                 >
                   <span className="truncate">{data.name}</span>
                   <BeautifulDropdownMenu
-                    onDelete={() =>  console.log("hello")}
+                    onDelete={() =>  console.log("deleting...")}
                     folderId={data.id.toString()}
                     folderName={data.name}
                     numberOfLinks={data._count.links}

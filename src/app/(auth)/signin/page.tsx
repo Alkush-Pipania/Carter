@@ -37,7 +37,7 @@ const Signin = () => {
     console.log(FormData)
     try{
       const res = await login("credentials", {email , password});
-      console.log("Auth response:", res);
+      // console.log("Auth response:", res);
       
       if(!res?.error){
         window.location.href = "/redirect";
