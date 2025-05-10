@@ -1,6 +1,13 @@
 import React from "react";
 
-const CustomButton = ({ children, onClick, className = "", ...props }) => {
+interface CustomButtonProps {
+  children: React.ReactNode;
+  onClick: () => void;
+  className?: string;
+  [key: string]: any;  // For the rest props
+}
+
+const CustomButton = ({ children, onClick, className = "", ...props }: CustomButtonProps) => {
   return (
     <div>
       <style jsx>{`

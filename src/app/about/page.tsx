@@ -147,7 +147,7 @@ export default function AboutPage() {
   )
 }
 
-function FeatureCard({ icon, title, description }) {
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
     <Card className="bg-[#292637]">
       <CardContent className="p-6">
@@ -160,4 +160,3 @@ function FeatureCard({ icon, title, description }) {
     </Card>
   )
 }
-
