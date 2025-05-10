@@ -17,7 +17,7 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   
-  const handleEmailSubmit = async (email: string, form: ReturnType<typeof useForm<{ email: string }>>) => {
+  const handleEmailSubmit = async (email: string, form: ReturnType<typeof useForm<{ email?: string }>>) => {
     setIsLoading(true)
     try {
       await postCarter(API_ENDPOINTS.OtpSent, { email });
@@ -46,7 +46,7 @@ export default function ForgotPassword() {
     }
   }
 
-  const handleOtpAndPasswordSubmit = async (otp: string, password: string, form: ReturnType<typeof useForm<{ otp: string; password: string; confirmPassword: string }>>) => {
+  const handleOtpAndPasswordSubmit = async (otp: string, password: string, form: ReturnType<typeof useForm<{ otp?: string; password?: string; confirmPassword?: string }>>) => {
     setIsLoading(true)
     try {
       // Send OTP verification and password update in one request

@@ -24,7 +24,7 @@ const formSchema = z.object({
 
 interface OtpFormProps {
   email: string
-  onSubmit: (otp: string, password: string, form: ReturnType<typeof useForm<z.infer<typeof formSchema>>>) => void
+  onSubmit: (otp: string, password: string, form: ReturnType<typeof useForm<z.infer<typeof formSchema>>>) => void | Promise<void>
   onBack: () => void
   isLoading: boolean
   showCooldownFromStart?: boolean
