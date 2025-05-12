@@ -62,6 +62,12 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
     useChatStore.getState().setStreaming(false)
     
     try {
+      const chatHistory = useChatStore.getState().messages
+      .slice(-5)
+      .map(msg => ({
+        role : msg.role,
+        content : typeof msg.content === 'string'? msg.content : JSON.stringify(msg.content)
+      }))
       // Use the fetch API with streams for the POST endpoint
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/chat`, {
         method: "POST",
@@ -73,6 +79,7 @@ export default function Chatcomponent({ greetings }: ChatComponentProps) {
         body: JSON.stringify({
           userId: userId,   
           userInput: message,
+          chatHistory: chatHistory
         }),
       })
 

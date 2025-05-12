@@ -116,6 +116,13 @@ const Signin = () => {
       <Link href="/auth-action" className='text-center mx-2 text-sm text-primary dark:text-text-primary hover:text-primary/80 dark:hover:text-white transition-colors'>
             Forgot Password?
           </Link>
+      
+      <div className="relative flex items-center gap-4 py-2">
+        <div className="flex-grow border-t border-slate-300 dark:border-gray-700 transition-colors"></div>
+        <span className="text-slate-700 dark:text-gray-400 text-sm font-medium transition-colors">or</span>
+        <div className="flex-grow border-t border-slate-300 dark:border-gray-700 transition-colors"></div>
+      </div>
+      
       <div className='flex flex-col gap-3 w-full'>
         <AuthButton
           onClick={() => {

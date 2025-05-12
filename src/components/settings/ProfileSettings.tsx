@@ -99,10 +99,10 @@ export function ProfileSettings() {
     const file = acceptedFiles[0]
     if (!file) return
     
-    // Check file size (1MB)
-    if (file.size > 1 * 1024 * 1024) {
+    // Check file size (4MB)
+    if (file.size > 4 * 1024 * 1024) {
       toast.error("Image too large", {
-        description: "Please select an image smaller than 1MB.",
+        description: "Please select an image smaller than 4MB.",
       })
       return
     }
@@ -215,7 +215,7 @@ export function ProfileSettings() {
                   <p className="text-sm text-slate-500 dark:text-gray-400 transition-colors">
                     {isDragActive
                       ? "Drop image here..."
-                      : "Drag and drop or click to select. JPG  with 1MB max."}
+                      : "Drag and drop or click to select. JPG  with 4MB max."}
                   </p>
                 </div>
               </div>

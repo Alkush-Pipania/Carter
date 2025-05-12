@@ -14,6 +14,7 @@ import Image from 'next/image'
 import { Loader2, X } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { login } from '@/lib/actions/auth'
+import AuthButton from '@/components/auth/Github-auth-button'
 
 const SignUp = () => {
   const router = useRouter();
@@ -214,6 +215,33 @@ const SignUp = () => {
           disabled={isLoading || imageLoading}>
           {isLoading || loading ? <Loader /> : 'Sign up'}
         </Button>
+
+        <div className="relative flex items-center gap-4 py-2">
+          <div className="flex-grow border-t border-slate-300 dark:border-gray-700 transition-colors"></div>
+          <span className="text-slate-700 dark:text-gray-400 text-sm font-medium transition-colors">or</span>
+          <div className="flex-grow border-t border-slate-300 dark:border-gray-700 transition-colors"></div>
+        </div>
+
+        <div className='flex flex-col gap-3 w-full'>
+          <AuthButton
+            onClick={() => {
+              setLoading(true)
+              login("google")
+              setLoading(false)
+            }}
+            isLoading={loading}
+            provider='Google'
+          />
+          <AuthButton
+            onClick={()=>{
+              setLoading(true)
+              login("github")
+              setLoading(false)
+            }}
+            provider='Github'
+          />
+        </div>
+
         <div className="border-t border-slate-300 dark:border-gray-700 pt-4 mt-4 transition-colors">
           <span className="block text-sm text-slate-700 dark:text-gray-400 text-center transition-colors">
             Already have an account?{" "}

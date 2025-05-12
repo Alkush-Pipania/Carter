@@ -37,7 +37,7 @@ const SidebarFolders: React.FC<SidebarFoldersProps> = ({
         <Star className="h-4 w-4 text-yellow-500" />
         <span>Folders</span>
       </div>
-      <div className="mt-2 px-3">
+      <div className="mt-2 min-h-16 rounded-md ">
         {userLoading || folderLoading ? (
           Array(5).fill(0).map((_, index) => (
             <div key={index}>
