@@ -5,10 +5,20 @@ import { MenuIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { SettingsSidebar } from '../../components/settings/SettingsSidebar'
+import { useSession } from 'next-auth/react'
+import Loading from '@/components/common/loading'
+import { redirect } from 'next/navigation'
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-
+  const {status} = useSession();
+  if(status == "unauthenticated"){
+    redirect("/signin")
+  }
+  else if(status == "loading"){
+    return <Loading/>
+  }
+  
   return (
     <main className="bg-slate-50 dark:bg-zinc-950 min-h-screen transition-colors">
       {/* Mobile sidebar toggle */}

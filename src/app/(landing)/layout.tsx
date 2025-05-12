@@ -14,7 +14,7 @@ const HomePageLayout = async({children} : {children : React.ReactNode}) => {
     <main>
       <Navbar/>
       {children}
-      </main>
+    </main>
   )
 }
 
