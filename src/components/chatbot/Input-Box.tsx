@@ -1,4 +1,4 @@
-// components/InputBox.tsx
+
 "use client";
 
 import { ArrowUp, Loader2, Plus, X } from "lucide-react";
