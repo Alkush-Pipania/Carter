@@ -22,6 +22,7 @@ type InputBoxProps = {
   hasMessages: boolean;
 }
 
+
 export default function InputBox({  onSendMessage, greeting, hasMessages }: InputBoxProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSecretKeyInput, setShowSecretKeyInput] = useState(false);
@@ -115,7 +116,7 @@ export default function InputBox({  onSendMessage, greeting, hasMessages }: Inpu
                             type="text"
                             value={secretKey}
                             onChange={(e) => setSecretKey(e.target.value)}
-                            placeholder="Enter your name"
+                            placeholder="Enter your secret key"
                             className="bg-slate-100 dark:bg-[#1E1A2D] border border-slate-300 dark:border-gray-700 text-slate-800 dark:text-gray-200 text-sm rounded-lg px-3 py-1.5 mr-2 focus:ring-1 focus:ring-primary-purple/primary-purple-500 outline-none transition-colors"
                             autoFocus
                           />
@@ -139,7 +140,7 @@ export default function InputBox({  onSendMessage, greeting, hasMessages }: Inpu
                           onClick={() => setShowSecretKeyInput(true)}
                           className="h-8 w-8 bg-gradient-to-br from-slate-100 to-slate-200 dark:bg-[#2A2536] border border-slate-300 dark:border-gray-700 rounded-md flex items-center justify-center text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300 hover:border-slate-400 dark:hover:border-gray-600 transition-all hover:shadow-sm hover:bg-gradient-to-br hover:from-slate-50 hover:to-slate-200"
                         >
-                          <span className="sr-only">Change name</span>
+                          <span className="sr-only">enter your secret key</span>
                           <Plus className="h-4 w-4" />
                         </button>
                       )}

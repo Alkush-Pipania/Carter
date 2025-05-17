@@ -42,6 +42,12 @@ export const CreateLinkCartSchema = z.object({
   .max(20, { message: "Too long to be a name" }),
 })
 
+export const InviteSchema = z.object({
+  email : z.string({
+    required_error : "Email is required"
+  })
+})
+
 export const updateusername = z.object({
   username: z.string().describe('Username').min(4, { message: 'Username must be at least 4 characters long' }),
 })

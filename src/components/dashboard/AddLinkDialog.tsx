@@ -96,7 +96,7 @@ export function AddLinkDialog({ activeRoute, trigger }: AddLinkDialogProps) {
          </button>
         )}
       </DialogTrigger>
-      <DialogContent className="bg-white dark:bg-zinc-900/95 border-slate-200 dark:border-zinc-800 transition-colors">
+      <DialogContent className="bg-white dark:bg-zinc-900/95 border-slate-200 dark:border-zinc-800 transition-colors fixed top-[30%] left-[50%] sm:top-[50%]">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-slate-900 dark:text-white transition-colors">Add New Link</DialogTitle>
           <DialogDescription className="text-slate-500 dark:text-gray-400 transition-colors">

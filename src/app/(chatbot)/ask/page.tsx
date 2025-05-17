@@ -10,7 +10,7 @@ export default function ChatPage() {
     const getGreeting = () => {
       // We'll just use "How was your day, Anant?" to match the design
       const secretKey = localStorage.getItem('secretKey');
-      return secretKey ? `How was your day, ${secretKey}? ` : "How's it going? 🦉 Night owl?";
+      return secretKey ? `How was your day, ${secretKey}? ` : "How can i help you today ?";
     };
 
     setGreeting(getGreeting());

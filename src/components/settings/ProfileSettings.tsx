@@ -215,7 +215,7 @@ export function ProfileSettings() {
                   <p className="text-sm text-slate-500 dark:text-gray-400 transition-colors">
                     {isDragActive
                       ? "Drop image here..."
-                      : "Drag and drop or click to select. JPG  with 4MB max."}
+                      : "Drag and drop or click to select. JPG , png  with 4MB max."}
                   </p>
                 </div>
               </div>
