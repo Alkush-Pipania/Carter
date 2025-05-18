@@ -32,7 +32,7 @@ const MemoizedLetterGlitch = memo(LetterGlitch)
 export default function FAQ() {
   return (
     <section className="py-16 sm:py-24 overflow-hidden text-white" id="about">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
           {/* Left Side - About */}
           <div className="order-2 lg:order-1 flex flex-col justify-center self-start">
@@ -65,8 +65,9 @@ export default function FAQ() {
           <div className="order-1 lg:order-2 h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden  border    sticky top-8">
             <MemoizedLetterGlitch
               glitchColors={["#6917AA", "#9333EA", "#A855F7", "#8B5CF6", "#6366F1"]}
+              
               glitchSpeed={70}
-              centerVignette={true}
+              centerVignette={false}
               outerVignette={true}
               smooth={true}
             />

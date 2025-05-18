@@ -23,7 +23,7 @@ type InputBoxProps = {
 }
 
 
-export default function InputBox({  onSendMessage, greeting, hasMessages }: InputBoxProps) {
+export default function InputBox({ onSendMessage, greeting, hasMessages }: InputBoxProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSecretKeyInput, setShowSecretKeyInput] = useState(false);
   const [secretKey, setSecretKey] = useState('');
@@ -53,7 +53,7 @@ export default function InputBox({  onSendMessage, greeting, hasMessages }: Inpu
 
   const onSubmit = async (values: FormValues) => {
     if (!values.message.trim() || isSubmitting) return;
-    
+
     try {
       setIsSubmitting(true);
       await onSendMessage(values.message);
@@ -80,34 +80,34 @@ export default function InputBox({  onSendMessage, greeting, hasMessages }: Inpu
         )}
         <div className="w-full">
           <div className="border border-slate-200 dark:border-gray-700 bg-white dark:bg-zinc-800 rounded-xl p-3 shadow-md hover:shadow-lg focus-within:border-blue-300 dark:focus-within:border-zinc-400 transition-all w-full ring-1 ring-slate-100 dark:ring-transparent">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="relative">
-              <FormField
-                control={form.control}
-                name="message"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <TextareaAutosize
-                        {...field}
-                        autoFocus
-                        disabled={isSubmitting}
-                        minRows={1}
-                        maxRows={6}
-                            placeholder="How can I help you today?"
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="relative">
+                  <FormField
+                    control={form.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <TextareaAutosize
+                            {...field}
+                            autoFocus
+                            disabled={isSubmitting}
+                            minRows={1}
+                            maxRows={6}
+                            placeholder="Find your Links?"
                             className="w-full bg-transparent resize-none text-slate-800 dark:text-gray-200 text-base py-2 px-1 outline-none border-none disabled:opacity-50 transition-colors"
-                        onKeyDown={(event : any) => {
-                          if (event.key === "Enter" && !event.shiftKey && !isSubmitting) {
-                            event.preventDefault();
-                            form.handleSubmit(onSubmit)();
-                          }
-                        }}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+                            onKeyDown={(event: any) => {
+                              if (event.key === "Enter" && !event.shiftKey && !isSubmitting) {
+                                event.preventDefault();
+                                form.handleSubmit(onSubmit)();
+                              }
+                            }}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
                   <div className="flex items-center justify-between mt-1">
                     <div className="flex gap-1">
                       {showSecretKeyInput ? (
@@ -146,22 +146,22 @@ export default function InputBox({  onSendMessage, greeting, hasMessages }: Inpu
                       )}
                     </div>
                     <div className="flex items-center">
-                <button
-                  type="submit"
+                      <button
+                        type="submit"
                         className="h-8 w-8 bg-gradient-to-br from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 cursor-pointer rounded-md transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
-                  disabled={!form.formState.isValid || isSubmitting}
-                >
-                  {isSubmitting ? (
+                        disabled={!form.formState.isValid || isSubmitting}
+                      >
+                        {isSubmitting ? (
                           <Loader2 className="w-4 h-4 text-white animate-spin" />
-                  ) : (
+                        ) : (
                           <ArrowUp className="w-4 h-4 text-white" />
-                  )}
-                </button>
+                        )}
+                      </button>
                     </div>
-              </div>
-            </div>
-          </form>
-        </Form>
+                  </div>
+                </div>
+              </form>
+            </Form>
           </div>
         </div>
       </div>

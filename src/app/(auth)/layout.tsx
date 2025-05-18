@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { Turnstile } from 'next-turnstile'
 import Loader from '@/components/common/Loader'
+import Head from 'next/head'
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -43,6 +44,12 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   }
 
   return (
+    <>
+    <Head>
+    <title>Sign Up</title>
+        <meta name="description" content="Create an account to save your ideas and links" />
+        <link rel="canonical" href="https://www.carter.fun/signin" />
+    </Head>
     <main className="flex h-screen w-full relative">
       {/* Carter Logo Top Left */}
       <Link href="/" className="absolute top-6 left-6 z-30 flex items-center gap-2 select-none">
@@ -102,6 +109,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         </div>
       </div>
     </main>
+    </>
   )
 }
 

@@ -31,12 +31,12 @@ export const ResponseSchema = z.object({
             .describe("Title or description of the link")
         })
       )
-      .min(0)
-      .describe("Related links for this section")
+        .min(0)
+        .describe("Related links for this section")
     })
   )
-  .min(0)
-  .describe("Array of content sections with their associated links"),
+    .min(0)
+    .describe("Array of content sections with their associated links"),
   outro: z.string()
     .min(10)
     .max(1000)
@@ -87,17 +87,17 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         currentStreamedContent: chunk
       };
     }
-    
+
     const updatedContent = state.currentStreamedContent + chunk;
     const messages = [...state.messages];
     const lastMessage = messages[messages.length - 1];
-    
+
     // Only update if the last message is from the assistant and is streaming
     if (lastMessage.role === 'assistant' && lastMessage.isStreaming) {
       lastMessage.content = updatedContent;
       return { messages, currentStreamedContent: updatedContent };
     }
-    
+
     // If last message is not from assistant or not streaming, add a new message
     return {
       messages: [...messages, { role: 'assistant', content: chunk, isStreaming: true }],
@@ -105,7 +105,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     };
   }),
   setLoading: (loading) => set({ isLoading: loading }),
-  setStreaming: (streaming) => set({ 
+  setStreaming: (streaming) => set({
     isStreaming: streaming,
     currentStreamedContent: streaming ? get().currentStreamedContent : ''
   }),
