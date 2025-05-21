@@ -31,7 +31,7 @@ const Find = () => {
       console.log('Submitting secret key:', secretKey);
       
       // Make the API call
-      const response = await axios.get(`http://localhost:4000/retrive-link`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND}/retrive-link`, {
         params: { SecretKey: secretKey }
       });
       
