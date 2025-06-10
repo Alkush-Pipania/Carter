@@ -34,24 +34,24 @@ export function CreateLinkCart({ onfoldercreate  } : any) {
   // Check for duplicate folder names as user types
   const folderName = form.watch("name");
   
-  useEffect(() => {
-    // Check if a folder with this name already exists (case insensitive)
-    if (folderName.trim()) {
-      const folderExists = folderList.some(
-        folder => folder.name.toLowerCase() === folderName.trim().toLowerCase()
-      );
-      setNameExists(folderExists);
+  // useEffect(() => {
+  //   // Check if a folder with this name already exists (case insensitive)
+  //   if (folderName.trim()) {
+  //     const folderExists = folderList.some(
+  //       folder => folder.name.toLowerCase() === folderName.trim().toLowerCase()
+  //     );
+  //     setNameExists(folderExists);
       
-      if (folderExists) {
-        form.setError("name", {
-          type: "manual",
-          message: "A folder with this name already exists"
-        });
-      } else {
-        form.clearErrors("name");
-      }
-    }
-  }, [folderName, folderList, form]);
+  //     if (folderExists) {
+  //       form.setError("name", {
+  //         type: "manual",
+  //         message: "A folder with this name already exists"
+  //       });
+  //     } else {
+  //       form.clearErrors("name");
+  //     }
+  //   }
+  // }, [folderName, folderList, form]);
   
   // Reset form when createError changes
   useEffect(() => {

@@ -20,6 +20,10 @@ export const API_ENDPOINTS ={
     // Move To Trash
     MoveToTrash : '/move-to-trash',
 
+    // Chat
+    Chat: '/chat',
+    ChatWithSecretKey: '/chatwithSecretkey',
+
     // Profile Settings
     Profile : '/profile', // Base endpoint for profile GET
     UpdateUsername : '/profile/username', // PUT endpoint for username

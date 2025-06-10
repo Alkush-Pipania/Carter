@@ -2,6 +2,7 @@ import { NEXT_PUBLIC_BACKEND_URL } from "./config";
 import axios from "axios";
 
 import { toast } from "sonner";
+import { API_ENDPOINTS } from "./apiEndpoints";
 
 const BASE_URL = NEXT_PUBLIC_BACKEND_URL;
 if (!BASE_URL) {
@@ -140,4 +141,52 @@ export const postCarterFormData = async (url: string, formData: FormData) => {
         });
         throw new Error(errorMessage);
     }
+};
+
+export const chatStream = async (payload: {
+    userId: string | null;
+    userInput: string;
+    chatHistory: any[];
+}) => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}${API_ENDPOINTS.Chat}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "text/event-stream",
+            ...(token ? { Authorization: token } : {}),
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.details || "Something went wrong");
+    }
+    return response;
+};
+
+export const chatWithSecretKeyStream = async (payload: {
+    userId: string | null;
+    userInput: string;
+    chatHistory: any[];
+    secretKey: string;
+}) => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}${API_ENDPOINTS.ChatWithSecretKey}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "text/event-stream",
+            ...(token ? { Authorization: token } : {}),
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.details || "Secure request failed");
+    }
+
+    return response;
 };

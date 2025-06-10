@@ -8,19 +8,13 @@ export default function ChatPage() {
 
   useEffect(() => {
     const getGreeting = () => {
-      // We'll just use "How was your day, Anant?" to match the design
-      const secretKey = localStorage.getItem('secretKey');
-      return secretKey ? `How was your day, ${secretKey}? ` : "How can i help you today ?";
+      return "How can i help you today ?";
     };
 
     setGreeting(getGreeting());
   }, []);
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="max-w-[800px] w-full">
-        <Chatcomponent greetings={greeting} />
-      </div>
-    </div>
+    <Chatcomponent greetings={greeting} />
   );
 }
