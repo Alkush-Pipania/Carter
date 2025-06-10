@@ -139,7 +139,7 @@ export default function InputBox({ setSecretKey, onSendMessage, greeting, hasMes
                       {showSecretKeyInput ? (
                         <div className="flex items-center gap-2">
                           <input
-                            type="password"
+                            type="text"
                             value={tempSecretKey}
                             onChange={(e) => setTempSecretKey(e.target.value)}
                             placeholder="Enter your secret key"
