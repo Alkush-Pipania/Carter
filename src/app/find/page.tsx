@@ -4,20 +4,39 @@ import Retrive from '@/components/retrivecom';
 import TitleSection from '@/components/landing/title-section';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'sonner';
 
 const Find = () => {
+  const searchParams = useSearchParams();
+  const autoSubmitRef = useRef(false);
   // Basic form state
   const [secretKey, setSecretKey] = useState('');
+
+  // On mount or when search param changes, auto-submit if ?secretkey= is present
+  useEffect(() => {
+    const urlKey = searchParams.get('secretkey');
+    if (urlKey && !autoSubmitRef.current) {
+      setSecretKey(urlKey);
+      autoSubmitRef.current = true;
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (autoSubmitRef.current && secretKey) {
+      handleSubmit();
+      autoSubmitRef.current = false; // Prevent double submit
+    }
+  }, [secretKey]);
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [arewedone, setAreWeDone] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     
     if (!secretKey.trim()) {
       toast('Error', { description: 'Please enter a secret key' });

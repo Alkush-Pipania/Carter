@@ -5,6 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import HeroVideo from "./HeroVideo";
 import Particles from "../ui/Particles";
 import { Button } from "../ui/button";
+import { FaChrome } from "react-icons/fa";
 
 export const ScrollComponent = ({ children , x=0 , y=-50 }) => {
   const { ref, inView } = useInView({
@@ -81,7 +82,7 @@ export default function HeroSection() {
 
     
     </section>
-    <section className="overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:bg-gradient-to-b dark:from-brand-bg dark:via-[#1C1C1C] dark:to-[#1C1C1C] dark:text-[#CDCDCD] px-4 sm:px-6 py-10 sm:py-16 my-[50px] sm:my-[80px] rounded-lg">
+    <section className="overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:bg-gradient-to-b dark:from-brand-bg dark:via-[#1C1C1C] dark:to-[#1C1C1C] dark:text-[#CDCDCD] px-4 sm:px-6 py-10 sm:py-16 mt-[50px] sm:mt-[80px] rounded-lg">
       <ScrollComponent>
         <TitleSection
           pill="✨ Carter AI"
@@ -124,6 +125,23 @@ export default function HeroSection() {
           </ul>
         </motion.div>
       </div>
+    </section>
+    <section className="overflow-hidden  bg-gradient-to-b from-slate-50 to-white dark:bg-gradient-to-b dark:to-brand-bg dark:via-[#1C1C1C] dark:from-[#1C1C1C] dark:text-[#CDCDCD] px-4 sm:px-6 py-10  sm:py-16  ">
+      <div className="border flex flex-col items-center justify-center gap-4 border-gray-200 rounded-3xl mx-10 p-10">
+        <ScrollComponent>
+        <TitleSection
+          pill="✨ Chrome Extension"
+          title={`Save Links with One Click`}
+          subheading="save your ideas with carter"
+        />  
+      </ScrollComponent>
+      <Button onClick={()=>window.open("https://chromewebstore.google.com/detail/link-saver-extension/cojbmogjbkpopmmkcbpeihnidojophfi", "_blank")}
+      className="">
+        <FaChrome className="mr-2 h-5 w-5" />
+        Install Chrome Extension
+      </Button>
+      </div>
+      
     </section>
     </>
   )

@@ -87,6 +87,7 @@ export default function ChatComponent({ greetings }: ChatComponentProps) {
         chatHistory: chatHistory,
       })
 
+
       await processStreamResponse(response)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to communicate with the server")
@@ -120,6 +121,7 @@ export default function ChatComponent({ greetings }: ChatComponentProps) {
         chatHistory: chatHistory,
         secretKey: secretKey,
       })
+
 
       await processStreamResponse(response)
     } catch (error) {
@@ -172,18 +174,22 @@ export default function ChatComponent({ greetings }: ChatComponentProps) {
     const processEventData = (message: string) => {
       if (message.startsWith("data: ")) {
         const dataRaw = message.replace(/^data: /, "")
-        if (!dataRaw) return
 
         if (!useChatStore.getState().isStreaming) {
           useChatStore.getState().setStreaming(true)
           scrollToBottom("auto")
         }
 
-        try {
-          const jsonData = JSON.parse(dataRaw)
-          useChatStore.getState().appendToLastMessage(jsonData)
-        } catch (e) {
-          useChatStore.getState().appendToLastMessage(dataRaw)
+        // An empty data field from the stream indicates a newline.
+        if (dataRaw.trim() === "") {
+          useChatStore.getState().appendToLastMessage("\n")
+        } else {
+          try {
+            const jsonData = JSON.parse(dataRaw)
+            useChatStore.getState().appendToLastMessage(jsonData)
+          } catch (e) {
+            useChatStore.getState().appendToLastMessage(dataRaw)
+          }
         }
 
         if (autoScrollEnabled) {

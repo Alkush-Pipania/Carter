@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, integer } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('user', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -8,6 +8,8 @@ export const users = pgTable('user', {
   name: text("name"),
   verified: boolean('verified').notNull().default(false),
   image: text('image'),
+  subscription: text('subscription').notNull().default('free'),
+  credit : integer('credit').notNull().default(10),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow()
 });

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import carterlogo from "/public/carter/logo.png"
 import { usePathname, useRouter } from 'next/navigation';
 import { AddLinkDialog } from './AddLinkDialog';
-import { Search, User, LogOut, Settings, Github, Moon, Sun } from 'lucide-react';
+import { Search, User, LogOut, Settings, Github, Moon, Sun, Key } from 'lucide-react';
 import { useAppSelector } from '@/store/hooks';
 import {
   DropdownMenu,
@@ -124,7 +124,12 @@ const Dashbar = () => {
                   Settings
                 </Link>
               </DropdownMenuItem>
-
+              <DropdownMenuItem asChild className={`dropdown-item ${dropdownItemStyles.item}`}>
+                <Link href="/find" className={dropdownItemStyles.link}>
+                  <Key className={dropdownItemStyles.icon} />
+                  Secret Key ?
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem asChild className={`dropdown-item ${dropdownItemStyles.item}`}>
                 <a href="https://github.com/Alkush-Pipania/Carter" target="_blank" rel="noopener noreferrer" className={dropdownItemStyles.link}>
                   <Github className={dropdownItemStyles.icon} />
@@ -140,9 +145,7 @@ const Dashbar = () => {
                   )}
                 </button>
               </DropdownMenuItem>
-
               <DropdownMenuSeparator className="bg-slate-200 dark:bg-zinc-700 transition-colors" />
-
               <DropdownMenuItem
                 onClick={() => {
                   localStorage.clear()

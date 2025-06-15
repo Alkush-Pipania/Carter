@@ -43,8 +43,8 @@ export default function FAQ() {
             <Accordion
               type="single"
               collapsible
-              className="space-y-3 text-base text-[#FAFAFA] overflow-y-auto max-h-[calc(100vh-200px)]"
-              defaultValue="item-1"
+              className="space-y-3 text-base text-[#FAFAFA] overflow-y-auto "
+              
             >
               {faqItems.map((item) => (
                 <AccordionItem

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
+import Link from "next/link"
 
 const formSchema = z.object({
   message: z.string().min(1, { message: "Message cannot be empty" }),
@@ -178,9 +179,9 @@ export default function InputBox({ setSecretKey, onSendMessage, greeting, hasMes
                       ) : hasSecretKey ? (
                         <div className="flex items-center gap-2 bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 rounded-lg px-3 py-1.5">
                           <Key size={14} className="text-emerald-600 dark:text-emerald-400" />
-                          <span className="text-sm text-emerald-700 dark:text-emerald-300 font-medium">
+                          <Link href={`/find?secretkey=${currentSecretKey}`} target="_blank" className="text-sm text-emerald-700 dark:text-emerald-300 font-medium">
                             {currentSecretKey.substring(0, 8)}...
-                          </span>
+                          </Link>
                           <button
                             type="button"
                             onClick={handleRemoveSecretKey}

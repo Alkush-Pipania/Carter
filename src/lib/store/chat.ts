@@ -46,7 +46,7 @@ export const ResponseSchema = z.object({
 export type ResponseType = z.infer<typeof ResponseSchema>;
 
 type Message = {
-  content: string | ResponseType;
+  content: string ;
   role: 'user' | 'assistant';
   isStructured?: boolean;
   isStreaming?: boolean;
