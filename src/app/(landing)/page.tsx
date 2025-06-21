@@ -14,28 +14,28 @@ export default async function Home() {
 
   return (
     <>
-      <HeroSection/>
+      <HeroSection />
 
-      
+
 
       {/* <Extension/> */}
 
 
       {/* Other sections are similar */}
       <section className="overflow-hidden font-mono gap-y-5 px-4 flex flex-col items-center justify-center sm:px-6 mt-[20px] sm:mt-12">
-      <FAQ />
-      <CTASection/>
+        <FAQ />
+        <CTASection />
 
       </section>
 
       <footer className="overflow-hidden font-mono gap-y-5 px-4 flex flex-col items-start justify-center sm:px-6 mt-[20px] sm:mt-12">
-       
+
         <Footer />
         <div className="flex sm:flex-row flex-col w-full sm:items-center sm:justify-center gap-4">
           <Link href="https://www.2alabs.pro/" target="_blank" rel="noopener noreferrer" className="text-gray-300 cursor-pointer hover:text-gray-200 font-mono">
             About
           </Link>
-          <Link href="https://www.linkedin.com/in/alkush-pipania-49269929b/" target="_blank" rel="noopener noreferrer" className="text-gray-300 cursor-pointer hover:text-gray-200 font-mono">
+          <Link href="https://www.alkush.xyz/" target="_blank" rel="noopener noreferrer" className="text-gray-300 cursor-pointer hover:text-gray-200 font-mono">
             Developer
           </Link>
           <a
@@ -49,7 +49,7 @@ export default async function Home() {
         </div>
         <div className="flex my-8 w-full items-center sm:justify-center gap-4">
           <Link href="https://x.com/alkushx">
-          {/* <Image
+            {/* <Image
             src={twitter}
             className="w-[34px] cursor-pointer"
             alt="twitter"
@@ -65,8 +65,8 @@ export default async function Home() {
           <Link href="https://github.com/Alkush-Pipania">
           <Image src={github} className="w-[34px] cursor-pointer" alt="github" />
           </Link> */}
-          
-          
+
+
         </div>
         <div className="w-full mb-8 sm:flex-row flex-col flex sm:justify-between sm:items-center">
           <h3>&copy; {new Date().getFullYear()}</h3>
