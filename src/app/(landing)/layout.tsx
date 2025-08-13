@@ -11,10 +11,21 @@ const HomePageLayout = async({children} : {children : React.ReactNode}) => {
     return redirect("/dashboard");
   }
   return (
-    <main>
-      <Navbar/>
-      {children}
-    </main>
+    <div className="min-h-screen w-full relative bg-black">
+      {/* Violet Storm Background with Top Glow */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.25), transparent 70%), #000000",
+        }}
+      />
+      
+      {/* Your Content/Components */}
+      <div className="relative z-10">
+        <Navbar/>
+        {children}
+      </div>
+    </div>
   )
 }
 
