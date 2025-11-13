@@ -24,17 +24,21 @@ async function uploadImageToCloudinary(base64Image: string) {
   }
 }
 
+// Disable caching for this API route
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json(); 
+    const body = await request.json();
     const { email, password, username, image } = body;
 
-    
+
     if (!email || !password || !username) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
 
-   
+
     const existingUser = await db.query.users.findFirst({
       where: eq(users.email , email)
     });
@@ -60,7 +64,14 @@ export async function POST(request: Request) {
       image : imageUrl
     })
 
-    return NextResponse.json({ error: false , message: "User created successfully" }, { status: 201 });
+    const response = NextResponse.json({ error: false , message: "User created successfully" }, { status: 201 });
+
+    // Add cache control headers to prevent caching of auth endpoints
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+
+    return response;
   } catch (error) {
     console.error("Error creating user:", error);
     return NextResponse.json({ error: true , message: "Internal server error" }, { status: 500 });
