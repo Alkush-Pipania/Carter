@@ -6,6 +6,15 @@ import FAQ from "@/components/landing/FAQ";
 import HeroSection from "@/components/landing/HeroSection";
 import { CTASection } from "@/components/landing/CTA_SECTION";
 
+// Enable ISR with 1 hour revalidation for optimal caching
+export const revalidate = 3600; // Revalidate every 1 hour
+
+// Force static rendering for better performance
+export const dynamic = 'force-static';
+
+// Enable edge caching
+export const runtime = 'nodejs';
+
 export default async function Home() {
   return (
     <>
