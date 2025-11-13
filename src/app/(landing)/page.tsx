@@ -42,17 +42,12 @@ export default async function Home() {
             <Link href="/about" className="text-gray-300 cursor-pointer hover:text-violet-400 font-mono transition-colors">
               About
             </Link>
-            <Link href="https://www.alkush.xyz/" target="_blank" rel="noopener noreferrer" className="text-gray-300 cursor-pointer hover:text-violet-400 font-mono transition-colors">
+            <span className="text-gray-300 font-mono">
               Developer
-            </Link>
-            <a
-              href="https://buymeacoffee.com/logicloom"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-300 cursor-pointer hover:text-violet-400 font-mono transition-colors"
-            >
+            </span>
+            <span className="text-gray-300 font-mono">
               Support
-            </a>
+            </span>
           </div>
           <div className="flex my-8 w-full items-center sm:justify-center gap-4">
             <Link href="https://x.com/alkushx" className="text-gray-300 hover:text-violet-400 transition-colors">
