@@ -108,10 +108,8 @@ function Navbar() {
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-4">
-            <a
-              href="https://github.com/Alkush-Pipania/Carter"
-              target="_blank" rel="noopener noreferrer"
-              className={`dark:text-white ${!isMobile ? "transition-transform duration-300 hover:scale-110" : ""}`}
+            <div
+              className={`dark:text-white ${!isMobile ? "transition-transform duration-300" : ""}`}
             >
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -120,7 +118,7 @@ function Navbar() {
                   clipRule="evenodd"
                 />
               </svg>
-            </a>
+            </div>
             <div
               onClick={() => session ? signOut() : signIn()}
               className={`bg-primary-purple/primary-purple-400 px-3 py-1 rounded-full 
