@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useEffect, useState } from "react"
 import { Progress } from "@/components/ui/progress"
@@ -49,17 +49,17 @@ export function CooldownTimer({ durationMs, onComplete, isActive }: CooldownTime
 
   return (
     <div className="mb-4 mt-1">
-      <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+      <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
         <span className="flex items-center gap-1">
           <Clock size={12} />
           <span>Resend available in:</span>
         </span>
-        <span className="font-mono font-medium">{formattedTime}</span>
+        <span className="font-mono font-medium text-purple-600">{formattedTime}</span>
       </div>
-      <Progress 
-        value={progress} 
-        className="h-1 w-full bg-zinc-700" 
-        indicatorClassName="bg-white/70"
+      <Progress
+        value={progress}
+        className="h-1 w-full bg-gray-100"
+        indicatorClassName="bg-purple-500"
       />
     </div>
   )

@@ -6,6 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useForm } from 'react-hook-form'
+import Loader from '@/components/common/Loader'
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -29,10 +30,10 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 w-full mx-auto">
-      <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-bold">Reset Password</h2>
-        <p className="text-sm sm:text-base text-gray-400">
+    <div className="space-y-6 w-full mx-auto">
+      <div className="space-y-2 text-center">
+        <h2 className="text-2xl font-semibold text-gray-900">Reset Password</h2>
+        <p className="text-sm text-gray-500">
           Enter your email address and we&apos;ll send you a verification code.
         </p>
       </div>
@@ -47,8 +48,8 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
                   <Input
                     {...field}
                     type="email"
-                    placeholder="Email"
-                    className="rounded-lg border border-zinc-600 bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-400 focus:outline-none w-full text-sm sm:text-base"
+                    placeholder="Email address"
+                    className="h-12 rounded-full border-gray-200 bg-gray-50 px-4 text-gray-900 placeholder:text-gray-400 focus-visible:ring-purple-500"
                     disabled={isLoading}
                   />
                 </FormControl>
@@ -58,10 +59,10 @@ export default function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
           />
           <Button
             type="submit"
-            className="w-full rounded-lg bg-white/80 text-xs hover:bg-pureWhite hover:bg-opacity-90 focus:outline-none focus:ring-2 text-black focus:ring-offset-2 focus:ring-offset-[#030014] disabled:opacity-50 sm:text-base"
+            className="w-full h-12 rounded-full bg-purple-500 text-white hover:bg-purple-600 font-medium"
             disabled={isLoading}
           >
-            {isLoading ? 'Sending...' : 'Send Verification Code'}
+            {isLoading ? <Loader /> : 'Send Verification Code'}
           </Button>
         </form>
       </Form>

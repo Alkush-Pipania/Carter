@@ -12,6 +12,7 @@ import { CooldownTimer } from '@/components/auth/auth-action/CooldownTimer'
 import { API_ENDPOINTS } from '@/services/apiEndpoints'
 import { postCarter } from '@/services/API_Services'
 import { toast } from 'sonner'
+import Loader from '@/components/common/Loader'
 
 const formSchema = z.object({
   otp: z.string().length(6, 'OTP must be 6 digits').regex(/^\d+$/, 'OTP must contain only numbers'),
@@ -36,7 +37,7 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
   const [showPassword, setShowPassword] = useState(false)
   const [isResending, setIsResending] = useState(false)
   const [isCooldown, setIsCooldown] = useState(showCooldownFromStart)
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,11 +51,11 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
   useEffect(() => {
     const storedCooldown = localStorage.getItem('otpCooldownExpiry')
     const storedEmail = localStorage.getItem('otpCooldownEmail')
-    
+
     if (storedCooldown && storedEmail && storedEmail === email) {
       const expiryTime = parseInt(storedCooldown, 10)
       const now = Date.now()
-      
+
       if (expiryTime > now) {
         setIsCooldown(true)
       } else {
@@ -79,7 +80,7 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
         const expiryTime = Date.now() + COOLDOWN_PERIOD_MS
         localStorage.setItem('otpCooldownExpiry', expiryTime.toString())
         localStorage.setItem('otpCooldownEmail', email)
-        
+
         toast.success('Verification code resent to your email')
       } else {
         toast.error(response.message || 'Failed to resend verification code')
@@ -102,23 +103,23 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 w-full">
+    <div className="space-y-6 w-full">
       <div className="space-y-2 text-center">
-        <h2 className="text-2xl sm:text-2xl font-bold">Reset Your Password</h2>
-        <p className="text-sm sm:text-base text-gray-400">
+        <h2 className="text-2xl font-semibold text-gray-900">Reset Your Password</h2>
+        <p className="text-sm text-gray-500">
           Enter the verification code sent to {email}
         </p>
       </div>
-      
+
       {/* Always show the cooldown timer at the top when active */}
       {isCooldown && (
-        <CooldownTimer 
-          durationMs={COOLDOWN_PERIOD_MS} 
-          onComplete={handleCooldownComplete} 
+        <CooldownTimer
+          durationMs={COOLDOWN_PERIOD_MS}
+          onComplete={handleCooldownComplete}
           isActive={isCooldown}
         />
       )}
-      
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <div className="space-y-3">
@@ -128,39 +129,39 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                  <Input
-                    {...field}
-                    type="text"
-                    inputMode="numeric"
-                    pattern="\d*"
-                    placeholder="Enter 6-digit code"
-                    maxLength={6}
-                    disabled={isLoading}
-                    className="rounded-lg border border-gray-600 bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-400 active:border-white/80 focus:outline-none w-full text-sm sm:text-base text-start tracking-wider"
-                  />
+                    <Input
+                      {...field}
+                      type="text"
+                      inputMode="numeric"
+                      pattern="\d*"
+                      placeholder="Enter 6-digit code"
+                      maxLength={6}
+                      disabled={isLoading}
+                      className="h-12 rounded-full border-gray-200 bg-gray-50 px-4 text-center tracking-[0.5em] text-gray-900 placeholder:text-gray-400 focus-visible:ring-purple-500"
+                    />
                   </FormControl>
                   <FormMessage className="text-sm text-center" />
                 </FormItem>
               )}
             />
-            
+
             {!isCooldown && (
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={handleResendOtp}
                 disabled={isResending || isLoading}
-                className="w-full text-sm text-zinc-300 hover:text-white border-zinc-700 py-2 flex items-center justify-center gap-2"
+                className="w-full text-sm text-purple-600 hover:text-purple-700 hover:bg-purple-50 flex items-center justify-center gap-2"
               >
                 <RefreshCw size={14} className={isResending ? "animate-spin" : ""} />
-                {isResending ? 'Sending...' : "Didn't receive code? Resend OTP"}
+                {isResending ? 'Sending...' : "Resend OTP code"}
               </Button>
             )}
           </div>
-          
-          <div className="mt-6 pt-4 border-t border-zinc-800">
-            <h3 className="text-base font-medium mb-3">Create New Password</h3>
-            
+
+          <div className="mt-6 pt-4 border-t border-gray-100">
+            <h3 className="text-sm font-medium text-gray-900 mb-3">Create New Password</h3>
+
             <FormField
               control={form.control}
               name="password"
@@ -172,14 +173,14 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
                         {...field}
                         type={showPassword ? 'text' : 'password'}
                         placeholder="New Password"
-                        className="rounded-lg border border-zinc-600 hover:border-white/50 active:border-white/80 bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-400 focus:outline-none w-full text-sm sm:text-base pr-12"
+                        className="h-12 rounded-full border-gray-200 bg-gray-50 px-4 pr-12 text-gray-900 placeholder:text-gray-400 focus-visible:ring-purple-500"
                         disabled={isLoading}
                       />
                       <Button
                         type="button"
                         variant="ghost"
-                        size="icon"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white bg-none hover:bg-transparent"
+                        size="sm"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 h-auto hover:bg-transparent text-gray-400 hover:text-gray-600"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -190,7 +191,7 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="confirmPassword"
@@ -201,7 +202,7 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
                       {...field}
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Confirm New Password"
-                      className="rounded-lg border border-zinc-600 hover:border-white/50 active:border-white/80 bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-400 focus:outline-none w-full text-sm sm:text-base"
+                      className="h-12 rounded-full border-gray-200 bg-gray-50 px-4 text-gray-900 placeholder:text-gray-400 focus-visible:ring-purple-500"
                       disabled={isLoading}
                     />
                   </FormControl>
@@ -210,20 +211,20 @@ export default function OtpForm({ email, onSubmit, onBack, isLoading, showCooldo
               )}
             />
           </div>
-          
+
           <div className="space-y-3 mt-4">
             <Button
               type="submit"
-              className="w-full rounded-lg px-4 py-2 sm:py-3 font-medium text-black bg-white/80 hover:bg-pureWhite hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#030014] disabled:opacity-50 text-sm sm:text-base"
+              className="w-full h-12 rounded-full bg-purple-500 text-white hover:bg-purple-600 font-medium"
               disabled={isLoading}
             >
-              {isLoading ? 'Resetting Password...' : 'Reset Password'}
+              {isLoading ? <Loader /> : 'Reset Password'}
             </Button>
             <Button
               type="button"
               onClick={onBack}
-              variant="link"
-              className="w-full text-sm sm:text-base text-zinc-200 hover:text-opacity-80"
+              variant="ghost"
+              className="w-full text-sm text-gray-500 hover:text-gray-700"
               disabled={isLoading}
             >
               Back to Email

@@ -1,7 +1,7 @@
 "use client"
 import { SignupSchema } from '@/lib/zod'
 import { useRouter } from 'next/navigation'
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import * as z from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Loader from '@/components/common/Loader'
 import Image from 'next/image'
-import { Loader2, X } from 'lucide-react'
+import { Loader2, X, Eye, EyeOff } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { login } from '@/lib/actions/auth'
 import AuthButton from '@/components/auth/Github-auth-button'
@@ -19,11 +19,12 @@ import AuthButton from '@/components/auth/Github-auth-button'
 const SignUp = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
- 
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -53,7 +54,7 @@ const SignUp = () => {
   const form = useForm<z.infer<typeof SignupSchema>>({
     mode: 'onChange',
     resolver: zodResolver(SignupSchema),
-    defaultValues: { username:'', email: '', password: '' },
+    defaultValues: { username: '', email: '', password: '' },
   });
 
   const isLoading = form.formState.isSubmitting;
@@ -61,10 +62,10 @@ const SignUp = () => {
   const onSubmit: SubmitHandler<z.infer<typeof SignupSchema>> = async (FormData) => {
     setLoading(true);
     const { username, email, password } = FormData;
-  
+
     try {
       const imageBase64 = image ? await convertImageToBase64(image) : null;
-      
+
       const response = await fetch("/api/signup", {
         method: "POST",
         headers: {
@@ -77,22 +78,22 @@ const SignUp = () => {
           image: imageBase64
         }),
       });
-  
+
       if (response.ok) {
         // Automatically log the user in
         const signInResult = await login("credentials", {
           email,
           password,
         });
-  
+
         if (signInResult?.error) {
           setSubmitError("something up with the server");
         } else {
-          router.push("/dashboard"); 
+          router.push("/dashboard");
         }
       } else {
         // Attempt to parse the error response
-        const data = await response.json().catch(() => null); 
+        const data = await response.json().catch(() => null);
         setSubmitError(data?.message || "Sign-up failed");
       }
     } catch (error) {
@@ -103,155 +104,223 @@ const SignUp = () => {
     }
   };
   return (
+    <div className="w-full flex flex-col items-center gap-6">
+      {/* Logo with purple background */}
+      <Link href="/" className="mb-2">
+        <div className="bg-black p-2 rounded-2xl flex items-center justify-center shadow-lg shadow-black/60">
+          <Image
+            src="/2alabs.png"
+            alt="2aLabs"
+            width={64}
+            height={64}
+            priority
+            unoptimized
+            className="w-16"
+          />
+        </div>
+      </Link>
 
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex flex-col gap-6 max-w-md mx-auto">
-        <span className='text-slate-800 dark:text-gray-400 text-center text-2xl font-medium transition-colors'>
-          Create a Carter Account
-        </span>
+      {/* Header */}
+      <div className="text-center">
+        <h1 className="text-2xl font-semibold text-gray-900">
+          Create an account
+        </h1>
+        <p className="text-gray-500 text-sm mt-1">
+          Start your journey with Carter today
+        </p>
+      </div>
 
-        <FormField disabled={isLoading} control={form.control}
-          name='username'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type='name' placeholder='Username' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField disabled={isLoading} control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type='email' placeholder='Email' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField disabled={isLoading} control={form.control}
-          name='password'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type='password' placeholder='Password' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid gap-2">
-          <Label htmlFor="image" className='text-slate-700 dark:text-gray-400 transition-colors'>Profile Image (optional)</Label>
-          <div className="flex items-end gap-4">
-            {imagePreview && (
-              <div className="relative w-16 h-16 rounded-sm overflow-hidden">
-                {imageLoading ? (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  </div>
-                ) : (
-                  <Image
-                    src={imagePreview}
-                    alt="Profile preview"
-                    width={64}
-                    height={64}
-                    className="object-cover"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
+          <FormField
+            disabled={isLoading}
+            control={form.control}
+            name='username'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type='text'
+                    placeholder='Username'
+                    className="h-12 rounded-full border-gray-200 bg-gray-50 px-4 text-gray-900 placeholder:text-gray-400 focus-visible:ring-purple-500"
+                    {...field}
                   />
+                </FormControl>
+                <FormMessage className="text-sm" />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            disabled={isLoading}
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type='email'
+                    placeholder='Email address'
+                    className="h-12 rounded-full border-gray-200 bg-gray-50 px-4 text-gray-900 placeholder:text-gray-400 focus-visible:ring-purple-500"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-sm" />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            disabled={isLoading}
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder='Password'
+                      className="h-12 rounded-full border-gray-200 bg-gray-50 px-4 pr-12 text-gray-900 placeholder:text-gray-400 focus-visible:ring-purple-500"
+                      {...field}
+                    />
+                  </FormControl>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 h-auto hover:bg-transparent text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <FormMessage className="text-sm" />
+              </FormItem>
+            )}
+          />
+
+          <div className="space-y-2">
+            <Label htmlFor="image" className='text-sm text-gray-600 ml-1'>Profile Image (optional)</Label>
+            <div className="flex items-center gap-4">
+              <div
+                className="relative w-16 h-16 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden cursor-pointer hover:bg-gray-100 transition-colors"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {imagePreview ? (
+                  imageLoading ? (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                      <Loader2 className="h-5 w-5 animate-spin text-white" />
+                    </div>
+                  ) : (
+                    <Image
+                      src={imagePreview}
+                      alt="Profile preview"
+                      fill
+                      className="object-cover"
+                    />
+                  )
+                ) : (
+                  <span className="text-xs text-gray-400 text-center px-1">Upload Photo</span>
                 )}
               </div>
-            )}
-            <div className="flex items-center gap-2 w-full">
-              <div className="relative w-full">
+
+              <div className="flex-1">
                 <input
                   ref={fileInputRef}
                   id="image"
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  className="hidden"
                   disabled={isLoading || imageLoading}
                 />
-                <div className="w-full flex items-center px-3 py-2 border border-gray-400 rounded-md text-sm">
-                  <span className="truncate text-slate-600 dark:text-gray-500 transition-colors">
-                    {image ? image.name : "No file chosen"}
-                  </span>
-                </div>
-                <Button 
+                <Button
                   type="button"
-                  variant="ghost" 
+                  variant="outline"
                   size="sm"
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2 text-xs"
+                  className="h-9 rounded-full border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 text-xs px-4"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isLoading || imageLoading}
                 >
-                  Browse
+                  Choose File
                 </Button>
+                {image && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-xs text-gray-500 truncate max-w-[150px]">
+                      {image.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setImage(null);
+                        setImagePreview(null);
+                        if (fileInputRef.current) {
+                          fileInputRef.current.value = '';
+                        }
+                      }}
+                      className="text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                )}
               </div>
-              {imagePreview && (
-                <X
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setImage(null);
-                    setImagePreview(null);
-                    if (fileInputRef.current) {
-                      fileInputRef.current.value = '';
-                    }
-                  }}
-                />
-              )}
             </div>
           </div>
-        </div>
 
-        {submitError && <FormMessage>{submitError}</FormMessage>}
+          {submitError && <FormMessage className="text-center">{submitError}</FormMessage>}
 
-        <Button className='w-full p-6' type='submit' size='lg'
-          disabled={isLoading || imageLoading}>
-          {isLoading || loading ? <Loader /> : 'Sign up'}
-        </Button>
+          <Button
+            className='w-full h-12 bg-purple-500 hover:bg-purple-600 text-white rounded-full font-medium mt-2'
+            type='submit'
+            disabled={isLoading || imageLoading || loading}
+          >
+            {isLoading || loading ? <Loader /> : 'Sign up'}
+          </Button>
 
-        <div className="relative flex items-center gap-4 py-2">
-          <div className="flex-grow border-t border-slate-300 dark:border-gray-700 transition-colors"></div>
-          <span className="text-slate-700 dark:text-gray-400 text-sm font-medium transition-colors">or</span>
-          <div className="flex-grow border-t border-slate-300 dark:border-gray-700 transition-colors"></div>
-        </div>
+          <div className="relative flex items-center gap-4 py-2">
+            <div className="flex-grow border-t border-gray-200"></div>
+            <span className="text-gray-400 text-sm">or</span>
+            <div className="flex-grow border-t border-gray-200"></div>
+          </div>
 
-        <div className='flex flex-col gap-3 w-full'>
-          <AuthButton
-            onClick={() => {
-              setLoading(true)
-              login("google")
-              setLoading(false)
-            }}
-            isLoading={loading}
-            provider='Google'
-          />
-          <AuthButton
-            onClick={()=>{
-              setLoading(true)
-              login("github")
-              setLoading(false)
-            }}
-            provider='Github'
-          />
-        </div>
+          <div className='flex gap-3 w-full'>
+            <AuthButton
+              onClick={() => {
+                setAuthLoading(true)
+                login("google")
+                setAuthLoading(false)
+              }}
+              isLoading={authLoading}
+              provider='Google'
+            />
+            <AuthButton
+              onClick={() => {
+                setAuthLoading(true)
+                login("github")
+                setAuthLoading(false)
+              }}
+              provider='Github'
+            />
+          </div>
 
-        <div className="border-t border-slate-300 dark:border-gray-700 pt-4 mt-4 transition-colors">
-          <span className="block text-sm text-slate-700 dark:text-gray-400 text-center transition-colors">
-            Already have an account?{" "}
-            <Link href="/signin" className="text-primary dark:text-text-primary hover:underline hover:text-primary/80 dark:hover:text-white transition-colors">
-              Sign in
-            </Link>
-          </span>
-        </div>
-      </form>
-    </Form>
+          <div className="text-center pt-2">
+            <p className="text-sm text-gray-500">
+              Already have an account?{' '}
+              <Link href="/signin" className="text-purple-600 hover:text-purple-700 font-medium">
+                Log in
+              </Link>
+            </p>
+          </div>
+        </form>
+      </Form>
+    </div>
   )
 }
 

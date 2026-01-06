@@ -1,32 +1,26 @@
 
 import { auth } from '@/auth';
-import Navbar from '@/components/landing/Navbar'
+import { Navbar } from '@/components/landing/navbar/main';
 import { redirect } from 'next/navigation';
 import React from 'react'
 
-const HomePageLayout = async({children} : {children : React.ReactNode}) => {
+const HomePageLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await auth();
 
   if (session) {
     return redirect("/dashboard");
   }
   return (
-    <div className="min-h-screen w-full relative bg-black">
-      {/* Violet Storm Background with Top Glow */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.25), transparent 70%), #000000",
-        }}
-      />
-      
-      {/* Your Content/Components */}
-      <div className="relative z-10">
-        <Navbar/>
-        {children}
-      </div>
-    </div>
+    <>
+      <Navbar />
+      {children}
+    </>
   )
 }
+
+export const metadata = {
+  title: '2aLabs - The Best AI Bookmark Manager',
+  description: 'Stop drowning in tabs. 2aLabs automatically organizes your saved links with AI, making them searchable and actionable. Join for free.',
+};
 
 export default HomePageLayout

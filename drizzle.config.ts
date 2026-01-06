@@ -8,5 +8,5 @@ export default defineConfig({
   dbCredentials: {
     url: process.env.AUTH_DRIZZLE_URL!,
   },
-  
+
 })
