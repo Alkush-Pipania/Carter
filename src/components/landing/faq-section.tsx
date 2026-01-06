@@ -47,21 +47,21 @@ const faqData = [
 
 export function FAQSection() {
     return (
-        <section className="w-full py-12 md:py-20 px-4 bg-white">
+        <section className="w-full py-12 md:py-20 px-4 bg-white dark:bg-black">
             <div className="w-full max-w-2xl mx-auto">
                 {/* Heading */}
-                <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-8">
+                <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-8">
                     Frequently Asked Questions
                 </h2>
 
-                <Accordion type="single" collapsible className="border border-gray-200 rounded-xl overflow-hidden">
+                <Accordion type="single" collapsible className="border border-gray-200 dark:border-zinc-800 rounded-xl overflow-hidden">
                     {faqData.map((item, index) => (
                         <AccordionItem
                             key={index}
                             value={`item-${index}`}
-                            className={`${index !== faqData.length - 1 ? "border-b border-gray-200" : ""} data-[state=open]:bg-purple-500 data-[state=open]:text-white group`}
+                            className={`${index !== faqData.length - 1 ? "border-b border-gray-200 dark:border-zinc-800" : ""} data-[state=open]:bg-purple-500 data-[state=open]:text-white group`}
                         >
-                            <AccordionTrigger className="px-6 py-4 text-left font-medium hover:no-underline transition-colors duration-200 [&>svg]:hidden">
+                            <AccordionTrigger className="px-6 py-4 text-left font-medium hover:no-underline transition-colors duration-200 [&>svg]:hidden text-gray-900 dark:text-gray-200 data-[state=open]:text-white">
                                 <div className="flex justify-between items-center w-full">
                                     <span>{item.question}</span>
                                     <span className="text-xl font-normal">
@@ -70,13 +70,13 @@ export function FAQSection() {
                                     </span>
                                 </div>
                             </AccordionTrigger>
-                            <AccordionContent className="px-6 py-2 text-sm leading-relaxed">
+                            <AccordionContent className="px-6 py-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400 group-data-[state=open]:text-white/90">
                                 {item.answer}
                             </AccordionContent>
                         </AccordionItem>
                     ))}
                 </Accordion>
             </div>
-        </section>
+        </section >
     )
 }

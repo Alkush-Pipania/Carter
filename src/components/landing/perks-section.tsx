@@ -10,12 +10,12 @@ interface FeatureCardProps {
 
 function FeatureCard({ icon, iconBgColor, title, description }: FeatureCardProps) {
     return (
-        <div className="rounded-3xl border border-gray-200 bg-white p-6 md:p-8 hover:shadow-lg transition-shadow duration-300">
+        <div className="rounded-3xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 md:p-8 hover:shadow-lg hover:shadow-gray-200/50 dark:hover:shadow-black/50 transition-shadow duration-300">
             <div className={`mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl ${iconBgColor}`}>
                 {icon}
             </div>
-            <h3 className="mb-3 text-xl font-medium text-gray-900 md:text-2xl">{title}</h3>
-            <p className="text-sm leading-relaxed text-gray-600 md:text-base">{description}</p>
+            <h3 className="mb-3 text-xl font-medium text-gray-900 dark:text-white md:text-2xl">{title}</h3>
+            <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400 md:text-base">{description}</p>
         </div>
     )
 }

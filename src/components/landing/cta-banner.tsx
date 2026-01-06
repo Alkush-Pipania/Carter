@@ -45,7 +45,7 @@ export function CTABanner() {
                 {/* CTA Button */}
                 <Link href="/dashboard">
                     <Button
-                        className="bg-white hover:bg-gray-100 text-purple-600 rounded-full px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+                        className="bg-white hover:bg-gray-100 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-purple-600 rounded-full px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
                     >
                         Get Started Free
                     </Button>

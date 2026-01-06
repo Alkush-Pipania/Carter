@@ -47,7 +47,7 @@ const itemVariants = {
 
 export function FeaturesSection() {
     return (
-        <section className="w-full py-6  px-4 bg-white">
+        <section className="w-full py-6 px-4 bg-white dark:bg-black">
             {/* Features Grid */}
             <motion.div
                 variants={containerVariants}
@@ -62,11 +62,11 @@ export function FeaturesSection() {
                         variants={itemVariants}
                         className="flex flex-col items-center text-center"
                     >
-                        <div className="mb-4 text-gray-400">
+                        <div className="mb-4 text-gray-400 dark:text-gray-500">
                             <feature.icon size={28} strokeWidth={1.5} />
                         </div>
-                        <p className="text-gray-800 text-sm md:text-base leading-relaxed">
-                            <span className="font-semibold text-gray-900">{feature.title}</span>{" "}
+                        <p className="text-gray-800 dark:text-gray-300 text-sm md:text-base leading-relaxed">
+                            <span className="font-semibold text-gray-900 dark:text-white">{feature.title}</span>{" "}
                             {feature.description}
                         </p>
                     </motion.div>
@@ -89,7 +89,7 @@ export function FeaturesSection() {
                 </div>
 
                 {/* Headline */}
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight">
                     Find anything instantly.
                 </h2>
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-purple-400 leading-tight mt-1">

@@ -61,12 +61,12 @@ const socialLinks = [
 
 export function Footer() {
     return (
-        <footer className="w-full bg-white py-12 px-4 md:px-8">
+        <footer className="w-full bg-white dark:bg-black py-12 px-4 md:px-8 border-t border-gray-100 dark:border-zinc-900">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
                     {/* Left side - Description */}
                     <div className="lg:col-span-2 space-y-4">
-                        <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+                        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-xs">
                             Built over hundreds of late nights. Carter gives you a smart, AI-powered way to save and find your links.
                         </p>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -83,7 +83,7 @@ export function Footer() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label={social.label}
-                                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
                                 >
                                     <social.icon size={18} />
                                 </a>
@@ -98,7 +98,7 @@ export function Footer() {
                     {/* Links columns */}
                     {Object.values(footerLinks).map((section) => (
                         <div key={section.title} className="space-y-3">
-                            <h4 className="text-sm font-medium text-gray-900">
+                            <h4 className="text-sm font-medium text-gray-900 dark:text-white">
                                 {section.title}
                             </h4>
                             <ul className="space-y-2">
@@ -109,14 +109,14 @@ export function Footer() {
                                                 href={link.href}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+                                                className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                                             >
                                                 {link.name}
                                             </a>
                                         ) : (
                                             <Link
                                                 href={link.href}
-                                                className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+                                                className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                                             >
                                                 {link.name}
                                             </Link>

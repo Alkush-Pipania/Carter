@@ -55,7 +55,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="font-[family-name:var(--font-epilogue)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-900 leading-[1.05] max-w-3xl tracking-tight"
+                className="font-[family-name:var(--font-epilogue)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-900 dark:text-white leading-[1.05] max-w-3xl tracking-tight"
             >
                 Save, organize,
                 <br className="md:hidden" />
@@ -69,7 +69,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-gray-500 text-sm md:text-lg mt-4 md:mt-6 max-w-xl px-2"
+                className="text-gray-500 dark:text-gray-400 text-sm md:text-lg mt-4 md:mt-6 max-w-xl px-2"
             >
                 Never lose a link again. Save anything from the web and
                 <br className="hidden md:block" />
@@ -93,7 +93,7 @@ export function Hero() {
                 <Link href="/dashboard" className="w-full sm:w-auto">
                     <Button
                         variant="outline"
-                        className="w-full sm:w-auto rounded-full px-8 py-6 text-sm font-medium border-gray-300 text-gray-700 hover:bg-gray-50"
+                        className="w-full sm:w-auto rounded-full px-8 py-6 text-sm font-medium border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:bg-transparent"
                     >
                         Save Links
                     </Button>
